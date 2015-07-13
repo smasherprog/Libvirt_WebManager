@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libvirt_WebManager", "Libvirt_WebManager\Libvirt_WebManager.csproj", "{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libvirt_Pinvoke", "..\Libvirt_Windows_CSharpDevelopment\Libvirt_Pinvoke\Libvirt_Pinvoke\Libvirt_Pinvoke.csproj", "{7B3896DC-19A5-46E9-9A6A-C9D459453486}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Internal_Build|x64 = Internal_Build|x64
+		Internal_Build|x86 = Internal_Build|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Debug|x64.ActiveCfg = Debug|x64
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Debug|x64.Build.0 = Debug|x64
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Debug|x86.ActiveCfg = Debug|x86
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Debug|x86.Build.0 = Debug|x86
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Internal_Build|x64.ActiveCfg = Release|x64
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Internal_Build|x64.Build.0 = Release|x64
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Internal_Build|x86.ActiveCfg = Release|x86
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Internal_Build|x86.Build.0 = Release|x86
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Release|x64.ActiveCfg = Release|x64
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Release|x64.Build.0 = Release|x64
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Release|x86.ActiveCfg = Release|x86
+		{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}.Release|x86.Build.0 = Release|x86
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Debug|x64.ActiveCfg = Debug|x64
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Debug|x64.Build.0 = Debug|x64
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Debug|x86.ActiveCfg = Debug|x86
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Debug|x86.Build.0 = Debug|x86
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Internal_Build|x64.ActiveCfg = Internal_Build|x64
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Internal_Build|x64.Build.0 = Internal_Build|x64
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Internal_Build|x86.ActiveCfg = Internal_Build|x86
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Internal_Build|x86.Build.0 = Internal_Build|x86
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Release|x64.ActiveCfg = Release|x64
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Release|x64.Build.0 = Release|x64
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Release|x86.ActiveCfg = Release|x86
+		{7B3896DC-19A5-46E9-9A6A-C9D459453486}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

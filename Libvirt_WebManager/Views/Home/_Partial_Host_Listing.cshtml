@@ -1,0 +1,19 @@
+﻿
+<script>
+
+    $(document).ready(function () {
+        $('.filetree').fileTree({
+            script: '@Url.Action("GetHosts", "Home")'
+        })
+        .on('filetreeexpand', function (e, data) { console.log(data); })
+        .on('filetreeexpanded', function (e, data) { console.log(data); })
+        .on('filetreecollapsed', function (e, data) { console.log(data); })
+        .on('filetreecollapse', function (e, data) { console.log(data); })
+        .on('filetreechecked', function (e, data) { console.log(data); })
+        .on('filetreeunchecked', function (e, data) { console.log(data); })
+        .on('filetreeclicked', function (e, data) { console.log(data); });
+    });
+</script>
+
+<div class="filetree">
+</div>

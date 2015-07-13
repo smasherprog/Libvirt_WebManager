@@ -1,0 +1,25 @@
+﻿
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Connect_To_Host_Form">Small modal</button>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="Connect_To_Host_Form">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                
+                <h4 class="modal-title">Connect To Host</h4>
+
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_Partial_Connect_ToHost_Form", new Libvirt_WebManager.ViewModels.Host.virConnectOpen())
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>

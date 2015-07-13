@@ -1,0 +1,24 @@
+﻿@model Libvirt_WebManager.ViewModels.Host.virConnectOpen
+
+
+
+
+<div id="_Partial_Connect_ToHost_Form">
+
+    @using (Ajax.BeginForm("_Partial_Connect_ToHost", "Home", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_Connect_ToHost_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_Connect_ToHost_spinner" }))
+    {
+        <div class="form-group">
+            @Html.ValidationSummary()
+
+            @Html.LabelFor(a => a.host_or_ip)
+            @Html.TextBoxFor(a => a.host_or_ip, new { @class = "form-control" })
+            @Html.ValidationMessageFor(a => a.host_or_ip)
+            <button class="btn btn-primary pull-right">
+                Connect
+                @Html.Spinner("_Partial_Connect_ToHost_spinner")
+            </button>
+
+        </div>
+    }
+</div>
+
