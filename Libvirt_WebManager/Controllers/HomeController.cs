@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -7,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Libvirt_WebManager.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : CommonController
     {
         public ActionResult Index()
         {
@@ -15,28 +16,23 @@ namespace Libvirt_WebManager.Controllers
 
             return View();
         }
-        public ActionResult index_frame()
+        [HttpGet]
+        public ActionResult _Partial_Connect_ToHost_Form()
         {
-            return View();
+            return PartialView(new Libvirt_WebManager.ViewModels.Host.virConnectOpen());
         }
         [HttpPost]
-        public ActionResult _Partial_Connect_ToHost(Libvirt_WebManager.ViewModels.Host.virConnectOpen obj)
+        public ActionResult _Partial_Connect_ToHost_Form(Libvirt_WebManager.ViewModels.Host.virConnectOpen obj)
         {
             if (ModelState.IsValid)
             {
-                //using (var con = Libvirt.CS_Objects.Host.virConnectOpen(host_or_ip))
-                //{
-                //    if (con.IsValid)
-                //        Debug.WriteLine("connected");
-                //    else Debug.WriteLine("NOT connected");
-                //}   
+                if (Libvirt_WebManager.Service.VM_Manager.Instance.virConnectOpen(obj.host_or_ip)) return CloseDialog();
             }
-            return PartialView("_Partial_Connect_ToHost_Form", obj);
+            return PartialView(obj);
         }
         [HttpPost]
         public virtual ActionResult GetHosts(string dir)
         {
-
             const string baseDir = @"~/Content";
 
             dir = Server.UrlDecode(dir);

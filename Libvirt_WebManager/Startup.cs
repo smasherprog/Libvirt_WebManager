@@ -12,7 +12,7 @@ namespace Libvirt_WebManager
     {
         public void Configuration(IAppBuilder app)
         {
-            
+            app.MapSignalR();
         }
     }
 }

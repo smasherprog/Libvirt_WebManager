@@ -1,0 +1,35 @@
+﻿<script>
+    $(function () {
+        var dummyobj = new Libvirt.ViewModels.LogMessages();
+        Libvirt.HubStart().done(function () {
+            ko.applyBindings(dummyobj, document.getElementById("sl_ko_logarea"));
+        });
+    });
+</script>
+<div class="row">
+    <div class="col-lg-12" id="sl_ko_logarea">
+        <h3>Logging</h3>
+        <table class="table table-responsive table-bordered table-condensed table-hover table-striped">
+            <thead>
+                <tr>
+                    <th style="width:20%;">
+                        Title
+                    </th>
+                    <th style="width:20%;">
+                        Time
+                    </th>
+                    <th style="width:60%;">
+                        Body
+                    </th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: { data: messages, afterAdd: AfterAdddingFunc}">
+                <tr>
+                    <td data-bind="text: Title"></td>
+                    <td data-bind="text: Time"></td>
+                    <td><a tabindex="0" role="button" data-bind="text: Body, popover: { title: Title, content: Body, trigger: 'focus', placement: 'top' }"></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

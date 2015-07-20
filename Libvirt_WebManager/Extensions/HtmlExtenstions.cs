@@ -18,5 +18,18 @@ namespace System.Web.Mvc.Html
             htmlString += "</div>";
             return new HtmlString(htmlString);
         }
+        public static string Controller(this HtmlHelper helper)
+        {
+            return helper.ViewContext.RouteData.Values["controller"].ToString();
+        }
+        public static string Action(this HtmlHelper helper)
+        {
+            return helper.ViewContext.RouteData.Values["action"].ToString();
+        }
+        public static string Area(this HtmlHelper helper)
+        {
+            var area = helper.ViewContext.RouteData.DataTokens["area"];
+            return area==null ? "" : area.ToString();
+        }
     }
 }

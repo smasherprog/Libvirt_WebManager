@@ -18,8 +18,13 @@ namespace Libvirt_WebManager
                            "~/Scripts/jQueryFileTree.js",
                            "~/Scripts/AjaxHelpers.js",
                             "~/Scripts/Libvirt.js",
-                             "~/Scripts/knockout-3.3.0.js",
-                             "~/Scripts/Host.js"
+                             "~/Scripts/knockout-{version}.js",
+                             "~/Scripts/Host.js",
+                             "~/Scripts/jquery.signalR-{version}.js",
+                                 "~/Scripts/jquery.jgrowl.min.js",
+                                 "~/Scripts/Libvirt.js",
+                                    "~/Scripts/Common.js"
+
                         ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
@@ -37,7 +42,8 @@ namespace Libvirt_WebManager
                   "~/Content/themes/base/jquery.ui.progressbar.css",
                   "~/Content/themes/base/jquery.ui.theme.css",
                       "~/Content/site.css",
-                      "~/Content/jQueryFileTree.css"
+                      "~/Content/jQueryFileTree.css",
+                      "~/Content/jquery.jgrowl.min.css"
 
                       ));
         }

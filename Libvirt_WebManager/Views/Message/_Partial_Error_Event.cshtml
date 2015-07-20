@@ -1,0 +1,46 @@
+﻿<script>
+    $(function () {
+        var dummyobj = new Libvirt.ViewModels.ErrorMessage(1, '', '', '', '', '', '', '', function () { $('#sl_ko_errorarea').modal('show'); });
+        Libvirt.HubStart().done(function () {
+            ko.applyBindings(dummyobj, document.getElementById("sl_ko_errorarea"));
+        });
+    });
+</script>
+
+<div id="sl_ko_errorarea" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" data-bind="text: Title"></h4>
+            </div>
+            <div class="modal-body">
+                <dl>
+                    <dt>Message</dt>
+                    <dd>
+                        <pre data-bind="text: Body"></pre>
+                    </dd>
+                    <dt>Additional Info 1</dt>
+                    <dd>
+                        <pre data-bind="text: Additional_Info_1"></pre>
+                    </dd>
+                    <dt>Additional Info 2</dt>
+                    <dd>
+                        <pre data-bind="text: Additional_Info_2"></pre>
+                    </dd>
+                    <dt>Additional Info 3</dt>
+                    <dd>
+                        <pre data-bind="text: Additional_Info_3"></pre>
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <span class="pull-left">
+                    Error Code:
+                    <span data-bind="text: Code"></span>
+                </span>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

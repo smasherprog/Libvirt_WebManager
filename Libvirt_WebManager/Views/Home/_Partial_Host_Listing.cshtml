@@ -14,6 +14,12 @@
         .on('filetreeclicked', function (e, data) { console.log(data); });
     });
 </script>
-
-<div class="filetree">
+<div class="row">
+    <div class="col-lg-12">
+        <button type="button" class="btn btn-primary btn-xs" onclick="Libvirt.UI.OpenDialog_sm('@Url.Action("_Partial_Connect_ToHost_Form")'); return false;">New Host</button>
+        <h3>Hosts</h3>
+        <div class="filetree">
+        </div>
+    </div>
 </div>
+
