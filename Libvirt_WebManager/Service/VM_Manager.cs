@@ -94,6 +94,56 @@ namespace Libvirt_WebManager.Service
                 return true;
             }
         }
+        private static List<string> _connections = new List<string>() { "Host1", "Host3" };
+        public List<TreeViewModel> GetTreeData(string path)
+        {
+            var nodes = new List<TreeViewModel>();
+            var splits = path.Split('/').ToList();
+            splits.RemoveAll(a => string.IsNullOrWhiteSpace(a));
+            var currentpath="";
+            if (splits.Count > 0)
+            {
+#if DEBUG
+                var host = _connections.FirstOrDefault(a => a.ToLower() == splits[0].ToLower());
+#else
+                var host = _Connections.FirstOrDefault(a => a.virConnectGetHostname().ToLower() == splits[0].ToLower());
+#endif
+                if (host != null)
+                {
+                    
+                    if (splits.Count == 1)
+                    {
+                        currentpath = "/" + host + "/";
+                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "domains", Name = "Domains", Path = currentpath + "Domains/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "interfaces", Name = "Interfaces", Path = currentpath + "Interfaces/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "storage_pools", Name = "Storage_Pools", Path = currentpath + "Storage_Pools/" });
+                    }
+                    else
+                    {
+#if DEBUG
+                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "host", Name = host, Path = currentpath + "/" + host + "/" });
+#else
+                        nodes.Add(new TreeViewModel { IsDirectory = true, Ext = "host", Name = host.virConnectGetHostname(), Path = currentpath + "/" + host.virConnectGetHostname() });
+#endif
+                    }
+                }
+            }
+            else
+            {
+#if DEBUG
+                foreach (var item in _connections)
+                {
+                    nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "host", Name = item, Path = currentpath + "/" + item + "/" });
+                }
+#else
+                   foreach (var item in _Connections)
+                {
+                    nodes.Add(new TreeViewModel { IsDirectory = true, Ext = "host", Name = item.virConnectGetHostname(), Path = currentpath + "/" + item.virConnectGetHostname() });
+                }
+#endif
 
+            }
+            return nodes;
+        }
     }
 }

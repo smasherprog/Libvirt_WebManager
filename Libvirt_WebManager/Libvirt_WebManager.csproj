@@ -290,7 +290,7 @@
     <Content Include="images\display.png" />
     <Content Include="images\document_properties.png" />
     <Content Include="images\ethernet_card_vista.png" />
-    <Content Include="images\exit %281%29.png" />
+    <Content Include="images\exit.png" />
     <Content Include="images\forward.png" />
     <Content Include="images\gnome_audio_volume_medium.png" />
     <Content Include="images\gnome_preferences_system.png" />
@@ -309,6 +309,7 @@
     <Content Include="images\player_play.png" />
     <Content Include="images\processor.png" />
     <Content Include="images\server_connect.png" />
+    <Content Include="images\server_multiple.png" />
     <Content Include="images\shutdown.png" />
     <Content Include="images\stop1normalred.png" />
     <Content Include="images\view_details.png" />
@@ -421,7 +422,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\_Partial_Host_Listing.cshtml" />
     <Content Include="Views\Home\_Partial_Connect_ToHost_Form.cshtml" />
-    <Content Include="Views\Home\GetFiles.cshtml" />
+    <Content Include="Views\Home\_Partial_HostTree.cshtml" />
     <Content Include="Views\Message\_Partial_Log_Listing.cshtml" />
     <Content Include="Views\Message\_Partial_Error_Event.cshtml" />
     <Content Include="x64\xml2-config" />

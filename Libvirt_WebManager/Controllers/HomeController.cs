@@ -33,33 +33,7 @@ namespace Libvirt_WebManager.Controllers
         [HttpPost]
         public virtual ActionResult GetHosts(string dir)
         {
-            const string baseDir = @"~/Content";
-
-            dir = Server.UrlDecode(dir);
-            string realDir = Server.MapPath(baseDir + dir);
-
-            //validate to not go above basedir
-            if (!realDir.StartsWith(Server.MapPath(baseDir)))
-            {
-                realDir = Server.MapPath(baseDir);
-                dir = "/";
-            }
-
-            List<TreeViewModel> files = new List<TreeViewModel>();
-
-            var di = new DirectoryInfo(realDir);
-
-            foreach (DirectoryInfo dc in di.GetDirectories())
-            {
-                files.Add(new TreeViewModel() { Name = dc.Name, Path = String.Format("{0}{1}\\", dir, dc.Name), IsDirectory = true });
-            }
-
-            foreach (FileInfo fi in di.GetFiles())
-            {
-                files.Add(new TreeViewModel() { Name = fi.Name, Ext = fi.Extension.Substring(1).ToLower(), Path = dir + fi.Name, IsDirectory = false });
-            }
-
-            return PartialView(files);
+            return PartialView("_Partial_HostTree", Libvirt_WebManager.Service.VM_Manager.Instance.GetTreeData(dir));
         }
 
 
