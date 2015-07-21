@@ -1,21 +1,48 @@
-@model IEnumerable<TreeViewModel>
+@model IEnumerable<Libvirt_WebManager.ViewModels.TreeViewModel>
+<script>
+    $(document).ready(function () {
+        @foreach (var item in Model)
+        {
+            if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Domains)
+            {
+                <text>context.attach('#@item.UniqueID', [{ text: "<div class='add'>New VM</div>", href: '#' }]);</text>
+            } else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Interfaces)
+            {
+                <text>context.attach('#@item.UniqueID', [{ text: "<div class='add'>New Interface</div>", href: '#' }]);</text>
+            }else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Storage_Pools)
+            {
+                <text>context.attach('#@item.UniqueID', [{ text: "<div class='add'>New Storage Pool</div>", href: '#' }]);</text>
+            }else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Domain)
+            {
+                <text>context.attach('#@item.UniqueID', [
+                { text: "<div class='connect'>Connect</div>", href: '#' },
+                { text: "<div class='settings'>Settings</div>", href: '#' },
+                { text: "<div class='start'>Start</div>", href: '#' },
+                { text: "<div class='shutdown'>ShutDown</div>", href: '#' },
+                { text: "<div class='migrate'>Migrate</div>", href: '#' },
+                { text: "<div class='edit'>Rename</div>", href: '#' },
+                { text: "<div class='delete'>Delete</div>", href: '#' },
+                ]);</text>
+            }
+        }
+
+    });
+</script>
 <ul class="jqueryFileTree">
     @foreach (var item in Model)
     {
         if (item.IsDirectory)
         {
-            <li class="directory collapsed @item.css_class">
+            <li id="@item.UniqueID" class="directory collapsed @item.Node_Type.ToString().ToLower()">
                 <a href="#" rel="@item.Path">@item.Name</a>
-         
             </li>
         }
         else
         {
-            <li class="file @item.css_class">
+            <li id="@item.UniqueID" class="file @item.Node_Type.ToString().ToLower()">
                 <a href="#" rel="@item.Path">@item.Name</a>
-         
+
             </li>
         }
-
     }
 </ul>

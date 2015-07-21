@@ -23,8 +23,8 @@ namespace Libvirt_WebManager
                              "~/Scripts/jquery.signalR-{version}.js",
                                  "~/Scripts/jquery.jgrowl.min.js",
                                  "~/Scripts/Libvirt.js",
-                                    "~/Scripts/Common.js"
-
+                                    "~/Scripts/context.js",
+                    "~/Scripts/Common.js"
                         ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
@@ -43,7 +43,9 @@ namespace Libvirt_WebManager
                   "~/Content/themes/base/jquery.ui.theme.css",
                       "~/Content/site.css",
                       "~/Content/jQueryFileTree.css",
-                      "~/Content/jquery.jgrowl.min.css"
+                      "~/Content/jquery.jgrowl.min.css",
+                      "~/Content/contextjs.bootstrap"
+
 
                       ));
         }

@@ -1,4 +1,5 @@
 ﻿using Libvirt_WebManager.Signalr;
+using Libvirt_WebManager.ViewModels;
 using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
@@ -110,18 +111,24 @@ namespace Libvirt_WebManager.Service
 #endif
                 if (host != null)
                 {
-                    
-                    if (splits.Count == 1)
+                    if (splits.Count == 2)
+                    {
+                        currentpath = "/" + host + "/Domains/";
+                        nodes.Add(new TreeViewModel { IsDirectory = false, Node_Type = TreeViewModel.Node_Types.Domain, Name = "Mis-13", Path = currentpath + "Mis-13/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = false, Node_Type = TreeViewModel.Node_Types.Domain, Name = "Finance-1", Path = currentpath + "Finance-1/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = false, Node_Type = TreeViewModel.Node_Types.Domain, Name = "Server-1", Path = currentpath + "Server-1/" });
+                    }
+                    else if (splits.Count == 1)
                     {
                         currentpath = "/" + host + "/";
-                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "domains", Name = "Domains", Path = currentpath + "Domains/" });
-                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "interfaces", Name = "Interfaces", Path = currentpath + "Interfaces/" });
-                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "storage_pools", Name = "Storage_Pools", Path = currentpath + "Storage_Pools/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type= TreeViewModel.Node_Types.Domains , Name = "Domains", Path = currentpath + "Domains/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Interfaces, Name = "Interfaces", Path = currentpath + "Interfaces/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Storage_Pools, Name = "Storage_Pools", Path = currentpath + "Storage_Pools/" });
                     }
                     else
                     {
 #if DEBUG
-                        nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "host", Name = host, Path = currentpath + "/" + host + "/" });
+                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Host, Name = host, Path = currentpath + "/" + host + "/" });
 #else
                         nodes.Add(new TreeViewModel { IsDirectory = true, Ext = "host", Name = host.virConnectGetHostname(), Path = currentpath + "/" + host.virConnectGetHostname() });
 #endif
@@ -133,7 +140,7 @@ namespace Libvirt_WebManager.Service
 #if DEBUG
                 foreach (var item in _connections)
                 {
-                    nodes.Add(new TreeViewModel { IsDirectory = true, css_class = "host", Name = item, Path = currentpath + "/" + item + "/" });
+                    nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Host, Name = item, Path = currentpath + "/" + item + "/" });
                 }
 #else
                    foreach (var item in _Connections)

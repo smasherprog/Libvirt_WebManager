@@ -202,7 +202,7 @@
     <Compile Include="Signalr\Libvirt_ManagerHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AutoMapper\Mapper.cs" />
-    <Compile Include="ViewModels\Host\FileTreeViewModel.cs" />
+    <Compile Include="ViewModels\TreeViewModel.cs" />
     <Compile Include="ViewModels\Host\Host.cs" />
     <Compile Include="ViewModels\Host\virConnectOpen.cs" />
     <Compile Include="ViewModels\Message\ErrorMessage.cs" />
@@ -214,9 +214,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\contextjs.bootstrap.css" />
+    <Content Include="Content\contextjs.standalone.css" />
     <Content Include="Content\jquery.jgrowl.css" />
     <Content Include="Content\jquery.jgrowl.min.css" />
-    <Content Include="Content\jQueryFileTree.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -321,6 +322,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Scripts\Common.js" />
+    <Content Include="Scripts\context.js" />
     <Content Include="Scripts\jquery.jgrowl.js" />
     <Content Include="Scripts\jquery.jgrowl.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />

@@ -37,4 +37,5 @@ ko.bindingHandlers.popover = {
 };
 $(document).ready(function () {
     $('.dropdown-toggle').dropdown();
+    context.init({ preventDoubleContext: false });
 });
