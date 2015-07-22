@@ -31,11 +31,10 @@ namespace Libvirt_WebManager.Controllers
             return PartialView(obj);
         }
         [HttpPost]
-        public virtual ActionResult GetHosts(string dir)
+        public ActionResult GetHosts(string dir)
         {
             return PartialView("_Partial_HostTree", Libvirt_WebManager.Service.VM_Manager.Instance.GetTreeData(dir));
         }
-
 
     }
 }

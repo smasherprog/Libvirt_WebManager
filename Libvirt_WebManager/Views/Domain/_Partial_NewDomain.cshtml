@@ -10,22 +10,17 @@
     <div class="modal-body">
         @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_Connect_ToHost_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_Connect_ToHost_spinner" }))
         {
-            <div class="row">
-                <div class="col-sm-12">
-                    @Html.ValidationSummary()
-                    <div class="form-group">
-                        @Html.LabelFor(a => a.host_or_ip)
-                        @Html.TextBoxFor(a => a.host_or_ip, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(a => a.host_or_ip)
-                    </div>
-                    <button class="btn btn-primary pull-right">
-                        Connect
-                        @Html.Spinner("_Partial_Connect_ToHost_spinner")
-                    </button>
-                </div>
+            <div class="form-group">
+                @Html.ValidationSummary()
+
+                @Html.LabelFor(a => a.host_or_ip)
+                @Html.TextBoxFor(a => a.host_or_ip, new { @class = "form-control" })
+                @Html.ValidationMessageFor(a => a.host_or_ip)
+                <button class="btn btn-primary pull-right">
+                    Connect
+                    @Html.Spinner("_Partial_Connect_ToHost_spinner")
+                </button>
             </div>
-
-
         }
     </div>
     <div class="modal-footer">

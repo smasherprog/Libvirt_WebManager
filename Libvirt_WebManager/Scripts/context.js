@@ -61,19 +61,17 @@ var context = context || (function () {
 				if (typeof data[i].href == 'undefined') {
 					data[i].href = '#';
 				}
+		
 				if (typeof data[i].target !== 'undefined') {
 					linkTarget = ' target="'+data[i].target+'"';
 				}
 				if (typeof data[i].subMenu !== 'undefined') {
-					$sub = ('<li class="dropdown-submenu"><a tabindex="-1" href="' + data[i].href + '">' + data[i].text + '</a></li>');
+				    $sub = ('<li class="dropdown-submenu"><a tabindex="-1" href="' + data[i].href + '">' + data[i].text + '</a></li>');
 				} else {
 					$sub = $('<li><a tabindex="-1" href="' + data[i].href + '"'+linkTarget+'>' + data[i].text + '</a></li>');
 				}
 				if (typeof data[i].action !== 'undefined') {
-					$sub
-						.find('a')
-						.addClass('context-event')
-						.on('click', data[i].action);
+					$sub.find('a').on('click', data[i].action);
 				}
 				$menu.append($sub);
 				if (typeof data[i].subMenu != 'undefined') {

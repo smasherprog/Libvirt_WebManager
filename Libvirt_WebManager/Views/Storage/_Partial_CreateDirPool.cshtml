@@ -1,0 +1,40 @@
+﻿@model Libvirt_WebManager.ViewModels.Storage.Dir_Pool
+
+<div id="_Partial_CreateDirPool_Form">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Storage Pool</h4>
+    </div>
+    <div class="modal-body">
+        @using (Ajax.BeginForm("_Partial_CreateDirPool", Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_CreateDirPool_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_CreateDirPool_Form_spinner" }))
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    @Html.HiddenFor(a => a._Storage_Pool.Host)
+                    @Html.HiddenFor(a => a._Storage_Pool.name)
+                    @Html.HiddenFor(a => a._Storage_Pool.pool_type)
+                    <div class="form-group">
+                        @Html.ValidationSummary()
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.path)
+                        @Html.TextBoxFor(a => a.path, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(a => a.path)
+                    </div>
+
+                    <button class="btn btn-primary pull-right">
+                        Create
+                        @Html.Spinner("_Partial_CreateDirPool_Form_spinner")
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="modal-footer">
+
+    </div>
+</div>
+
+

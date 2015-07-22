@@ -530,94 +530,98 @@ UL.jqueryFileTree {
         white-space: nowrap;
     }
 
-ul.jqueryFileTree .host {
+ul.jqueryFileTree .host_icon {
     background: url(/images/server_multiple.png) left top no-repeat;
     background-size: 18px;
 }
-ul.jqueryFileTree .domain {
+ul.jqueryFileTree .domain_icon {
     background: url(/images/monitor.png) left top no-repeat;
     background-size: 18px;
 }
-ul.jqueryFileTree .domains {
+ul.jqueryFileTree .domains_icon {
     background: url(/images/connect_established.png) left top no-repeat;
     background-size: 18px;
 }
 
-ul.jqueryFileTree .interfaces {
+ul.jqueryFileTree .interfaces_icon {
     background: url(/images/ethernet_card_vista.png) left top no-repeat;
     background-size: 18px;
 }
 
-ul.jqueryFileTree .storage_pools {
+ul.jqueryFileTree .storage_pools_icon {
     background: url(/images/storage_pools.png) left top no-repeat;
     background-size: 18px;
 }
-.dropdown-menu .add {
+ul.jqueryFileTree .storage_pool_icon {
+    background: url(/images/pool.png) left top no-repeat;
+    background-size: 18px;
+}
+.dropdown-menu .add_icon {
     background: url(/images/add.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .refresh {
+.dropdown-menu .refresh_icon {
     background: url(/images/add.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .connect {
+.dropdown-menu .connect_icon {
     background: url(/images/connect_established.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .start {
+.dropdown-menu .start_icon {
     background: url(/images/player_play.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .stop {
+.dropdown-menu .stop_icon {
     background: url(/images/stop1normalred.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .player_pause {
+.dropdown-menu .pause_icon {
     background: url(/images/player_play.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .shutdown {
+.dropdown-menu .shutdown_icon {
     background: url(/images/connect_creating_256.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .migrate {
+.dropdown-menu .migrate_icon {
     background: url(/images/ic_arrow_round_move_down.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .edit {
+.dropdown-menu .edit_icon {
     background: url(/images/pencil.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .delete {
+.dropdown-menu .delete_icon {
     background: url(/images/deletered.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .disconnect {
+.dropdown-menu .disconnect_icon {
     background: url(/images/disconnect.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .settings {
+.dropdown-menu .settings_icon {
     background: url(/images/applications_system.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .details {
+.dropdown-menu .details_icon {
     background: url(/images/document_properties.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;
 }
-.dropdown-menu .disconnect {
+.dropdown-menu .disconnect_icon {
     background: url(/images/disconnect.png) left top no-repeat;
     background-size: 18px;
     padding-left: 18px;

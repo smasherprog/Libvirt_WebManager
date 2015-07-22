@@ -185,6 +185,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\HtmlExtenstions.cs" />
     <Compile Include="Global.asax.cs">
@@ -194,6 +195,7 @@
     <Compile Include="Models\Message\ErrorMessage.cs" />
     <Compile Include="Models\Message\LogMessage.cs" />
     <Compile Include="Models\IMessage.cs" />
+    <Compile Include="Models\Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\ErrorMessage_Service.cs" />
     <Compile Include="Service\LogMessage_Service.cs" />
@@ -202,6 +204,8 @@
     <Compile Include="Signalr\Libvirt_ManagerHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AutoMapper\Mapper.cs" />
+    <Compile Include="ViewModels\Storage\Dir_Pool.cs" />
+    <Compile Include="ViewModels\Storage\Storage_Pool.cs" />
     <Compile Include="ViewModels\TreeViewModel.cs" />
     <Compile Include="ViewModels\Host\Host.cs" />
     <Compile Include="ViewModels\Host\virConnectOpen.cs" />
@@ -308,6 +312,7 @@
     <Content Include="images\performance-monitoring.png" />
     <Content Include="images\player_pause.png" />
     <Content Include="images\player_play.png" />
+    <Content Include="images\pool.png" />
     <Content Include="images\processor.png" />
     <Content Include="images\server_connect.png" />
     <Content Include="images\server_multiple.png" />
@@ -428,6 +433,9 @@
     <Content Include="Views\Message\_Partial_Log_Listing.cshtml" />
     <Content Include="Views\Message\_Partial_Error_Event.cshtml" />
     <Content Include="x64\xml2-config" />
+    <Content Include="Views\Storage\_Partial_CreatePool.cshtml" />
+    <Content Include="Views\Domain\_Partial_NewDomain.cshtml" />
+    <Content Include="Views\Storage\_Partial_CreateDirPool.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
