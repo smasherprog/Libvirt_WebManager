@@ -185,6 +185,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\DomainController.cs" />
+    <Compile Include="Controllers\HostController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\HtmlExtenstions.cs" />
@@ -200,10 +202,13 @@
     <Compile Include="Service\ErrorMessage_Service.cs" />
     <Compile Include="Service\LogMessage_Service.cs" />
     <Compile Include="Service\Message_Manager.cs" />
+    <Compile Include="Service\Nodes\NodeBuilder.cs" />
     <Compile Include="Service\VM_Manager.cs" />
     <Compile Include="Signalr\Libvirt_ManagerHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AutoMapper\Mapper.cs" />
+    <Compile Include="Utilities\String\Formatting.cs" />
+    <Compile Include="ViewModels\Domain\New_Domain_VM.cs" />
     <Compile Include="ViewModels\Storage\Dir_Pool.cs" />
     <Compile Include="ViewModels\Storage\Storage_Pool.cs" />
     <Compile Include="ViewModels\TreeViewModel.cs" />
@@ -287,6 +292,7 @@
     <Content Include="images\add.png" />
     <Content Include="images\applications_system.png" />
     <Content Include="images\arrow_refresh.png" />
+    <Content Include="images\cd.png" />
     <Content Include="images\cd_drive.png" />
     <Content Include="images\connect_creating_256.png" />
     <Content Include="images\connect_established.png" />
@@ -326,6 +332,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\context.js" />
     <Content Include="Scripts\jquery.jgrowl.js" />
@@ -436,6 +444,7 @@
     <Content Include="Views\Storage\_Partial_CreatePool.cshtml" />
     <Content Include="Views\Domain\_Partial_NewDomain.cshtml" />
     <Content Include="Views\Storage\_Partial_CreateDirPool.cshtml" />
+    <Content Include="Views\Host\_Partial_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

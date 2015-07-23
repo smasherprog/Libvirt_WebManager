@@ -42,7 +42,7 @@
         @Html.Partial("~/Views/Message/_Partial_Error_Event.cshtml")
     </div>
 
-   
+
     <script>
         $(function () {
             $(".resizable").resizable({
@@ -50,7 +50,17 @@
                 animateEasing: 'swing',
                 imateDuration: 500
             });
+
+
         });
+        var currenturl = '';
+        function LoadMainContent(url) {
+            if (url == currenturl) return;
+            else {
+                currenturl = url;
+                $('#main_content_area').load(url);
+            }
+        }
     </script>
 </body>
 </html>

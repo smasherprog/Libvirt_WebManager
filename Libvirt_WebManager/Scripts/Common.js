@@ -39,4 +39,5 @@ $(document).ready(function () {
     $('.dropdown-toggle').dropdown();
     context.init({ preventDoubleContext: false });
     $.ajaxSetup({ cache: false });
+    Chart.defaults.global.responsive = true;
 });

@@ -83,86 +83,12 @@ namespace Libvirt_WebManager.Service
 
         public List<TreeViewModel> GetTreeData(string path)
         {
-            var nodes = new List<TreeViewModel>();
             var splits = path.Split('/').ToList();
             splits.RemoveAll(a => string.IsNullOrWhiteSpace(a));
-            var currentpath = "";
-            if (splits.Count > 0)
-            {
-
-                Libvirt.CS_Objects.Host host;
-                if (Connections.TryGetValue(splits[0].ToLower(), out host))
-                {
-                    var hostname = splits[0].ToLower();
-
-                    if (splits.Count == 2)
-                    {
-                        Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types typ;
-                        if (Enum.TryParse(splits[1], out typ))
-                        {
-                            currentpath = "/" + hostname + "/" + typ.ToString() + "/";
-                            if (typ == TreeViewModel.Node_Types.Domains)
-                            {
-                                Libvirt.CS_Objects.Domain[] d;
-                                if (host.virConnectListAllDomains(out d, Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT) > -1)
-                                {
-                                    try
-                                    {
-                                        foreach (var domain in d)
-                                        {
-                                            var dname = domain.virDomainGetName();
-                                            nodes.Add(new TreeViewModel { IsDirectory = false, Node_Type = TreeViewModel.Node_Types.Domain, Name = dname, Path = currentpath + dname + "/", Host = hostname });
-                                            domain.Dispose();
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Debug.WriteLine(e.Message);
-                                    }
-
-                                }
-                            }
-                            else if (typ == TreeViewModel.Node_Types.Interfaces)
-                            {
-
-                            }
-                            else if (typ == TreeViewModel.Node_Types.Storage_Pools)
-                            {
-
-                                Libvirt.CS_Objects.Storage_Pool[] p;
-                                if (host.virConnectListAllStoragePools(out p, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE | Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE | Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_AUTOSTART) > -1)
-                                {
-                                    foreach (var pool in p)
-                                    {
-                                        var dname = pool.virStoragePoolGetName();
-                                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Storage_Pool, Name = dname, Path = currentpath + dname + "/", Host = hostname });
-                                        pool.Dispose();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if (splits.Count == 1)
-                    {
-                        currentpath = "/" + hostname + "/";
-                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Domains, Name = "Domains", Path = currentpath + "Domains/", Host = hostname });
-                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Interfaces, Name = "Interfaces", Path = currentpath + "Interfaces/", Host = hostname });
-                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Storage_Pools, Name = "Storage_Pools", Path = currentpath + "Storage_Pools/", Host = hostname });
-                    }
-                    else
-                    {
-                        nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Host, Name = hostname, Path = currentpath + "/" + hostname + "/", Host = hostname });
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item in Connections)
-                {
-                    nodes.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Host, Name = item.Key, Path = currentpath + "/" + item.Key + "/", Host = item.Key });
-                }
-            }
-            return nodes;
+            if (splits.Count == 0) return Connections.Select(a => new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Host, Name = a.Key, Path = "/" + a.Key + "/", Host = a.Key }).ToList();
+            Libvirt.CS_Objects.Host host;
+            if (Connections.TryGetValue(splits[0].ToLower(), out host)) return Libvirt_WebManager.Service.Nodes.NodeBuilder.Build(splits, host);
+            return new List<TreeViewModel>();
         }
     }
 }

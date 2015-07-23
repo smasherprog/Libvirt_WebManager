@@ -556,6 +556,14 @@ ul.jqueryFileTree .storage_pool_icon {
     background: url(/images/pool.png) left top no-repeat;
     background-size: 18px;
 }
+ul.jqueryFileTree .storage_volume_iso_icon {
+    background: url(/images/cd.png) left top no-repeat;
+    background-size: 18px;
+}
+ul.jqueryFileTree .storage_volume_icon {
+    background: url(/images/harddrive.png) left top no-repeat;
+    background-size: 18px;
+}
 .dropdown-menu .add_icon {
     background: url(/images/add.png) left top no-repeat;
     background-size: 18px;

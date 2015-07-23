@@ -20,7 +20,8 @@
                         @Html.LabelFor(a => a.name)
                         @Html.TextBoxFor(a => a.name, new { @class = "form-control" })
                         @Html.ValidationMessageFor(a => a.name)
-                    </div><div class="form-group">
+                    </div>
+                    <div class="form-group">
                         @Html.LabelFor(a => a.pool_type)
                         @Html.EnumDropDownListFor(a => a.pool_type, new { @class = "form-control" })
                         @Html.ValidationMessageFor(a => a.pool_type)

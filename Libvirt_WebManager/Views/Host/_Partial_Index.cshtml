@@ -1,0 +1,107 @@
+﻿@model Libvirt_WebManager.ViewModels.Host.Host_VM
+<script>
+    var data = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: [65, 59, 80, 81, 56, 55, 40]
+            },
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
+            }
+        ]
+    };
+    $(document).ready(function () {
+        var ctx = document.getElementById("Host_CPU_Usage_Graph").getContext("2d");
+        var myNewChart = new Chart(ctx).Line(data);
+        ctx = document.getElementById("Host_Memory_Usage_Graph").getContext("2d");
+        var myNewChart2 = new Chart(ctx).Line(data);
+    });
+</script>
+<div class="row">
+    <div class="col-sm-6">
+        <dl class="dl-horizontal">
+            <dt>
+                Host Name
+            </dt>
+            <dd>
+                @Model.Hostname
+            </dd>
+            <dt>
+                Hypervisor
+            </dt>
+            <dd>
+                @Model.Hypervisor
+            </dd>
+            <dt>
+                Cpu Model
+            </dt>
+            <dd>
+                @Model.Cpu_Model
+            </dd>
+            <dt>
+                Memory
+            </dt>
+            <dd>
+                @Model.Memory
+            </dd>
+        </dl>
+    </div>
+
+    <div class="col-sm-6">
+        <dl class="dl-horizontal">
+
+            <dt>
+                Cpu Count
+            </dt>
+            <dd>
+                @Model.Cpu_Count
+            </dd>
+
+            <dt>
+                Mhz
+            </dt>
+            <dd>
+                @Model.Mhz
+            </dd>
+
+            <dt>
+                Core Count
+            </dt>
+            <dd>
+                @Model.Cores
+            </dd>
+
+            <dt>
+                Thread Count
+            </dt>
+            <dd>
+                @Model.Threads
+            </dd>
+        </dl>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6" style="max-height:300px;">
+        <h3>Cpu Usage</h3>
+        <canvas id="Host_CPU_Usage_Graph"></canvas>
+    </div>
+    <div class="col-sm-6" style="max-height:300px;">
+        <h3>Memory Usage</h3>
+        <canvas id="Host_Memory_Usage_Graph"></canvas>
+    </div>
+</div>

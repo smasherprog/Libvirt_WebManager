@@ -24,6 +24,7 @@ namespace Libvirt_WebManager
                                  "~/Scripts/jquery.jgrowl.min.js",
                                  "~/Scripts/Libvirt.js",
                                     "~/Scripts/context.js",
+                                    "~/Scripts/Chart.min.js",
                     "~/Scripts/Common.js"
                         ));
 
