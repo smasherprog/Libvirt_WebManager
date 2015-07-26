@@ -44,10 +44,33 @@ namespace Libvirt_WebManager.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                var h = GetHost(pool._Storage_Pool.Host);
+                if (ModelState.IsValid)
+                {
+                    var p = new Libvirt.Models.Concrete.Storage_Pool();
+                    p.name = pool._Storage_Pool.name;
+                    var d = new Libvirt.Models.Concrete.Storage_Pool_Dir();
+                    p.Storage_Pool_Item = d;
+                    d.target_path = pool.path;
+                    using (var storagepool = h.virStoragePoolDefineXML(p))
+                    {
+                        var suc = storagepool.virStoragePoolBuild(Libvirt.virStoragePoolBuildFlags.VIR_STORAGE_POOL_BUILD_NEW);
+                        suc = storagepool.virStoragePoolCreate();
+                      
+                        if (suc == 0)
+                        {
+                            storagepool.virStoragePoolSetAutostart(1);
+                        }
+                        
+                    }
+                }
             }
             return PartialView(pool);
         }
-
+        public ActionResult _Partial_GetPoolInfo_TreeView(string host)
+        {
+            ViewBag.HostName = host;
+            return PartialView(GetHost(host));
+        }
     }
 }

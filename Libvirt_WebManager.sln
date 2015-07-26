@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libvirt_WebManager", "Libvirt_WebManager\Libvirt_WebManager.csproj", "{38073AC3-FCE9-42FE-B26E-CE54724EC3B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libvirt_Pinvoke", "..\Libvirt_Windows_CSharpDevelopment\Libvirt_Pinvoke\Libvirt_Pinvoke\Libvirt_Pinvoke.csproj", "{7B3896DC-19A5-46E9-9A6A-C9D459453486}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libvirt_Pinvoke", "Libvirt_Pinvoke\Libvirt_Pinvoke.csproj", "{7B3896DC-19A5-46E9-9A6A-C9D459453486}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

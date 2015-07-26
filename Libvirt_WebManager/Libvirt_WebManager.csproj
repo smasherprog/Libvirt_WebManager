@@ -14,7 +14,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Libvirt_WebManager</RootNamespace>
     <AssemblyName>Libvirt_WebManager</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -24,6 +24,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>8f0a1a2b</NuGetPackageImportStamp>
     <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -212,7 +213,6 @@
     <Compile Include="ViewModels\Storage\Dir_Pool.cs" />
     <Compile Include="ViewModels\Storage\Storage_Pool.cs" />
     <Compile Include="ViewModels\TreeViewModel.cs" />
-    <Compile Include="ViewModels\Host\Host.cs" />
     <Compile Include="ViewModels\Host\virConnectOpen.cs" />
     <Compile Include="ViewModels\Message\ErrorMessage.cs" />
     <Compile Include="ViewModels\Message\LogMessage.cs" />
@@ -307,10 +307,12 @@
     <Content Include="images\gnome_preferences_system.png" />
     <Content Include="images\gnome_session_reboot.png" />
     <Content Include="images\harddrive.png" />
+    <Content Include="images\icons.png" />
     <Content Include="images\ic_arrow_round_move_down.png" />
     <Content Include="images\input_mouse.png" />
     <Content Include="images\keyboard_archigraphs.png" />
     <Content Include="images\memory.png" />
+    <Content Include="images\minus-tree-checkbox.png" />
     <Content Include="images\monitor.png" />
     <Content Include="images\monitor_1.png" />
     <Content Include="images\networking.png" />
@@ -318,6 +320,7 @@
     <Content Include="images\performance-monitoring.png" />
     <Content Include="images\player_pause.png" />
     <Content Include="images\player_play.png" />
+    <Content Include="images\plus-tree-checkbox.png" />
     <Content Include="images\pool.png" />
     <Content Include="images\processor.png" />
     <Content Include="images\server_connect.png" />
@@ -409,7 +412,6 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\jQueryFileTree.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -435,16 +437,19 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\_Partial_Host_Listing.cshtml" />
-    <Content Include="Views\Home\_Partial_Connect_ToHost_Form.cshtml" />
-    <Content Include="Views\Home\_Partial_HostTree.cshtml" />
+    <Content Include="Views\Host\_Partial_Host_Listing.cshtml" />
+    <Content Include="Views\Host\_Partial_Connect_ToHost_Form.cshtml" />
+    <Content Include="Views\Host\_Partial_GetHosts_TreeView.cshtml" />
     <Content Include="Views\Message\_Partial_Log_Listing.cshtml" />
     <Content Include="Views\Message\_Partial_Error_Event.cshtml" />
     <Content Include="x64\xml2-config" />
     <Content Include="Views\Storage\_Partial_CreatePool.cshtml" />
     <Content Include="Views\Domain\_Partial_NewDomain.cshtml" />
     <Content Include="Views\Storage\_Partial_CreateDirPool.cshtml" />
-    <Content Include="Views\Host\_Partial_Index.cshtml" />
+    <Content Include="Views\Host\_Partial_HostInfo_maincontent.cshtml" />
+    <Content Include="Views\Host\_Partial_HostTree - Copy.cshtml" />
+    <Content Include="Views\Host\_Partial_GetHostChildren_TreeView.cshtml" />
+    <Content Include="Views\Storage\_Partial_GetPoolInfo_TreeView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

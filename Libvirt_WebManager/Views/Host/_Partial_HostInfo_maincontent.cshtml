@@ -1,4 +1,8 @@
-﻿@model Libvirt_WebManager.ViewModels.Host.Host_VM
+﻿@model Libvirt.CS_Objects.Host
+@{
+    Libvirt._virNodeInfo info;
+    Model.virNodeGetInfo(out info);
+}
 <script>
     var data = {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -39,29 +43,28 @@
                 Host Name
             </dt>
             <dd>
-                @Model.Hostname
+                @Model.virConnectGetHostname()
             </dd>
             <dt>
                 Hypervisor
             </dt>
             <dd>
-                @Model.Hypervisor
+                @Model.virConnectGetType()
             </dd>
             <dt>
                 Cpu Model
             </dt>
             <dd>
-                @Model.Cpu_Model
+                @info.model
             </dd>
             <dt>
                 Memory
             </dt>
             <dd>
-                @Model.Memory
+                @Libvirt_WebManager.Utilities.String.Formatting.Format(info.memory)
             </dd>
         </dl>
     </div>
-
     <div class="col-sm-6">
         <dl class="dl-horizontal">
 
@@ -69,28 +72,28 @@
                 Cpu Count
             </dt>
             <dd>
-                @Model.Cpu_Count
+                @info.cpus
             </dd>
 
             <dt>
                 Mhz
             </dt>
             <dd>
-                @Model.Mhz
+                @info.mhz
             </dd>
 
             <dt>
                 Core Count
             </dt>
             <dd>
-                @Model.Cores
+                @info.cores
             </dd>
 
             <dt>
                 Thread Count
             </dt>
             <dd>
-                @Model.Threads
+                @info.threads
             </dd>
         </dl>
     </div>

@@ -49,9 +49,12 @@ var context = context || (function () {
 	function buildMenu(data, id, subMenu) {
 		var subClass = (subMenu) ? ' dropdown-context-sub' : '',
 			compressed = options.compress ? ' compressed-context' : '',
-			$menu = $('<ul class="dropdown-menu dropdown-context' + subClass + compressed+'" id="dropdown-' + id + '"></ul>'),
+			$menu = $('<ul class="dropdown-menu dropdown-context' + subClass + compressed+'" id="' + id + '"></ul>'),
 			linkTarget = '',
         	i;
+	
+		
+
         for(i = 0; i<data.length; i++) {
         	if (typeof data[i].divider !== 'undefined') {
 				$menu.append('<li class="divider"></li>');
@@ -88,9 +91,8 @@ var context = context || (function () {
 
 	function addContext(selector, data) {
 
-		var d = new Date(),
-			id = d.getTime(),
-			$menu = buildMenu(data, id);
+	    var id = (selector + 'drop').replace("#", "");
+        $menu = buildMenu(data, id);
 
 		$('body').append($menu);
 
@@ -101,10 +103,10 @@ var context = context || (function () {
 
 			$('.dropdown-context:not(.dropdown-context-sub)').hide();
 
-			$dd = $('#dropdown-' + id);
+			$dd = $('#' + id);
 			if (typeof options.above == 'boolean' && options.above) {
 				$dd.addClass('dropdown-context-up').css({
-					top: e.pageY - 20 - $('#dropdown-' + id).height(),
+				    top: e.pageY - 20 - $('#' + id).height(),
 					left: e.pageX - 13
 				}).fadeIn(options.fadeSpeed);
 			} else if (typeof options.above == 'string' && options.above == 'auto') {
@@ -126,7 +128,8 @@ var context = context || (function () {
 	}
 
 	function destroyContext(selector) {
-		$(document).off('contextmenu', selector).off('click', '.context-event');
+	    $(document).off('contextmenu', '#'+selector).off('click', '.context-event');
+	    $('#' + selector + 'drop').remove();
 	}
 
 	return {

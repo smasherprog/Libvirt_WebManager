@@ -107,15 +107,16 @@ namespace Libvirt_WebManager.Service.Nodes
             try
             {
 
-                if (nodeh.host.virConnectListAllStoragePools(out p, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE | Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE | Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_AUTOSTART) > -1)
-                {
-                    foreach (var pool in p)
-                    {
-                        var dname = pool.virStoragePoolGetName();
-                        ret.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Storage_Pool, Name = dname, Path = nodeh.currentpath + dname + "/", Host = nodeh.hostname });
-                        pool.Dispose();
-                    }
-                }
+                //if (nodeh.host.virConnectListAllStoragePools(out p, Libvirt.virConnectListAllStoragePoolsFlags@VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT) > -1)
+                //{
+                //    foreach (var pool in p)
+                //    {
+                //        var dname = pool.virStoragePoolGetName();
+
+                //        ret.Add(new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Storage_Pool, Name = dname, Path = nodeh.currentpath + dname + "/", Host = nodeh.hostname });
+                //        pool.Dispose();
+                //    }
+                //}
             }
             catch (Exception e)
             {

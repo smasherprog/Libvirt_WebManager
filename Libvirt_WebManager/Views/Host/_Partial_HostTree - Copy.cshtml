@@ -1,0 +1,77 @@
+@model IEnumerable<Libvirt_WebManager.ViewModels.TreeViewModel>
+@{
+    var uniqueid = DateTime.Now.Ticks;
+}
+@if (Model.Any())
+{
+    <ul id="_@uniqueid"></ul>
+    <script>
+        $(document).ready(function () {
+
+            @foreach (var item in Model)
+        {
+            if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Domains)
+            {
+                <text>
+            addnode('#_@uniqueid', '@item.UniqueID', '<span class="icon @(item.Node_Type.ToString().ToLower())_icon"></span>@item.Name', '@Url.Action("GetHosts", "Home", new { dir = item.Path })');
+            context.attach('#@item.UniqueID', [{ text: "<div class='add_icon'>New VM</div>", action: function () { Libvirt.UI.OpenDialog('@Url.Action("_Partial_NewDomain", "Domain", new { host = item.Host })'); } }]);
+
+            </text>
+            } else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Interfaces)
+            {
+                <text>
+            addnode('#_@uniqueid', '@item.UniqueID', '<span class="icon @(item.Node_Type.ToString().ToLower())_icon"></span>@item.Name', '@Url.Action("GetHosts", "Home", new { dir = item.Path })');
+            context.attach('#@item.UniqueID', [{ text: "<div class='add_icon'>New Interface</div>", action: function () { Libvirt.UI.OpenDialog('@Url.Action("_Partial_NewInterface", new { host = item.Host })'); } }]);
+
+            </text>
+                }
+                else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Storage_Pools)
+                {
+                <text>
+            addnode('#_@uniqueid', '@item.UniqueID', '<span class="icon @(item.Node_Type.ToString().ToLower())_icon"></span>@item.Name', '@Url.Action("GetHosts", "Home", new { dir = item.Path })');
+            context.attach('#@item.UniqueID', [{ text: "<div class='add_icon'>New Storage Pool</div>", action: function () { Libvirt.UI.OpenDialog('@Url.Action("_Partial_CreatePool", "Storage", new { host = item.Host })'); } }]);
+
+            </text>
+            }else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Domain)
+            {
+                <text>
+            addnode('#_@uniqueid', '@item.UniqueID', '<span class="icon @(item.Node_Type.ToString().ToLower())_icon"></span>@item.Name', '@Url.Action("GetHosts", "Home", new { dir = item.Path })');
+
+            context.attach('#@item.UniqueID', [
+                { text: "<div class='connect_icon'>Connect</div>", href: '#', action: function () { } },
+                { text: "<div class='settings_icon'>Settings</div>", href: '#', action: function () { } },
+                { text: "<div class='start_icon'>Start</div>", href: '#', action: function () { } },
+                { text: "<div class='shutdown_icon'>ShutDown</div>", href: '#', action: function () { } },
+                { text: "<div class='migrate_icon'>Migrate</div>", href: '#', action: function () { } },
+                { text: "<div class='edit_icon'>Rename</div>", href: '#', action: function () { } },
+                { text: "<div class='delete_icon'>Delete</div>", href: '#', action: function () { } },
+            ]);
+
+
+            </text>
+            } else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Host)
+            {
+                <text>
+            addnode('#_@uniqueid', '@item.UniqueID', '<span class="icon @(item.Node_Type.ToString().ToLower())_icon"></span>@item.Name', '@Url.Action("GetHosts", "Home", new { dir = item.Path })');
+            </text>
+
+            }  else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Storage_Volume)
+                {
+                    <text>
+
+            addnode('#_@uniqueid', '@item.UniqueID', '<span class="icon @(item.Node_Type.ToString().ToLower() + (item.Name.ToLower().EndsWith(".iso") ? "_iso" : ""))_icon"></span>@item.Name', '@Url.Action("GetHosts", "Home", new { dir = item.Path })');
+            </text>
+          }  else if (item.Node_Type == Libvirt_WebManager.ViewModels.TreeViewModel.Node_Types.Storage_Pool)
+                {
+                    <text>
+
+            addnode('#_@uniqueid', '@item.UniqueID', '<span class="icon @(item.Node_Type.ToString().ToLower())_icon"></span>@item.Name', '@Url.Action("GetHosts", "Home", new { dir = item.Path })');
+            
+            </text>
+            }
+        }
+
+        });
+    </script>
+}
+

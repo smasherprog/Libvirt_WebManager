@@ -35,8 +35,17 @@ ko.bindingHandlers.popover = {
        
     }
 };
+var currenturl = '';
+function LoadMainContent(url) {
+    if (url == currenturl) return;
+    else {
+        currenturl = url;
+        $('#main_content_area').load(url);
+    }
+}
 $(document).ready(function () {
     $('.dropdown-toggle').dropdown();
+    $("body").tooltip({ selector: '[data-toggle="tooltip"]' });
     context.init({ preventDoubleContext: false });
     $.ajaxSetup({ cache: false });
     Chart.defaults.global.responsive = true;

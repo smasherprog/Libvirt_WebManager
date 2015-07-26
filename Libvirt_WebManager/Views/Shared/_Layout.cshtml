@@ -30,7 +30,7 @@
     <div class="container-fluid body-content">
         <div class="row">
             <div class="col-lg-3">
-                @Html.Partial("~/Views/Home/_Partial_Host_Listing.cshtml")
+                @Html.Partial("~/Views/Host/_Partial_Host_Listing.cshtml")
             </div>
             <div class="col-lg-9">
                 @RenderBody()
@@ -41,26 +41,5 @@
         </div>
         @Html.Partial("~/Views/Message/_Partial_Error_Event.cshtml")
     </div>
-
-
-    <script>
-        $(function () {
-            $(".resizable").resizable({
-                animate: true,
-                animateEasing: 'swing',
-                imateDuration: 500
-            });
-
-
-        });
-        var currenturl = '';
-        function LoadMainContent(url) {
-            if (url == currenturl) return;
-            else {
-                currenturl = url;
-                $('#main_content_area').load(url);
-            }
-        }
-    </script>
 </body>
 </html>

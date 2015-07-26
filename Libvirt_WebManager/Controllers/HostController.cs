@@ -10,25 +10,32 @@ namespace Libvirt_WebManager.Controllers
 {
     public class HostController : CommonController
     {
-        public ActionResult _Partial_Index(string host, string p)
+        public ActionResult _Partial_HostInfo_maincontent(string host)
         {
-            var h = GetHost(host);
-            var ret = new Libvirt_WebManager.ViewModels.Host.Host_VM { Hostname = "Does Not exist!" };
-            if (h != null)
+            return PartialView(GetHost(host));
+        }
+        [HttpGet]
+        public ActionResult _Partial_Connect_ToHost_Form()
+        {
+            return PartialView(new Libvirt_WebManager.ViewModels.Host.virConnectOpen());
+        }
+        [HttpPost]
+        public ActionResult _Partial_Connect_ToHost_Form(Libvirt_WebManager.ViewModels.Host.virConnectOpen obj)
+        {
+            if (ModelState.IsValid)
             {
-                ret.Hostname = h.virConnectGetHostname();
-                ret.Hypervisor = h.virConnectGetType();
-                Libvirt._virNodeInfo info;
-                h.virNodeGetInfo(out info);
-                ret.Cpu_Model = info.model;
-                ret.Memory = Libvirt_WebManager.Utilities.String.Formatting.Format(info.memory);
-                ret.Cpu_Count = info.cpus.ToString();
-
-                ret.Mhz = info.mhz.ToString();
-                ret.Cores = info.cores.ToString();
-                ret.Threads = info.threads.ToString();
+                if (Libvirt_WebManager.Service.VM_Manager.Instance.virConnectOpen(obj.host_or_ip)) return CloseDialog("AddHost('" + obj.host_or_ip + "');");
             }
-            return PartialView(ret);
+            return PartialView(obj);
+        }
+        public ActionResult _Partial_GetHosts_TreeView()
+        {
+            return PartialView(Libvirt_WebManager.Service.VM_Manager.Instance.Connections);
+        }
+        public ActionResult _Partial_GetHostChildren_TreeView(string host)
+        {
+            ViewBag.HostName = host;
+            return PartialView(GetHost(host));
         }
     }
 }

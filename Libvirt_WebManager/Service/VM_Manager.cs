@@ -61,7 +61,7 @@ namespace Libvirt_WebManager.Service
         }
         public bool virConnectOpen(string hostorip)
         {
-
+            hostorip = hostorip.Replace("/", "");
             if (Connections.ContainsKey(hostorip.ToLower())) return true;
             else
             {
@@ -87,7 +87,11 @@ namespace Libvirt_WebManager.Service
             splits.RemoveAll(a => string.IsNullOrWhiteSpace(a));
             if (splits.Count == 0) return Connections.Select(a => new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Host, Name = a.Key, Path = "/" + a.Key + "/", Host = a.Key }).ToList();
             Libvirt.CS_Objects.Host host;
-            if (Connections.TryGetValue(splits[0].ToLower(), out host)) return Libvirt_WebManager.Service.Nodes.NodeBuilder.Build(splits, host);
+            if (Connections.TryGetValue(splits[0].ToLower(), out host))
+            {
+                var r =  Libvirt_WebManager.Service.Nodes.NodeBuilder.Build(splits, host);
+                return r;
+            }
             return new List<TreeViewModel>();
         }
     }
