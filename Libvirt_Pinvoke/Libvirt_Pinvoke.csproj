@@ -81,6 +81,7 @@
     <Compile Include="Models\Concrete\Features.cs" />
     <Compile Include="Models\Concrete\General_Metadata.cs" />
     <Compile Include="Models\Concrete\Device_Collection.cs" />
+    <Compile Include="Models\Concrete\Storage_Volume.cs" />
     <Compile Include="Models\Concrete\Storage_Pool.cs" />
     <Compile Include="Models\Concrete\Storage_Pool_Items.cs" />
     <Compile Include="Models\Concrete\Validator.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="CS_Objects\Storage_Pool.cs" />
     <Compile Include="Service\Concrete\General_Metadata_Validator.cs" />
     <Compile Include="Service\Concrete\Features_Validator.cs" />
+    <Compile Include="Service\Concrete\Storage_Volume_Validator.cs" />
     <Compile Include="Service\Concrete\Storage_Pool_Validator.cs" />
     <Compile Include="Service\Concrete\Memory_Allocation_Validator.cs" />
     <Compile Include="Service\Concrete\Device_Validator.cs" />

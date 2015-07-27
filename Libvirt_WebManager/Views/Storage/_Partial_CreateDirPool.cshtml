@@ -24,6 +24,10 @@
                         @Html.ValidationMessageFor(a => a.path)
                     </div>
 
+                    @Html.LabelFor(a => a.AutoStart)
+                    @Html.TextBoxFor(a => a.AutoStart)
+                    @Html.ValidationMessageFor(a => a.AutoStart)
+
                     <button class="btn btn-primary pull-right">
                         Create
                         @Html.Spinner("_Partial_CreateDirPool_Form_spinner")

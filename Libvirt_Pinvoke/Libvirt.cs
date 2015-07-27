@@ -2502,12 +2502,10 @@ namespace Libvirt
             else if (@cpuNum > 0)
             {
                 @nparams = 1;
-
             }
             else
             {
                 @nparams = 0;
-
             }
             if (@nparams > 0)
             {

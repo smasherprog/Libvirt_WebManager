@@ -99,7 +99,7 @@ namespace Libvirt.Models.Concrete
     }
     public class Device_Source_Network : IDevice_Source
     {
-        //missing auth stuff in here so it will only work with no authentication to the source target
+        //missing auth stuff in here so it will only work with no authentication to the source target for now
         public Device_Source_Network()
         {
             protocol = Protocol_Types.iscsi;

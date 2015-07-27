@@ -8,10 +8,34 @@ namespace Libvirt_WebManager.Utilities.AutoMapper
 {
     public static class Mapper<TO_TYPE> where TO_TYPE : new()
     {
-        public static TO_TYPE Map<FROM_TYPE>(FROM_TYPE obj)
+        public static TO_TYPE Map<FROM_TYPE>(FROM_TYPE obj) where FROM_TYPE : class
         {
             var to_obj = new TO_TYPE();
             var src_props = typeof(FROM_TYPE).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).ToArray();
+            var dst_props = typeof(TO_TYPE).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).ToArray();
+
+            foreach (var src_prop in src_props)
+            {
+                var dst_prop = dst_props.FirstOrDefault(a => a.Name.ToLower() == src_prop.Name.ToLower());
+                if (dst_prop != null)
+                {
+                    try
+                    {
+                        SetFieldValue(dst_prop, to_obj, src_prop.GetValue(obj));
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.Message);
+                    }
+
+                }
+            }
+            return to_obj;
+        }
+        public static TO_TYPE Map<FROM_TYPE>(ref FROM_TYPE obj) where FROM_TYPE : struct
+        {
+            var to_obj = new TO_TYPE();
+            var src_props = typeof(FROM_TYPE).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).ToArray();
             var dst_props = typeof(TO_TYPE).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).ToArray();
 
             foreach (var src_prop in src_props)

@@ -9,30 +9,12 @@
     <script src="~/signalr/hubs"></script>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
     <div class="container-fluid body-content">
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-sm-3">
                 @Html.Partial("~/Views/Host/_Partial_Host_Listing.cshtml")
             </div>
-            <div class="col-lg-9">
+            <div class="col-sm-9">
                 @RenderBody()
 
                 @Html.Partial("~/Views/Message/_Partial_Log_Listing.cshtml")

@@ -6,6 +6,7 @@
         @foreach (var item in Model)
         {
             var li_id = "x" + item.Key.Replace(".", "_");
+       
             <li id="@(li_id)">
                 <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetHostChildren_TreeView", "Host", new { host = item.Key })" />
                 <label for="item-@(li_id)" onclick="LoadMainContent('@Url.Action("_Partial_HostInfo_maincontent", "Host", new { host = item.Key})');return false;"><span></span><span class="icon host_icon"></span>@item.Key</label>

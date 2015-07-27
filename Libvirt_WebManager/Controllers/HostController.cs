@@ -24,7 +24,7 @@ namespace Libvirt_WebManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Libvirt_WebManager.Service.VM_Manager.Instance.virConnectOpen(obj.host_or_ip)) return CloseDialog("AddHost('" + obj.host_or_ip + "');");
+                if (Libvirt_WebManager.Service.VM_Manager.Instance.virConnectOpen(obj.host_or_ip)) return CloseDialog();
             }
             return PartialView(obj);
         }

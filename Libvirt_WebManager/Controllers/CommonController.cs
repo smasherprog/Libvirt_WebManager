@@ -8,9 +8,9 @@ namespace Libvirt_WebManager.Controllers
 {
     public class CommonController : Controller
     {
-        protected ActionResult CloseDialog(string javascript)
+        protected ActionResult CloseDialog()
         {
-            return Content("<div id='scriptcloserhelperthingy_123'></div><script>$('#scriptcloserhelperthingy_123').closest('.modal').modal('hide');"+ javascript + "</script>");
+            return Content("<div id='scriptcloserhelperthingy_123'></div><script>$('#scriptcloserhelperthingy_123').closest('.modal').modal('hide');</script>");
         }
         protected Libvirt.CS_Objects.Host GetHost(string hostname)
         {

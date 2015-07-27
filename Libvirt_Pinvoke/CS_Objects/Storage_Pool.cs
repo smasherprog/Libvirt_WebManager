@@ -98,13 +98,13 @@ namespace Libvirt.CS_Objects
         {
             return API.virStoragePoolUndefine(_Storage_PoolPtr);
         }
-        public Storage_Volume virStorageVolCreateXML(string xmlDesc, virStorageVolCreateFlags flags)
+        public Storage_Volume virStorageVolCreateXML(Models.Concrete.Storage_Volume xmlDesc, virStorageVolCreateFlags flags)
         {
-            return new Storage_Volume(API.virStorageVolCreateXML(_Storage_PoolPtr, xmlDesc, flags));
+            return new Storage_Volume(API.virStorageVolCreateXML(_Storage_PoolPtr, xmlDesc.To_XML(), flags));
         }
-        public Storage_Volume virStorageVolCreateXMLFrom(string xmlDesc,Storage_Volume clonevol, virStorageVolCreateFlags flags)
+        public Storage_Volume virStorageVolCreateXMLFrom(Models.Concrete.Storage_Volume xmlDesc,Storage_Volume clonevol, virStorageVolCreateFlags flags)
         {
-            return new Storage_Volume(API.virStorageVolCreateXMLFrom(_Storage_PoolPtr, xmlDesc, Storage_Volume.GetPtr(clonevol), flags));
+            return new Storage_Volume(API.virStorageVolCreateXMLFrom(_Storage_PoolPtr, xmlDesc.To_XML(), Storage_Volume.GetPtr(clonevol), flags));
         }
         public Storage_Volume virStorageVolLookupByName(string name)
         {

@@ -1,0 +1,46 @@
+@model Libvirt.CS_Objects.Host
+@{
+    var p = new Libvirt.CS_Objects.Storage_Volume[0];
+}
+@if (Model != null)
+{
+    <ul>
+        @try
+        {
+            using (Libvirt.CS_Objects.Storage_Pool pool = Model.virStoragePoolLookupByName(ViewBag.PoolName))
+            {
+                if (pool.virStoragePoolListAllVolumes(out p) > -1)
+                {
+                    foreach (var volume in p)
+                    {
+
+                        var dname = volume.virStorageVolGetName();
+                        Libvirt._virStorageVolInfo info;
+                        volume.virStorageVolGetInfo(out info);
+
+                        var li_id = "x" + ViewBag.HostName.Replace(".", "_") + "StoragePools_Volume_" + dname;
+                        <li id="@(li_id)"  data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.type.ToString()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">
+                            <a href="#">
+                                @if (dname.ToLower().EndsWith(".iso"))
+                                {
+                                    <span class="icon storage_volume_iso_icon"></span>
+                                }
+                                else
+                                {
+                                    <span class="icon storage_volume_icon"></span>
+                                }
+
+                                @dname
+                            </a>
+                        </li>
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+    </ul>
+}
+

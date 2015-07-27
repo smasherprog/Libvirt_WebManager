@@ -32,7 +32,7 @@ ko.bindingHandlers.popover = {
     },
     options: {
         trigger: "click"
-       
+
     }
 };
 var currenturl = '';
@@ -49,4 +49,43 @@ $(document).ready(function () {
     context.init({ preventDoubleContext: false });
     $.ajaxSetup({ cache: false });
     Chart.defaults.global.responsive = true;
+    $('.modal').on('hidden.bs.modal', function (event) {
+        $(this).removeClass('fv-modal-stack');
+        $('body').data('fv_open_modals', $('body').data('fv_open_modals') - 1);
+    });
+    $('.modal').on('shown.bs.modal', function (event) {
+        if (typeof ($('body').data('fv_open_modals')) == 'undefined') {
+            $('body').data('fv_open_modals', 0);
+        }
+        if ($(this).hasClass('fv-modal-stack')) {
+            return;
+        }
+        $(this).addClass('fv-modal-stack');
+        $('body').data('fv_open_modals', $('body').data('fv_open_modals') + 1);
+        $(this).css('z-index', 1040 + (10 * $('body').data('fv_open_modals')));
+        $('.modal-backdrop').not('.fv-modal-stack').css('z-index', 1039 + (10 * $('body').data('fv_open_modals')));
+        $('.modal-backdrop').not('fv-modal-stack').addClass('fv-modal-stack');
+    });
+    window.addEventListener("submit", function (e) {
+        var form = e.target;
+        if (form.getAttribute("enctype") === "multipart/form-data") {
+            if (form.dataset.ajax) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        if (form.dataset.ajaxUpdate) {
+                            var updateTarget = document.querySelector(form.dataset.ajaxUpdate);
+                            if (updateTarget) {
+                                updateTarget.innerHTML = xhr.responseText;
+                            }
+                        }
+                    }
+                };
+                xhr.send(new FormData(form));
+            }
+        }
+    }, true);
 });

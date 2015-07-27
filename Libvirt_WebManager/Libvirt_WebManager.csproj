@@ -209,7 +209,10 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AutoMapper\Mapper.cs" />
     <Compile Include="Utilities\String\Formatting.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Domain\New_Domain_VM.cs" />
+    <Compile Include="ViewModels\Storage\Storage_Volume_Down.cs" />
+    <Compile Include="ViewModels\Storage\Storage_Volume.cs" />
     <Compile Include="ViewModels\Storage\Dir_Pool.cs" />
     <Compile Include="ViewModels\Storage\Storage_Pool.cs" />
     <Compile Include="ViewModels\TreeViewModel.cs" />
@@ -450,6 +453,8 @@
     <Content Include="Views\Host\_Partial_HostTree - Copy.cshtml" />
     <Content Include="Views\Host\_Partial_GetHostChildren_TreeView.cshtml" />
     <Content Include="Views\Storage\_Partial_GetPoolInfo_TreeView.cshtml" />
+    <Content Include="Views\Storage\_Partial_GetVolumes_TreeView.cshtml" />
+    <Content Include="Views\Storage\_Partial_CreateVolume.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -458,7 +463,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libvirt_Windows_CSharpDevelopment\Libvirt_Pinvoke\Libvirt_Pinvoke\Libvirt_Pinvoke.csproj">
+    <ProjectReference Include="..\Libvirt_Pinvoke\Libvirt_Pinvoke.csproj">
       <Project>{7b3896dc-19a5-46e9-9a6a-c9d459453486}</Project>
       <Name>Libvirt_Pinvoke</Name>
     </ProjectReference>

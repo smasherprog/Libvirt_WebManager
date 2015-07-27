@@ -136,10 +136,9 @@
         background-size: 18px;
     }
 
-
-body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+.pie-legend > li > span {
+padding:5px;
+height:10px;
 }
 
 .field-validation-error {

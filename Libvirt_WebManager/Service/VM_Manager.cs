@@ -23,10 +23,13 @@ namespace Libvirt_WebManager.Service
         public static void Start()
         {
             _instance = new VM_Manager(GlobalHost.ConnectionManager.GetHubContext<Libvirt_ManagerHub>());
+            Debug.WriteLine("Starting Libvirt Library");
         }
         public static void Stop()
         {
             _instance.Dispose();
+            _instance = null;
+            Debug.WriteLine("Stopping Libvirt Library");
         }
         public void Dispose()
         {
@@ -57,7 +60,20 @@ namespace Libvirt_WebManager.Service
         }
         void virErrorFunc(IntPtr userData, Libvirt.virErrorPtr error)
         {
-            _hubContext.Clients.All.ErrorEvent(Libvirt.API.MarshalErrorPtr(error));
+            var msg = Libvirt.API.MarshalErrorPtr(error);
+            var errmsg = new Libvirt_WebManager.Models.Message.ErrorMessage
+            {
+                Additional_Info_1 = msg.str1,
+                Additional_Info_2 = msg.str2,
+                Additional_Info_3 = msg.str3,
+                Body = msg.message,
+                Code = msg.code,
+                Message_Type = Models.Message_Types.danger,
+                Time = DateTime.Now,
+                Title = "Libvirt Error"
+            };
+
+            Message_Manager.Send(errmsg);
         }
         public bool virConnectOpen(string hostorip)
         {
@@ -80,19 +96,5 @@ namespace Libvirt_WebManager.Service
             }
         }
 
-
-        public List<TreeViewModel> GetTreeData(string path)
-        {
-            var splits = path.Split('/').ToList();
-            splits.RemoveAll(a => string.IsNullOrWhiteSpace(a));
-            if (splits.Count == 0) return Connections.Select(a => new TreeViewModel { IsDirectory = true, Node_Type = TreeViewModel.Node_Types.Host, Name = a.Key, Path = "/" + a.Key + "/", Host = a.Key }).ToList();
-            Libvirt.CS_Objects.Host host;
-            if (Connections.TryGetValue(splits[0].ToLower(), out host))
-            {
-                var r =  Libvirt_WebManager.Service.Nodes.NodeBuilder.Build(splits, host);
-                return r;
-            }
-            return new List<TreeViewModel>();
-        }
     }
 }

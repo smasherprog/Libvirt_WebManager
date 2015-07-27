@@ -2,38 +2,44 @@
 @{
     Libvirt._virNodeInfo info;
     Model.virNodeGetInfo(out info);
+    Libvirt._virNodeCPUStats[] cpustats = null;
+    Model.virNodeGetCPUStats(-1, out cpustats);
+    Libvirt._virNodeMemoryStats[] memstats = null;
+    Model.virNodeGetMemoryStats(-1, out memstats);
 }
 <script>
-    var data = {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [
+    var cpudata = [
+        @foreach (var item in cpustats)
+        {
+            if(item.field == "idle")
             {
-                label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.2)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(151,187,205,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(151,187,205,1)",
-                data: [28, 48, 40, 19, 86, 27, 90]
+    <text>{value: @item.value,color: "#46BFBD",highlight: "#5AD3D1",label: "@item.field"},</text>
+            } else {
+    <text>{ value: @item.value, color: "#F7464A",highlight: "#FF5A5E",label: "@item.field"},</text>
             }
-        ]
-    };
+
+        }
+    ];
+    var memdata = [
+        @foreach (var item in memstats.Where(a=>a.field.ToLower() != "total"))
+        {
+            if(item.field == "free")
+            {
+        <text> { value: @((item.value +1) / 1024), color: "#46BFBD", highlight: "#5AD3D1",label: "@item.field" },</text>
+            } else{
+        <text> { value: @((item.value+1) / 1024), color: "#F7464A", highlight: "#FF5A5E", label: "@item.field"}, </text>
+            }
+
+        }
+    ];
+
     $(document).ready(function () {
         var ctx = document.getElementById("Host_CPU_Usage_Graph").getContext("2d");
-        var myNewChart = new Chart(ctx).Line(data);
+        var myNewChart = new Chart(ctx).Pie(cpudata);
+        $('#cpulegend').html(myNewChart.generateLegend());
         ctx = document.getElementById("Host_Memory_Usage_Graph").getContext("2d");
-        var myNewChart2 = new Chart(ctx).Line(data);
+        var myNewChart2 = new Chart(ctx).Pie(memdata);
+        $('#memlegend').html(myNewChart2.generateLegend());
     });
 </script>
 <div class="row">
@@ -61,7 +67,7 @@
                 Memory
             </dt>
             <dd>
-                @Libvirt_WebManager.Utilities.String.Formatting.Format(info.memory)
+                @Libvirt_WebManager.Utilities.String.Formatting.Format(((long)info.memory)*1024)
             </dd>
         </dl>
     </div>
@@ -101,10 +107,11 @@
 <div class="row">
     <div class="col-sm-6" style="max-height:300px;">
         <h3>Cpu Usage</h3>
+        <div id="cpulegend"></div>
         <canvas id="Host_CPU_Usage_Graph"></canvas>
     </div>
     <div class="col-sm-6" style="max-height:300px;">
-        <h3>Memory Usage</h3>
+        <h3>Memory Usage</h3><div id="memlegend"></div>
         <canvas id="Host_Memory_Usage_Graph"></canvas>
     </div>
 </div>
