@@ -2940,6 +2940,11 @@ namespace Libvirt
         {
             return PInvoke.virStorageVolUpload(@vol, @stream, @offset, @length, @flags);
         }
+
+        public static virConnectPtr virStoragePoolGetConnect(virStoragePoolPtr vol)
+        {
+            return PInvoke.virStoragePoolGetConnect(vol);
+        }
         public static int virStorageVolWipe(virStorageVolPtr @conn, uint flags = 0)
         {
             return PInvoke.virStorageVolWipe(@conn, flags);
@@ -4001,7 +4006,10 @@ namespace Libvirt
             return PInvoke.virDomainHasCurrentSnapshot(domain, flags);
         }
 
-
+        public static virConnectPtr virStorageVolGetConnect(virStorageVolPtr _Storage_VolumePtr)
+        {
+            return PInvoke.virStorageVolGetConnect(_Storage_VolumePtr);
+        }
     }
 
 

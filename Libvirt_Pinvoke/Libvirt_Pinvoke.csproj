@@ -69,6 +69,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CS_Objects\Domain.cs" />
+    <Compile Include="CS_Objects\Extensions\Storage_Volume_Extensions.cs" />
     <Compile Include="CS_Objects\Host.cs" />
     <Compile Include="CS_Objects\Interface.cs" />
     <Compile Include="CS_Objects\Stream.cs" />

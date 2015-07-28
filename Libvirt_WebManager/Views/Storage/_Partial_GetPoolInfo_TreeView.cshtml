@@ -16,7 +16,7 @@
             
                     pool.virStoragePoolGetInfo(out info);
                     
-                    var li_id = "x" + ViewBag.HostName.Replace(".", "_") + "StoragePools_" + dname;
+                    var li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_StoragePools_" + dname;
                     <li id="@(li_id)" data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.state.ToString()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>available:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.available)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">
                         <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetVolumes_TreeView", "Storage", new { host = ViewBag.HostName, pool = dname })" />
                         <label for="item-@(li_id)" onclick="return false;" ><span></span><span class="icon storage_pool_icon"></span>@dname</label>
@@ -39,8 +39,9 @@
                     var dname = pool.virStoragePoolGetName();
                     Libvirt._virStoragePoolInfo info;
                     pool.virStoragePoolGetInfo(out info);
-                    var li_id = "x" + ViewBag.HostName.Replace(".", "_") + "StoragePools_" + dname;
+                    var li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_StoragePools_" + dname;
             <text>
+            registercallsbacks('@li_id');
             context.attach('#@(li_id)', [{ text: "<div class='add_icon'>New Volume</div>", action: function () { Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_CreateVolume", "Storage", new { host = ViewBag.HostName, pool = dname }))'); } }]);
             </text>
 

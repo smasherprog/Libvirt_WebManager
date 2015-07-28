@@ -204,6 +204,7 @@
     <Compile Include="Service\LogMessage_Service.cs" />
     <Compile Include="Service\Message_Manager.cs" />
     <Compile Include="Service\Nodes\NodeBuilder.cs" />
+    <Compile Include="Service\Storage_Service.cs" />
     <Compile Include="Service\VM_Manager.cs" />
     <Compile Include="Signalr\Libvirt_ManagerHub.cs" />
     <Compile Include="Startup.cs" />

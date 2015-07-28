@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Libvirt_Pinvoke.CS_Objects.Extensions;
 
 namespace Libvirt_WebManager.Controllers
 {
@@ -107,13 +102,24 @@ namespace Libvirt_WebManager.Controllers
                 {
                     var t = new Libvirt.Service.Concrete.Storage_Volume_Validator();
                     var v = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Storage_Volume>.Map(volume);
-
+                    v.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GB;
                     if (ModelState.IsValid)
                     {
                         t.Validate(new Libvirt_WebManager.Models.Validator(ModelState), v, p);
                         if (ModelState.IsValid)
                         {
-                            return PartialView("_Partial_CreateDirPool", new ViewModels.Storage.Storage_Volume());
+                            if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
+                            {
+                                v.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
+                                v.capacity = v.allocation = File.ContentLength;
+                                using (var storagevol = p.virStorageVolCreateXML(v, Libvirt.virStorageVolCreateFlags.VIR_DEFAULT))
+                                {
+                                    if (storagevol.IsValid)
+                                    {
+                                        storagevol.Upload(File.InputStream);
+                                    }
+                                }
+                            }
                         }
                     }
                 }

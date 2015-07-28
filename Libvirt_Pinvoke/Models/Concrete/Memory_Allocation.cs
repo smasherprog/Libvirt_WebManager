@@ -9,7 +9,7 @@ namespace Libvirt.Models.Concrete
 {
     public class Memory_Allocation : IXML, IValidation
     {
-        public enum UnitTypes { b, KB, k, KiB, MB, M, MiB, GB, G, GiB, TB, T, TiB };
+        public enum UnitTypes { B, KB, K, KiB, MB, M, MiB, GB, G, GiB, TB, T, TiB };
         public Memory_Allocation()
         {
             Reset();

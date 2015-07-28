@@ -11,6 +11,25 @@
                 console.log('hide');
             }
         }
+        function fileselected() {
+            var x = document.getElementById('Volume_File')
+            if ('files' in x) {
+                if (x.files.length == 0) {
+                    txt = "Select one or more files.";
+                } else {
+                    for (var i = 0; i < x.files.length; i++) {
+                        var file = x.files[i];
+                        if ('size' in file) {
+                            if (file.size > 0) {
+                                var present = Math.floor(file.size / 1000000000) + 1;
+                                $('#Volume_capacity').val(present);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         $(document).ready(function () {
             console.log('got');
             $('#Volume_Volume_Type').change(function () {
@@ -18,16 +37,16 @@
             });
             Storage_Volume_Volume_Typeupdate();
         });
-    </script>
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Create Storage Volume -@Model.Volume.Host-</h4>
-    </div>
-    <div class="modal-body">
-        @using (Ajax.BeginForm("_Partial_CreateVolume", Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_CreateVolume_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_CreateVolume_Form_spinner" }, new { enctype = "multipart/form-data" }))
-        {
+    </script>@using (Ajax.BeginForm("_Partial_CreateVolume", Html.Controller(), null, new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_CreateVolume_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_CreateVolume_Form_spinner" }, new { enctype = "multipart/form-data" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Create Storage Volume -@Model.Volume.Host-</h4>
+        </div>
+        <div class="modal-body">
+
             <div class="row">
                 <div class="col-sm-12">
 
@@ -48,8 +67,13 @@
                     </div>
                     <div id="FileArea" class="form-group-sm">
                         @Html.LabelFor(a => a.Volume.File)
-                        <input type="file" name="File" class="form-control" />
+                        <input type="file" id="Volume_File" name="File" class="form-control" onchange="fileselected();" />
                         @Html.ValidationMessageFor(a => a.Volume.File)
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" style="width:0;">
+                                0%
+                            </div>
+                        </div>
                     </div>
                     <h3>Pool Details:</h3>
                     <dl class="dl-horizontal">
@@ -92,15 +116,16 @@
                         @Html.ValidationMessageFor(a => a.Volume.capacity)
                     </div>
 
-                    <button class="btn btn-primary pull-right">
-                        Create
-                        @Html.Spinner("_Partial_CreateVolume_Form_spinner")
-                    </button>
+
                 </div>
             </div>
-        }
-    </div>
-    <div class="modal-footer">
 
-    </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary pull-right">
+                Create
+                @Html.Spinner("_Partial_CreateVolume_Form_spinner")
+            </button>
+        </div>
+    }
 </div>

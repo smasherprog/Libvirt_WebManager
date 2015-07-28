@@ -73,6 +73,15 @@ $(document).ready(function () {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 var xhr = new XMLHttpRequest();
+                var progressbar = $(form).find('.progress-bar');
+                if (progressbar.length > 0) {
+                    xhr.upload.onprogress = function (e) {
+                        var done = e.position || e.loaded, total = e.totalSize || e.total;
+                        var present = Math.floor(done / total * 100);
+                        $(progressbar).css('width', present + '%');
+                        $(progressbar).html(present + '%');
+                    }
+                }
                 xhr.open(form.method, form.action);
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
@@ -84,6 +93,7 @@ $(document).ready(function () {
                         }
                     }
                 };
+
                 xhr.send(new FormData(form));
             }
         }
