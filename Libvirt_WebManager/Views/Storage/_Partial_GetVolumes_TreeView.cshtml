@@ -19,8 +19,8 @@
                         volume.virStorageVolGetInfo(out info);
 
                         var li_id = "x" + ViewBag.HostName.Replace(".", "_") + "StoragePools_Volume_" + dname;
-                        <li id="@(li_id)"  data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.type.ToString()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">
-                            <a href="#">
+                        <li id="@(li_id)">
+                            <a href="#" data-html="true" data-toggle="tooltip" data-placement="right" title="Volume:@dname<br>Type:@info.type.ToString()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">
                                 @if (dname.ToLower().EndsWith(".iso"))
                                 {
                                     <span class="icon storage_volume_iso_icon"></span>

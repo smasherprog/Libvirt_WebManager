@@ -201,9 +201,11 @@
     <Compile Include="Models\Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\ErrorMessage_Service.cs" />
+    <Compile Include="Service\Interface\IService.cs" />
     <Compile Include="Service\LogMessage_Service.cs" />
     <Compile Include="Service\Message_Manager.cs" />
     <Compile Include="Service\Nodes\NodeBuilder.cs" />
+    <Compile Include="Service\Domain_Service.cs" />
     <Compile Include="Service\Storage_Service.cs" />
     <Compile Include="Service\VM_Manager.cs" />
     <Compile Include="Signalr\Libvirt_ManagerHub.cs" />
@@ -450,12 +452,13 @@
     <Content Include="Views\Storage\_Partial_CreatePool.cshtml" />
     <Content Include="Views\Domain\_Partial_NewDomain.cshtml" />
     <Content Include="Views\Storage\_Partial_CreateDirPool.cshtml" />
-    <Content Include="Views\Host\_Partial_HostInfo_maincontent.cshtml" />
-    <Content Include="Views\Host\_Partial_HostTree - Copy.cshtml" />
+    <Content Include="Views\Host\_Partial_HostInfo_MainContent.cshtml" />
     <Content Include="Views\Host\_Partial_GetHostChildren_TreeView.cshtml" />
     <Content Include="Views\Storage\_Partial_GetPoolInfo_TreeView.cshtml" />
     <Content Include="Views\Storage\_Partial_GetVolumes_TreeView.cshtml" />
     <Content Include="Views\Storage\_Partial_CreateVolume.cshtml" />
+    <Content Include="Views\Storage\_Partial_PoolInfo_MainContent.cshtml" />
+    <Content Include="Views\Domain\_Partial_OS_PoolVolume_Selector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

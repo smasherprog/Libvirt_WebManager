@@ -12,7 +12,9 @@ namespace Libvirt_WebManager.Controllers
     {
         public ActionResult _Partial_HostInfo_maincontent(string host)
         {
-            return PartialView(GetHost(host));
+            var v = PartialView(GetHost(host));
+            Debug.WriteLine("got");
+            return v;
         }
         [HttpGet]
         public ActionResult _Partial_Connect_ToHost_Form()

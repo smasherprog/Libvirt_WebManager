@@ -9,27 +9,63 @@
     </div>
     <div class="modal-body">
         @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_NewDomain_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_NewDomain_Form_spinner" }))
-        {    <div class="row">
-            <div class="col-sm-12">
+        {
+            <div class="row">
+                <div class="col-sm-12">
 
-                @Html.ValidationSummary()
-                @Html.HiddenFor(a => a.Domain.Host)
-                <div class="form-group">
-                    @Html.LabelFor(a => a.Domain.Name)
-                    @Html.TextBoxFor(a => a.Domain.Name, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(a => a.Domain.Name)
+                    @Html.ValidationSummary()
+
+                    @Html.HiddenFor(a => a.Domain.Host)
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.Domain.Name)
+                        @Html.TextBoxFor(a => a.Domain.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(a => a.Domain.Name)
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.OS_Options)
+                        @Html.DropDownListFor(a => a.OS_Options, Model.InstallOptions, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(a => a.OS_Options)
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(a => a.Domain.Cpus)
+                                @Html.TextBoxFor(a => a.Domain.Cpus, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               min = 1,
+                               step = 1,
+                               max = Model.Info.cpus
+                           })
+                                @Html.ValidationMessageFor(a => a.Domain.Cpus)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.LabelFor(a => a.Domain.Ram)
+                            <div class="input-group">
+                               
+                                @Html.TextBoxFor(a => a.Domain.Ram, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               aria_describedby = "basic-addon2",
+                               min = 1,
+                               step = 1,
+                               max = (Model.Info.memory / 1024) - 1
+                           })
+                                <span class="input-group-addon">MB</span>
+                                @Html.ValidationMessageFor(a => a.Domain.Ram)
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary pull-right">
+                        Create
+                        @Html.Spinner("_Partial_NewDomain_Form_spinner")
+                    </button>
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(a => a.OS_Options)
-                    @Html.DropDownListFor(a => a.OS_Options, Model.InstallOptions, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(a => a.OS_Options)
-                </div>
-                <button class="btn btn-primary pull-right">
-                    Create
-                    @Html.Spinner("_Partial_NewDomain_Form_spinner")
-                </button>
             </div>
-        </div>
         }
     </div>
 

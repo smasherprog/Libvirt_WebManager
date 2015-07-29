@@ -1,10 +1,15 @@
 ﻿using System.Web.Mvc;
-using Libvirt_Pinvoke.CS_Objects.Extensions;
+
 
 namespace Libvirt_WebManager.Controllers
 {
     public class StorageController : CommonController
     {
+        private Service.Storage_Service _Storage_Service;
+        public StorageController()
+        {
+            _Storage_Service = new Service.Storage_Service(new Libvirt_WebManager.Models.Validator(ModelState));
+        }
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
@@ -39,23 +44,7 @@ namespace Libvirt_WebManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                var h = GetHost(pool._Storage_Pool.Host);
-                if (ModelState.IsValid)
-                {
-                    var p = new Libvirt.Models.Concrete.Storage_Pool();
-                    p.name = pool._Storage_Pool.name;
-                    var d = new Libvirt.Models.Concrete.Storage_Pool_Dir();
-                    p.Storage_Pool_Item = d;
-                    d.target_path = pool.path;
-                    using (var storagepool = h.virStoragePoolDefineXML(p))
-                    {
-                        var suc = storagepool.virStoragePoolBuild(Libvirt.virStoragePoolBuildFlags.VIR_STORAGE_POOL_BUILD_NEW);
-                        if (storagepool.virStoragePoolCreate() == 0)
-                        {//succesfully created the pool
-                            if (pool.AutoStart) storagepool.virStoragePoolSetAutostart(1);
-                        }
-                    }
-                }
+                _Storage_Service.CreatePool_Dir(pool);
             }
             return PartialView(pool);
         }
@@ -74,68 +63,28 @@ namespace Libvirt_WebManager.Controllers
         [HttpGet]
         public ActionResult _Partial_CreateVolume(string host, string pool)
         {
-            var h = GetHost(host);
-            using (var p = h.virStoragePoolLookupByName(pool))
-            {
-                if (p.IsValid)
-                {
-                    var svd = new ViewModels.Storage.Storage_Volume_Down();
-                    Libvirt._virStoragePoolInfo info;
-                    p.virStoragePoolGetInfo(out info);
-                    svd.PoolInfo = info;
-                    svd.Volume = new ViewModels.Storage.Storage_Volume { Host = host, Parent = pool };
-                    return PartialView(svd);
-                }
-                else
-                {
-                    return CloseDialog();
-                }
-            }
+            return PartialView(GetStorage_Volume_Down(new ViewModels.Storage.Storage_Volume { Host = host, Parent = pool }));
         }
         [HttpPost]
         public ActionResult _Partial_CreateVolume(ViewModels.Storage.Storage_Volume volume, System.Web.HttpPostedFileBase File)
         {
+            if (ModelState.IsValid) _Storage_Service.CreateVolume(volume, File);
+            return PartialView(GetStorage_Volume_Down(volume));
+        }
+        private ViewModels.Storage.Storage_Volume_Down GetStorage_Volume_Down(ViewModels.Storage.Storage_Volume volume)
+        {
             var h = GetHost(volume.Host);
             using (var p = h.virStoragePoolLookupByName(volume.Parent))
             {
-                if (ModelState.IsValid)
-                {
-                    var t = new Libvirt.Service.Concrete.Storage_Volume_Validator();
-                    var v = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Storage_Volume>.Map(volume);
-                    v.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GB;
-                    if (ModelState.IsValid)
-                    {
-                        t.Validate(new Libvirt_WebManager.Models.Validator(ModelState), v, p);
-                        if (ModelState.IsValid)
-                        {
-                            if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
-                            {
-                                v.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
-                                v.capacity = v.allocation = File.ContentLength;
-                                using (var storagevol = p.virStorageVolCreateXML(v, Libvirt.virStorageVolCreateFlags.VIR_DEFAULT))
-                                {
-                                    if (storagevol.IsValid)
-                                    {
-                                        storagevol.Upload(File.InputStream);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                var svd = new ViewModels.Storage.Storage_Volume_Down();
+                svd.Volume = volume;
                 if (p.IsValid)
                 {
-                    var svd = new ViewModels.Storage.Storage_Volume_Down();
                     Libvirt._virStoragePoolInfo info;
                     p.virStoragePoolGetInfo(out info);
                     svd.PoolInfo = info;
-                    svd.Volume = volume;
-                    return PartialView(svd);
                 }
-                else
-                {
-                    return CloseDialog();
-                }
+                return svd;
             }
         }
     }

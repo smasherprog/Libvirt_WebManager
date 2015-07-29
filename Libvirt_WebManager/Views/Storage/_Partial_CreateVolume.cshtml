@@ -86,40 +86,46 @@
                         <dt>Available</dt>
                         <dd>@Libvirt_WebManager.Utilities.String.Formatting.Format((long)Model.PoolInfo.available)</dd>
                     </dl>
-                    <div class="input-group-sm">
-                        @Html.LabelFor(a => a.Volume.allocation)
-                        @Html.TextBoxFor(a => a.Volume.allocation, new
-                   {
-                       @class = "form-control",
-                       @type = "number",
-                       min = 0,
-                       step = 1,
-                       max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
-                       data_toggle = "tooltip",
-                       data_placement = "bottom",
-                       title = "Specify 0 if you want to pre allocate the entire capacity."
-                   })
-                        <span class="input-group-addon">GB</span>
-                        @Html.ValidationMessageFor(a => a.Volume.allocation)
-                    </div>
-                    <div class="input-group-sm">
-                        @Html.LabelFor(a => a.Volume.capacity)
-                        @Html.TextBoxFor(a => a.Volume.capacity, new
-                   {
-                       @class = "form-control",
-                       @type = "number",
-                       min = 1,
-                       step = 1,
-                       max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
-                   })
-                        <span class="input-group-addon">GB</span>
-                        @Html.ValidationMessageFor(a => a.Volume.capacity)
-                    </div>
+                    <div class="row">
 
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                @Html.LabelFor(a => a.Volume.allocation)
+                                @Html.TextBoxFor(a => a.Volume.allocation, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               min = 0,
+                               step = 1,
+                               max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
+                               data_toggle = "tooltip",
+                               data_placement = "bottom",
+                               title = "Specify 0 if you want to pre allocate the entire capacity."
+                           })
+                                <span class="input-group-addon">GB</span>
+                                @Html.ValidationMessageFor(a => a.Volume.allocation)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                @Html.LabelFor(a => a.Volume.capacity)
+                                @Html.TextBoxFor(a => a.Volume.capacity, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               min = 1,
+                               step = 1,
+                               max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
+                           })
+                                <span class="input-group-addon">GB</span>
+                                @Html.ValidationMessageFor(a => a.Volume.capacity)
+                            </div>
 
+                        </div>
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary pull-right">

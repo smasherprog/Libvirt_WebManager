@@ -2941,10 +2941,7 @@ namespace Libvirt
             return PInvoke.virStorageVolUpload(@vol, @stream, @offset, @length, @flags);
         }
 
-        public static virConnectPtr virStoragePoolGetConnect(virStoragePoolPtr vol)
-        {
-            return PInvoke.virStoragePoolGetConnect(vol);
-        }
+   
         public static int virStorageVolWipe(virStorageVolPtr @conn, uint flags = 0)
         {
             return PInvoke.virStorageVolWipe(@conn, flags);
@@ -4006,10 +4003,6 @@ namespace Libvirt
             return PInvoke.virDomainHasCurrentSnapshot(domain, flags);
         }
 
-        public static virConnectPtr virStorageVolGetConnect(virStorageVolPtr _Storage_VolumePtr)
-        {
-            return PInvoke.virStorageVolGetConnect(_Storage_VolumePtr);
-        }
     }
 
 
@@ -5162,8 +5155,9 @@ namespace Libvirt
         [DllImport(libraryPath, EntryPoint = "virSecretFree", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virSecretFree(virSecretPtr @secret);
 
-        [DllImport(libraryPath, EntryPoint = "virStoragePoolGetConnect", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virConnectPtr virStoragePoolGetConnect(virStoragePoolPtr @pool);
+        //DO NOT USE ACCORDING TO DOCUMENTATION  http://libvirt.org/html/libvirt-libvirt-storage.html#virStoragePoolGetConnect
+        //[DllImport(libraryPath, EntryPoint = "virStoragePoolGetConnect", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        // public static extern virConnectPtr virStoragePoolGetConnect(virStoragePoolPtr @pool);
 
         [DllImport(libraryPath, EntryPoint = "virConnectNumOfStoragePools", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virConnectNumOfStoragePools(virConnectPtr @conn);
@@ -5258,8 +5252,9 @@ namespace Libvirt
         [DllImport(libraryPath, EntryPoint = "virStoragePoolListAllVolumes", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virStoragePoolListAllVolumes(virStoragePoolPtr @pool, out IntPtr @vols, uint @flags);
 
-        [DllImport(libraryPath, EntryPoint = "virStorageVolGetConnect", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virConnectPtr virStorageVolGetConnect(virStorageVolPtr @vol);
+        //DO NOT USE THIS ACCORDING TO DOCUMENTATION http://libvirt.org/html/libvirt-libvirt-storage.html#virStorageVolGetConnect
+        // [DllImport(libraryPath, EntryPoint = "virStorageVolGetConnect", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        // public static extern virConnectPtr virStorageVolGetConnect(virStorageVolPtr @vol);
 
         [DllImport(libraryPath, EntryPoint = "virStorageVolLookupByName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern virStorageVolPtr virStorageVolLookupByName(virStoragePoolPtr @pool, [MarshalAs(UnmanagedType.LPStr), In] string @name);

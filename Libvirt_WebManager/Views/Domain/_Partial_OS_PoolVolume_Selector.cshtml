@@ -1,0 +1,32 @@
+﻿@model Libvirt.CS_Objects.Storage_Pool[] 
+
+<script>
+    function ospoolselected() {
+        $('.OS_Volume_drp').hide();
+        $('#' + $('#OS_Pool_Selector').val()).show();
+    }
+</script>
+<div class="row">
+    <div class="col-sm-12">
+        <input type="hidden" name="OS_Pool" value="" />
+        <label>OS Install</label>
+        <select id="OS_Pool_Selector" onselect="$(this).val();">
+            @foreach (var item in Model)
+            {
+                string uuid = "";
+                item.virStoragePoolGetUUIDString(out uuid);
+                <option value="@uuid">@item.virStoragePoolGetName()</option>
+            }
+        </select>
+        <input type="hidden" name="OS_Volume" value="" />
+        @foreach (var item in Model)
+        {
+            string uuid = "";
+            item.virStoragePoolGetUUIDString(out uuid);
+            <select id="@uuid" class="hidden OS_Volume_drp" onselect="$('#OS_Volume').val($(this).val());">
+
+                <option value="@item.virStoragePoolGetName()">@item.virStoragePoolGetName()</option>
+            </select>
+        }
+    </div>
+</div>
