@@ -10,6 +10,11 @@ namespace Libvirt_WebManager.Controllers
 {
     public class DomainController : CommonController
     {
+        private Service.Domain_Service _Domain_Service;
+        public DomainController()
+        {
+            _Domain_Service = new Service.Domain_Service(new Libvirt_WebManager.Models.Validator(ModelState));
+        }
         [HttpGet]
         public ActionResult _Partial_NewDomain(string host)
         {
@@ -18,17 +23,22 @@ namespace Libvirt_WebManager.Controllers
         [HttpPost]
         public ActionResult _Partial_NewDomain(Libvirt_WebManager.ViewModels.Domain.New_Domain_VM domain)
         {
+            if (ModelState.IsValid)
+            {
+                _Domain_Service.CreateDomain(domain);
+            }
             var d = GetDomainDown(domain.Host);
             d.Domain = domain;
             return View(d);
         }
-        public ActionResult _Partial_PoolVolume_Selector(string host)
+   
+        public ActionResult _Partial_OS_PoolVolume_Selector(ViewModels.Domain.PoolVolume_Selector_VM vm)
         {
             Libvirt.CS_Objects.Storage_Pool[] pools = new Libvirt.CS_Objects.Storage_Pool[0];
-            var h = GetHost(host);
-            h.virConnectListAllStoragePools(out pools, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
+            var h = GetHost(vm.Host);
+            h.virConnectListAllStoragePools(out pools, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE);
             AddToAutomaticDisposal(pools);
-            return PartialView(pools);
+            return PartialView(new ViewModels.Domain.PoolVolume_Selector_VM_Down { Pools = pools, Selector =vm}  );
         }
         private ViewModels.Domain.New_Domain_Down_VM GetDomainDown(string host)
         {

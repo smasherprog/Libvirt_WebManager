@@ -1,32 +1,73 @@
-﻿@model Libvirt.CS_Objects.Storage_Pool[] 
+﻿@model Libvirt_WebManager.ViewModels.Domain.PoolVolume_Selector_VM_Down
 
 <script>
     function ospoolselected() {
         $('.OS_Volume_drp').hide();
         $('#' + $('#OS_Pool_Selector').val()).show();
+        $('#@Model.Selector.PoolSelector').val($('#OS_Pool_Selector').val());
     }
-</script>
-<div class="row">
-    <div class="col-sm-12">
-        <input type="hidden" name="OS_Pool" value="" />
-        <label>OS Install</label>
-        <select id="OS_Pool_Selector" onselect="$(this).val();">
-            @foreach (var item in Model)
-            {
-                string uuid = "";
-                item.virStoragePoolGetUUIDString(out uuid);
-                <option value="@uuid">@item.virStoragePoolGetName()</option>
-            }
-        </select>
-        <input type="hidden" name="OS_Volume" value="" />
-        @foreach (var item in Model)
-        {
-            string uuid = "";
-            item.virStoragePoolGetUUIDString(out uuid);
-            <select id="@uuid" class="hidden OS_Volume_drp" onselect="$('#OS_Volume').val($(this).val());">
+    function UpdateSelectors() {
+        $('#@Model.Selector.PoolSelector').val($('#OS_Pool_Selector').val());
+        $('#@Model.Selector.VolumeSelector').val($('.OS_Volume_drp').filter(':visible').first().val());
 
-                <option value="@item.virStoragePoolGetName()">@item.virStoragePoolGetName()</option>
-            </select>
-        }
+    }
+    $(document).ready(function () {
+        ospoolselected();
+    });
+</script>
+<div id="_Partial__Partial_OS_PoolVolume_Selector_Form">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Select Storage</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="OS_Pool_Selector">Available Pools</label>
+                <select id="OS_Pool_Selector" onchange="ospoolselected();" class="form-control">
+                    @foreach (var item in Model.Pools)
+                    {
+                        <option value="@item.virStoragePoolGetName()">@item.virStoragePoolGetName()</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label>Available Volumes</label>
+                @foreach (var item in Model.Pools)
+                {
+                    Libvirt.CS_Objects.Storage_Volume[] vols;
+                    item.virStoragePoolListAllVolumes(out vols);
+                    <select id="@item.virStoragePoolGetName()" class="OS_Volume_drp form-control" onchange="UpdateSelectors();">
+                        @foreach (var v in vols)
+                        {
+                            var vname = v.virStorageVolGetName();
+                            if (Model.Selector.Select_ISO)
+                            {
+                                if (vname.EndsWith(".iso"))
+                                {
+                                    <option value="@vname">@vname</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="@vname">@vname</option>
+                            }
+
+                            v.Dispose();
+                        }
+                    </select>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary pull-right" data-dismiss="modal" onclick="UpdateSelectors();">
+            Done
+        </button>
     </div>
 </div>

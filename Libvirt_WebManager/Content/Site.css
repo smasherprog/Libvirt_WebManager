@@ -137,10 +137,9 @@
     }
 
 .pie-legend > li > span {
-padding:5px;
-height:10px;
+    padding: 5px;
+    height: 10px;
 }
-
 .field-validation-error {
     color: #a94442;
 }

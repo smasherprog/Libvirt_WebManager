@@ -52,7 +52,7 @@ namespace Libvirt.Models.Concrete
             CPU = new CPU_Layout();
             Memory = new Memory_Allocation();
             System_Features = new Features();
-            clock = Clock_Types.utc;// utc for everything excet windows which uses localtime
+            clock = Clock_Types.utc;// utc for everything except windows which uses localtime
             Devices = new Libvirt.Models.Concrete.Device_Collection();
         }
         public void From_XML(System.Xml.Linq.XElement xml)

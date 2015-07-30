@@ -22,7 +22,7 @@ namespace Libvirt.Models.Concrete
         //public int currentMemory { get; set; }//Not needed as defaults to use the Memory element if not present
         public string To_XML()
         {
-            var ret = "<currentMemory unit='" + currentMemory_unit.ToString() + "'>" + currentMemory.ToString() + "</maxMemory>";
+            var ret = "<currentMemory unit='" + currentMemory_unit.ToString() + "'>" + currentMemory.ToString() + "</currentMemory>";
             ret += "<memory unit='" + memory_unit.ToString() + "'>" + memory.ToString() + "</memory>";
             return ret;
         }
@@ -45,7 +45,8 @@ namespace Libvirt.Models.Concrete
 
         private void Reset()
         {
-            memory = currentMemory = 128;
+       
+            memory = currentMemory=128;
             currentMemory_unit = memory_unit = UnitTypes.MiB;
         }
         public void From_XML(System.Xml.Linq.XElement xml)
