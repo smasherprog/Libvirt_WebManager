@@ -1,0 +1,32 @@
+﻿@model Libvirt.CS_Objects.Storage_Pool
+@{
+    Libvirt.CS_Objects.Storage_Volume[] vols;
+    Model.virStoragePoolListAllVolumes(out vols);
+}
+
+<h3>Available Volumes</h3>
+<table class="table table-striped table-striped table-responsive table-hover table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>Type</th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vol in vols)
+        {
+            <tr>
+                <td>@vol.virStorageVolGetName()</td>
+                <td></td>
+                <td><a href="#"><span class="glyphicon glyphicon-expand" aria-hidden="true"></span></a></td>
+            </tr>
+            vol.Dispose();
+        }
+
+    </tbody>
+</table>

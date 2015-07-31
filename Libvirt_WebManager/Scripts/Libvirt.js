@@ -23,6 +23,7 @@ namespace(Libvirt, 'Libvirt.Host');
 namespace(Libvirt, 'Libvirt.ViewModels.Host');
 namespace(Libvirt, 'Libvirt.Config');
 namespace(Libvirt, 'Libvirt.UI');
+namespace(Libvirt, 'Libvirt.UI.Internal');
 namespace(Libvirt, 'Libvirt.Utilities');
 
 Libvirt.Config.HostAPIUrl = 'Api/Host/';
@@ -41,23 +42,25 @@ Libvirt.HubStart = function () {
     return Libvirt.Config._HubStarter;
 };
 
-$(document).ready(function () {
-    $('body').append("<div class='modal fade' tabindex='-1' role='dialog' id='MyModalDialogBoxArea_sm'><div class='modal-dialog modal-sm'><div class='modal-content'></div></div></div>");
-    $('body').append("<div class='modal fade' tabindex='-1' role='dialog' id='MyModalDialogBoxArea'><div class='modal-dialog'><div class='modal-content'></div></div></div>");
-    $('body').append("<div class='modal fade' tabindex='-1' role='dialog' id='MyModalDialogBoxArea_lg'><div class='modal-dialog modal-lg'><div class='modal-content'></div></div></div>");
-});
-
+Libvirt.UI.Internal.OpenDialog = function (url, ctype) {
+    var did = '_' + (new Date()).getTime();
+    var newd = $("<div class='modal fade' tabindex='-1' role='dialog' id='" + did + "'><div class='modal-dialog " + ctype + "'><div class='modal-content'></div></div></div>");
+    $('body').append(newd);
+    $('#' + did + ' .modal-content').load(url);
+    $('#' + did).modal('show');
+    $(newd).on('hidden.bs.modal', function () {
+        $(newd).remove();
+    });
+    return newd;
+}
 Libvirt.UI.OpenDialog_sm = function (url) {
-    $('#MyModalDialogBoxArea_sm .modal-content').load(url);
-    $('#MyModalDialogBoxArea_sm').modal('show');
+    return Libvirt.UI.Internal.OpenDialog(url, 'modal-sm');
 }
 Libvirt.UI.OpenDialog = function (url) {
-    $('#MyModalDialogBoxArea .modal-content').load(url);
-    $('#MyModalDialogBoxArea').modal('show');
+    return Libvirt.UI.Internal.OpenDialog(url, '');
 }
 Libvirt.UI.OpenDialog_lg = function (url) {
-    $('#MyModalDialogBoxArea_lg .modal-content').load(url);
-    $('#MyModalDialogBoxArea_lg').modal('show');
+    return Libvirt.UI.Internal.OpenDialog(url, 'modal-lg');
 }
 
 //HOST

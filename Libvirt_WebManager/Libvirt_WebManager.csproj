@@ -460,6 +460,7 @@
     <Content Include="Views\Storage\_Partial_CreateVolume.cshtml" />
     <Content Include="Views\Storage\_Partial_PoolInfo_MainContent.cshtml" />
     <Content Include="Views\Domain\_Partial_OS_PoolVolume_Selector.cshtml" />
+    <Content Include="Views\Domain\_Partial_OS_Volume_Selector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

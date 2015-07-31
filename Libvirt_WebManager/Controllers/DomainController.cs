@@ -31,15 +31,6 @@ namespace Libvirt_WebManager.Controllers
             d.Domain = domain;
             return View(d);
         }
-   
-        public ActionResult _Partial_OS_PoolVolume_Selector(ViewModels.Domain.PoolVolume_Selector_VM vm)
-        {
-            Libvirt.CS_Objects.Storage_Pool[] pools = new Libvirt.CS_Objects.Storage_Pool[0];
-            var h = GetHost(vm.Host);
-            h.virConnectListAllStoragePools(out pools, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE);
-            AddToAutomaticDisposal(pools);
-            return PartialView(new ViewModels.Domain.PoolVolume_Selector_VM_Down { Pools = pools, Selector =vm}  );
-        }
         private ViewModels.Domain.New_Domain_Down_VM GetDomainDown(string host)
         {
             var h = GetHost(host);
@@ -53,5 +44,23 @@ namespace Libvirt_WebManager.Controllers
             vm.Domain.Host = host;
             return vm;
         }
+        public ActionResult _Partial_OS_PoolVolume_Selector(string Host)
+        {
+            Libvirt.CS_Objects.Storage_Pool[] pools = new Libvirt.CS_Objects.Storage_Pool[0];
+            var h = GetHost(Host);
+            h.virConnectListAllStoragePools(out pools, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
+            AddToAutomaticDisposal(pools);
+            ViewBag.Host = Host;
+            return PartialView(pools);
+        }
+
+        public ActionResult _Partial_OS_Volume_Selector(string Host, string pool)
+        {
+            var h = GetHost(Host);
+            var p = h.virStoragePoolLookupByName(pool);
+            AddToAutomaticDisposal(p);
+            return PartialView(p);
+        }
+
     }
 }
