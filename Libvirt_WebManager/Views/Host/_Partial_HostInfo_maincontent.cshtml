@@ -6,112 +6,173 @@
     Model.virNodeGetCPUStats(-1, out cpustats);
     Libvirt._virNodeMemoryStats[] memstats = null;
     Model.virNodeGetMemoryStats(-1, out memstats);
+    ulong cputotalvalue = 0;
+    foreach (var item in cpustats)
+    {
+        cputotalvalue += item.value;
+    }
+    var totalmemory = memstats.FirstOrDefault(a => a.field == "total").value;
+    var memoryused = totalmemory - memstats.FirstOrDefault(a => a.field == "free").value;
+
+
+
 }
-<script>
-    var cpudata = [
-        @foreach (var item in cpustats)
-        {
-            if(item.field == "idle")
-            {
-    <text>{value: @item.value,color: "#46BFBD",highlight: "#5AD3D1",label: "@item.field"},</text>
-            } else {
-    <text>{ value: @item.value, color: "#F7464A",highlight: "#FF5A5E",label: "@item.field"},</text>
-            }
 
-        }
-    ];
-    var memdata = [
-        @foreach (var item in memstats.Where(a=>a.field.ToLower() != "total"))
-        {
-            if(item.field == "free")
-            {
-        <text> { value: @((item.value +1) / 1024), color: "#46BFBD", highlight: "#5AD3D1",label: "@item.field" },</text>
-            } else{
-        <text> { value: @((item.value+1) / 1024), color: "#F7464A", highlight: "#FF5A5E", label: "@item.field"}, </text>
-            }
+<div class="page-header">
+    <h2>
+        @Model.virConnectGetHostname()
+    </h2>
 
-        }
-    ];
-
-    $(document).ready(function () {
-        var ctx = document.getElementById("Host_CPU_Usage_Graph").getContext("2d");
-        var myNewChart = new Chart(ctx).Pie(cpudata);
-        $('#cpulegend').html(myNewChart.generateLegend());
-        ctx = document.getElementById("Host_Memory_Usage_Graph").getContext("2d");
-        var myNewChart2 = new Chart(ctx).Pie(memdata);
-        $('#memlegend').html(myNewChart2.generateLegend());
-    });
-</script>
-<div class="row">
-    <div class="col-sm-6">
-        <dl class="dl-horizontal">
-            <dt>
-                Host Name
-            </dt>
-            <dd>
-                @Model.virConnectGetHostname()
-            </dd>
-            <dt>
-                Hypervisor
-            </dt>
-            <dd>
-                @Model.virConnectGetType()
-            </dd>
-            <dt>
-                Cpu Model
-            </dt>
-            <dd>
-                @info.model
-            </dd>
-            <dt>
-                Memory
-            </dt>
-            <dd>
-                @Libvirt_WebManager.Utilities.String.Formatting.Format(((long)info.memory)*1024)
-            </dd>
-        </dl>
-    </div>
-    <div class="col-sm-6">
-        <dl class="dl-horizontal">
-
-            <dt>
-                Cpu Count
-            </dt>
-            <dd>
-                @info.cpus
-            </dd>
-
-            <dt>
-                Mhz
-            </dt>
-            <dd>
-                @info.mhz
-            </dd>
-
-            <dt>
-                Core Count
-            </dt>
-            <dd>
-                @info.cores
-            </dd>
-
-            <dt>
-                Thread Count
-            </dt>
-            <dd>
-                @info.threads
-            </dd>
-        </dl>
-    </div>
 </div>
+
 <div class="row">
-    <div class="col-sm-6" style="max-height:300px;">
-        <h3>Cpu Usage</h3>
-        <div id="cpulegend"></div>
-        <canvas id="Host_CPU_Usage_Graph"></canvas>
-    </div>
-    <div class="col-sm-6" style="max-height:300px;">
-        <h3>Memory Usage</h3><div id="memlegend"></div>
-        <canvas id="Host_Memory_Usage_Graph"></canvas>
+    <div class="col-sm-12">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Host Name
+                            </dt>
+                            <dd>
+                                @Model.virConnectGetHostname()
+                            </dd>
+                            <dt>
+                                Hypervisor
+                            </dt>
+                            <dd>
+                                @Model.virConnectGetType()
+                            </dd>
+                            <dt>
+                                Cpu Model
+                            </dt>
+                            <dd>
+                                @info.model
+                            </dd>
+                            <dt>
+                                Memory
+                            </dt>
+                            <dd>
+                                @Libvirt_WebManager.Utilities.String.Formatting.Format(((long)info.memory) * 1024)
+                            </dd>
+                            <dt>
+                                Memory Usage
+                            </dt>
+                            <dd>
+                       
+                                <div class="progress">
+                                    @foreach (var item in memstats.Where(a => a.field.ToLower() != "total").OrderByDescending(a => a.value))
+                                    {
+                                        var percentage = Convert.ToInt32((Convert.ToDouble(item.value) / Convert.ToDouble(totalmemory)) * 100);
+                                        var mem = Libvirt_WebManager.Utilities.String.Formatting.Format(((long)item.value) * 1024);
+                                        if (item.field == "free")
+                                        {
+                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
+                                                @mem 
+                                            </div>
+                                        }
+                                        else if (item.field == "buffers")
+                                        {
+
+                                            <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
+                                                @mem
+                                                
+                                            </div>
+                                        }
+                                        else if (item.field == "cached")
+                                        {
+                                            <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
+                                                @mem
+                                                
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
+                                                @mem
+                                                
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </dd>
+
+
+                        </dl>
+                    </div>
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+
+                            <dt>
+                                Cpu Count
+                            </dt>
+                            <dd>
+                                @info.cpus
+                            </dd>
+
+                            <dt>
+                                Mhz
+                            </dt>
+                            <dd>
+                                @info.mhz
+                            </dd>
+
+                            <dt>
+                                Core Count
+                            </dt>
+                            <dd>
+                                @info.cores
+                            </dd>
+
+                            <dt>
+                                Thread Count
+                            </dt>
+                            <dd>
+                                @info.threads
+                            </dd>
+                            <dt>
+                                Cpu Usage
+                            </dt>
+                            <dd>
+                                <div class="progress">
+                                    @foreach (var item in cpustats.OrderByDescending(a => a.value))
+                                    {
+                                        var percentage = Convert.ToInt32((Convert.ToDouble(item.value) / Convert.ToDouble(cputotalvalue)) * 100);
+                                        if (item.field == "idle")
+                                        {
+                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
+                                                @percentage%
+                                            </div>
+                                        }
+                                        else if (item.field == "iowait")
+                                        {
+
+                                            <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
+                                                @percentage%
+                                            </div>
+                                        }
+                                        else if (item.field == "kernel")
+                                        {
+
+                                            <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
+                                                @percentage%
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
+                                                @percentage%
+                                            </div>
+                                        }
+                                    }
+                                </div>
+
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

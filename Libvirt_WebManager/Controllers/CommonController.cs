@@ -26,8 +26,10 @@ namespace Libvirt_WebManager.Controllers
             return t;
         }
         protected List<IDisposable> ObjectsToDispose { get; set; }
-        protected void AddToAutomaticDisposal(IDisposable o) { ObjectsToDispose.Add(o); }
-        protected void AddToAutomaticDisposal(IEnumerable<IDisposable> objs) { ObjectsToDispose.AddRange(objs); }
+        protected IEnumerable<T> AddToAutomaticDisposal<T>(IEnumerable<T> objs) where T : IDisposable { ObjectsToDispose.AddRange((IEnumerable<IDisposable>)objs); return objs; }
+        protected T[] AddToAutomaticDisposal<T>(T[] objs) where T : IDisposable { foreach (var item in objs) ObjectsToDispose.Add(item); return objs; }
+        protected T AddToAutomaticDisposal<T>(T o) where T : IDisposable { ObjectsToDispose.Add(o); return o; }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

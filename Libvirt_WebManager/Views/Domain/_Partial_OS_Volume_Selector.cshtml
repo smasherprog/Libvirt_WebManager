@@ -11,6 +11,8 @@
             <th>
                 Name
             </th>
+            <th title="Actual amount of space used by the volume.">Allocation</th>
+            <th title="Amount of space the Volume is allowed to grow into.">Capacity</th>
             <th>Type</th>
             <th>
 
@@ -20,9 +22,14 @@
     <tbody>
         @foreach (var vol in vols)
         {
+            Libvirt._virStorageVolInfo info;
+            vol.virStorageVolGetInfo(out info);
+            
             <tr>
                 <td>@vol.virStorageVolGetName()</td>
-                <td></td>
+                <td>@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)</td>
+                <td>@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)</td>
+                <td>@info.type</td>
                 <td><a href="#"><span class="glyphicon glyphicon-expand" aria-hidden="true"></span></a></td>
             </tr>
             vol.Dispose();

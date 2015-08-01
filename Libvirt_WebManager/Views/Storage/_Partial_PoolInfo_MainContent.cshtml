@@ -1,117 +1,80 @@
-﻿@model Libvirt.CS_Objects.Host
+﻿@model Libvirt_WebManager.ViewModels.Storage.Storage_Pool_Down
 @{
-    Libvirt._virNodeInfo info;
-    Model.virNodeGetInfo(out info);
-    Libvirt._virNodeCPUStats[] cpustats = null;
-    Model.virNodeGetCPUStats(-1, out cpustats);
-    Libvirt._virNodeMemoryStats[] memstats = null;
-    Model.virNodeGetMemoryStats(-1, out memstats);
+    Libvirt._virStoragePoolInfo info;
+    Model.Pool.virStoragePoolGetInfo(out info);
 }
 <script>
-    var cpudata = [
-        @foreach (var item in cpustats)
-        {
-            if(item.field == "idle")
-            {
-    <text>{value: @item.value,color: "#46BFBD",highlight: "#5AD3D1",label: "@item.field"},</text>
-            } else {
-    <text>{ value: @item.value, color: "#F7464A",highlight: "#FF5A5E",label: "@item.field"},</text>
-            }
-
-        }
-    ];
-    var memdata = [
-        @foreach (var item in memstats.Where(a=>a.field.ToLower() != "total"))
-        {
-            if(item.field == "free")
-            {
-        <text> { value: @((item.value +1) / 1024), color: "#46BFBD", highlight: "#5AD3D1",label: "@item.field" },</text>
-            } else{
-        <text> { value: @((item.value+1) / 1024), color: "#F7464A", highlight: "#FF5A5E", label: "@item.field"}, </text>
-            }
-
-        }
-    ];
-
+    var pooldata = [{value: @(info.available == 0 ? 0 : (info.available/(1024*1024))), color: "#46BFBD",highlight: "#5AD3D1",label: "Available Space"},{ value: @(info.allocation == 0 ? 0 : (info.allocation / (1024*1024))), color: "#F7464A",highlight: "#FF5A5E",label: "Used Space"}];
     $(document).ready(function () {
-        var ctx = document.getElementById("Host_CPU_Usage_Graph").getContext("2d");
-        var myNewChart = new Chart(ctx).Pie(cpudata);
-        $('#cpulegend').html(myNewChart.generateLegend());
-        ctx = document.getElementById("Host_Memory_Usage_Graph").getContext("2d");
-        var myNewChart2 = new Chart(ctx).Pie(memdata);
-        $('#memlegend').html(myNewChart2.generateLegend());
+        var ctx = document.getElementById("Pool_Usage_Graph").getContext("2d");
+        var myNewChart = new Chart(ctx).Pie(pooldata);
+        $('#Poollegend').html(myNewChart.generateLegend());
     });
 </script>
-<div class="row">
-    <div class="col-sm-6">
-        <dl class="dl-horizontal">
-            <dt>
-                Host Name
-            </dt>
-            <dd>
-                @Model.virConnectGetHostname()
-            </dd>
-            <dt>
-                Hypervisor
-            </dt>
-            <dd>
-                @Model.virConnectGetType()
-            </dd>
-            <dt>
-                Cpu Model
-            </dt>
-            <dd>
-                @info.model
-            </dd>
-            <dt>
-                Memory
-            </dt>
-            <dd>
-                @Libvirt_WebManager.Utilities.String.Formatting.Format(((long)info.memory)*1024)
-            </dd>
-        </dl>
-    </div>
-    <div class="col-sm-6">
-        <dl class="dl-horizontal">
-
-            <dt>
-                Cpu Count
-            </dt>
-            <dd>
-                @info.cpus
-            </dd>
-
-            <dt>
-                Mhz
-            </dt>
-            <dd>
-                @info.mhz
-            </dd>
-
-            <dt>
-                Core Count
-            </dt>
-            <dd>
-                @info.cores
-            </dd>
-
-            <dt>
-                Thread Count
-            </dt>
-            <dd>
-                @info.threads
-            </dd>
-        </dl>
-    </div>
+<div class="page-header">
+    <h2>
+        Pool
+        <a class="pull-right btn btn-primary" title="Start Pool" href="#"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+        <a class="pull-right btn btn-warning" title="Stop Pool" href="#"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
+        <a class="pull-right btn btn-danger" title="Delete Pool" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+    </h2>
 </div>
 <div class="row">
-    <div class="col-sm-6" style="max-height:300px;">
-        <h3>Cpu Usage</h3>
-        <div id="cpulegend"></div>
-        <canvas id="Host_CPU_Usage_Graph"></canvas>
+    <div class="col-sm-12">
+        <div class="panel panel-primary">
+          
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.Pool.virStoragePoolGetName()</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-sm-6">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Capacity
+                        </dt>
+                        <dd>
+                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)
+
+                        </dd>
+                        <dt>
+                            Allocation
+                        </dt>
+                        <dd>
+                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)
+
+                        </dd>
+                        <dt>
+                            Available
+                        </dt>
+                        <dd>
+                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.available)
+
+                        </dd>
+                        <dt>
+                            State
+                        </dt>
+                        <dd>
+                            @info.state
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-sm-6">
+
+                    <div id="Poollegend"></div>
+                    <div style="max-height:200px;max-width:200px;">
+                        <canvas id="Pool_Usage_Graph"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-sm-6" style="max-height:300px;">
-        <h3>Memory Usage</h3><div id="memlegend"></div>
-        <canvas id="Host_Memory_Usage_Graph"></canvas>
+</div><h2>Volumes</h2>
+@foreach (var vol in Model.Volumes)
+{
+    <div class="row">
+        <div class="col-sm-12">
+            @Html.Partial("_Partial_Volume_Details_Listing", vol)
+        </div>
     </div>
-</div>
+
+}

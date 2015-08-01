@@ -9,11 +9,17 @@ namespace Libvirt_WebManager.Service
         public void CreateVolume(ViewModels.Storage.Storage_Volume v, System.Web.HttpPostedFileBase File)
         {
             var volume = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Storage_Volume>.Map(v);
+            if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
+            {
+                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
+                volume.capacity = volume.allocation = File.ContentLength;
+            } else {
+                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GB;
+            }
             var h = GetHost(v.Host);
             if (!_Validator.IsValid()) return;
             using (var p = h.virStoragePoolLookupByName(v.Parent))
             {
-                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GB;
                 var t = new Libvirt.Service.Concrete.Storage_Volume_Validator();
                 t.Validate(_Validator, volume, p);
                 if (_Validator.IsValid())
@@ -24,8 +30,6 @@ namespace Libvirt_WebManager.Service
                         {
                             if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
                             {
-                                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
-                                volume.capacity = volume.allocation = File.ContentLength;
                                 storagevol.Upload(h, File.InputStream);
                             }
                         }

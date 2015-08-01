@@ -215,6 +215,7 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Domain\New_Domain_VM.cs" />
     <Compile Include="ViewModels\Domain\PoolVolume_Selector_VM.cs" />
+    <Compile Include="ViewModels\Storage\Storage_Pool_Down.cs" />
     <Compile Include="ViewModels\Storage\Storage_Volume_Down.cs" />
     <Compile Include="ViewModels\Storage\Storage_Volume.cs" />
     <Compile Include="ViewModels\Storage\Dir_Pool.cs" />
@@ -461,6 +462,7 @@
     <Content Include="Views\Storage\_Partial_PoolInfo_MainContent.cshtml" />
     <Content Include="Views\Domain\_Partial_OS_PoolVolume_Selector.cshtml" />
     <Content Include="Views\Domain\_Partial_OS_Volume_Selector.cshtml" />
+    <Content Include="Views\Storage\_Partial_Volume_Details_Listing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

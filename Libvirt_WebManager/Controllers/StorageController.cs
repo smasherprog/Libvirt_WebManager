@@ -71,6 +71,22 @@ namespace Libvirt_WebManager.Controllers
             if (ModelState.IsValid) _Storage_Service.CreateVolume(volume, File);
             return PartialView(GetStorage_Volume_Down(volume));
         }
+
+        public ActionResult _Partial_PoolInfo_MainContent(string host, string pool)
+        {
+            var p = GetHost(host).virStoragePoolLookupByName(pool);
+
+            var vm = new ViewModels.Storage.Storage_Pool_Down();
+            vm.Pool = p;
+            Libvirt.CS_Objects.Storage_Volume[] vols;
+            AddToAutomaticDisposal(p).virStoragePoolListAllVolumes(out vols);
+            vm.Volumes = vols;
+            AddToAutomaticDisposal(vols);
+            return PartialView(vm);
+        }
+
+
+
         private ViewModels.Storage.Storage_Volume_Down GetStorage_Volume_Down(ViewModels.Storage.Storage_Volume volume)
         {
             var h = GetHost(volume.Host);

@@ -1,0 +1,76 @@
+﻿@model Libvirt.CS_Objects.Storage_Volume
+@{
+    Libvirt._virStorageVolInfo info;
+    Model.virStorageVolGetInfo(out info);
+    var name = Model.virStorageVolGetName();
+}
+<script>
+    var pooldata = [{value: @(info.capacity == 0 ? 0 : ((info.capacity- info.allocation )/ (1024*1024))), color: "#46BFBD",highlight: "#5AD3D1",label: "Available Space"},{ value: @(info.allocation == 0 ? 0 : (info.allocation / (1024*1024))), color: "#F7464A",highlight: "#FF5A5E",label: "Used Space"}];
+    $(document).ready(function () {
+        var ctx = document.getElementById("@(name.Replace(".",""))Volume_Usage_Graph").getContext("2d");
+        var myNewChart = new Chart(ctx).Pie(pooldata);
+        $('#@(name.Replace(".", ""))legend').html(myNewChart.generateLegend());
+    });
+</script>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-success">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <a class="btn btn-xs btn-primary" title="Start Volume" href="#"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+                        <a class="btn btn-xs btn-warning" title="Stop Volume" href="#"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
+                        <a class="btn btn-xs btn-danger" title="Delete Volume" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                    </div>
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Name
+                            </dt>
+                            <dd>
+                                @name
+                            </dd>
+                            <dt>
+                                Capacity
+                            </dt>
+                            <dd>
+                                @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)
+
+                            </dd>
+                            <dt>
+                                Allocation
+                            </dt>
+                            <dd>
+                                @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)
+
+                            </dd>
+                     
+                            <dt>
+                                Type
+                            </dt>
+                            <dd>
+                                @info.type
+                            </dd>
+                            <dt>
+                                Path
+                            </dt>
+                            <dd>
+                                @Model.virStorageVolGetPath()
+                            </dd>
+
+                        </dl>
+                    </div>
+                    <div class="col-sm-5">
+
+                        <div id="@(name.Replace(".",""))legend">  </div>
+
+
+                        <div style="max-height:200px;max-width:200px;">
+                            <canvas id="@(name.Replace(".",""))Volume_Usage_Graph"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

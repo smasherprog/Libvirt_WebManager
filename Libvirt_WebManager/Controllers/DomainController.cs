@@ -46,7 +46,7 @@ namespace Libvirt_WebManager.Controllers
         }
         public ActionResult _Partial_OS_PoolVolume_Selector(string Host)
         {
-            Libvirt.CS_Objects.Storage_Pool[] pools = new Libvirt.CS_Objects.Storage_Pool[0];
+            Libvirt.CS_Objects.Storage_Pool[] pools;
             var h = GetHost(Host);
             h.virConnectListAllStoragePools(out pools, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
             AddToAutomaticDisposal(pools);
@@ -59,6 +59,11 @@ namespace Libvirt_WebManager.Controllers
             var h = GetHost(Host);
             var p = h.virStoragePoolLookupByName(pool);
             AddToAutomaticDisposal(p);
+            var vm = new ViewModels.Storage.Storage_Pool_Down();
+            vm.Pool = p;
+            Libvirt.CS_Objects.Storage_Volume[] vols;
+            p.virStoragePoolListAllVolumes(out vols);
+            AddToAutomaticDisposal(vols);
             return PartialView(p);
         }
 
