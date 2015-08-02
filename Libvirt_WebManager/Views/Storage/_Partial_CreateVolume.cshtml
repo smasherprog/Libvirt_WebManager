@@ -89,8 +89,9 @@
                     <div class="row">
 
                         <div class="col-sm-6">
+                            @Html.LabelFor(a => a.Volume.allocation)
                             <div class="input-group">
-                                @Html.LabelFor(a => a.Volume.allocation)
+
                                 @Html.TextBoxFor(a => a.Volume.allocation, new
                            {
                                @class = "form-control",
@@ -107,8 +108,9 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
+                            @Html.LabelFor(a => a.Volume.capacity)
                             <div class="input-group">
-                                @Html.LabelFor(a => a.Volume.capacity)
+
                                 @Html.TextBoxFor(a => a.Volume.capacity, new
                            {
                                @class = "form-control",

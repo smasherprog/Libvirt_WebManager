@@ -45,8 +45,11 @@ namespace Libvirt_WebManager
                       "~/Content/site.css",
                       "~/Content/jQueryFileTree.css",
                       "~/Content/jquery.jgrowl.min.css",
-                      "~/Content/contextjs.bootstrap"
+                      "~/Content/contextjs.bootstrap.css",
+                      "~/Content/font-awesome.min.css"
 
+
+              
 
                       ));
         }

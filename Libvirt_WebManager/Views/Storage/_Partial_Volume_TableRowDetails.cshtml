@@ -1,0 +1,59 @@
+﻿@model Libvirt_WebManager.ViewModels.Storage.Storage_Volume_Details
+@{
+    Libvirt._virStorageVolInfo info;
+    Model.Volume.virStorageVolGetInfo(out info);
+    var name = Model.Volume.virStorageVolGetName();
+    var someuiniqueid = "Volume_Details_" + name.Replace(".", "");
+
+    var percentused = 0;
+    if (info.capacity > 0)
+    {
+        var tmpd = (double)(info.capacity - info.allocation);
+        tmpd = (tmpd / (double)info.capacity);
+        percentused = ((int)(tmpd * 100) - 100) * -1;
+    }
+    var cl = "progress-bar-danger";
+    if(percentused<25)
+    {
+        cl = "progress-bar-success";
+    } else if (percentused < 50)
+    {
+        cl = "progress-bar-info";
+    }
+    else if (percentused < 75)
+    {
+        cl = "progress-bar-warning";
+    }
+}
+<tr id="@someuiniqueid">
+    <td>
+        @name
+    </td>
+    <td>
+        @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)
+    </td>
+    <td>
+        @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)
+    </td>
+    <td>
+        @info.type.ToString().Split('_').LastOrDefault()
+    </td>
+    <td>
+        @Model.Volume.virStorageVolGetPath()
+    </td>
+    <td>
+        TBA
+    </td>
+    <td>
+        <div class="progress">
+            <div class="progress-bar @cl progress-bar-striped" style="width: @percentused%" title="@percentused">
+
+            </div>
+        </div>
+    </td>
+    <td>
+        @Html.Partial("_Partial_Volume_TableRowDetails_Commands", Model)
+    </td>
+</tr>
+
+

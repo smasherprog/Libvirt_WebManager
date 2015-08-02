@@ -8,7 +8,11 @@
             @{ li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_Domains";}
             <li id="@(li_id)">
                 <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetDoimains_TreeView", "Domain", new { host = ViewBag.HostName })" />
-                <label for="item-@(li_id)" onclick="return false;"><span></span><span class="icon domains_icon"></span>Domains</label>
+                <label for="item-@(li_id)" onclick="return false;">
+                    <span></span><span class="icon domains_icon"></span>
+                    <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_Domain_Listing_MainContent", "Domain", new { host = ViewBag.HostName })');return false;">Domains</a>
+ 
+                </label>
             </li>
             @{ li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_Interfaces";}
             <li id="@(li_id)">
@@ -18,21 +22,22 @@
             @{ li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_StoragePools";}
             <li id="@(li_id)">
                 <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetPoolInfo_TreeView", "Storage", new { host = ViewBag.HostName })" />
-                <label for="item-@(li_id)" onclick="return false;"><span></span><span class="icon storage_pools_icon"></span>Storage Pools</label>
+                <label for="item-@(li_id)" onclick="return false;">
+                    <span></span><span class="icon storage_pools_icon"></span>
+
+                    <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_Pool_Listing_MainContent", "Storage", new { host = ViewBag.HostName })');return false;">Storage Pools</a>
+                </label>
             </li>
         </ul>
         <script>
             $(document).ready(function () {
                 @{ li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_Domains";}
                 registercallsbacks('@li_id');
-                context.attach('#@(li_id)', [{ text: "<div class='add_icon'>New VM</div>", action: function () { Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_NewDomain", "Domain", new { host = ViewBag.HostName }))'); } }]);
-                @{ li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_Interfaces";}
+                 @{ li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_Interfaces";}
                 registercallsbacks('@li_id');
-                context.attach('#@(li_id)', [{ text: "<div class='add_icon'>New Interface</div>", action: function () { Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_NewInterface", new { host = ViewBag.HostName }))'); } }]);
                 @{ li_id = "x" + ViewBag.HostName.Replace(".", "_") + "_StoragePools";}
                 registercallsbacks('@li_id');
-                context.attach('#@(li_id)', [{ text: "<div class='add_icon'>New Interface</div>", action: function () { Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_CreatePool", "Storage", new { host = ViewBag.HostName }))'); } }]);
-            });
+           });
         </script>
     }
 }

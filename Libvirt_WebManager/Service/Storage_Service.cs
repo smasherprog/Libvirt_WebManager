@@ -14,7 +14,7 @@ namespace Libvirt_WebManager.Service
                 volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
                 volume.capacity = volume.allocation = File.ContentLength;
             } else {
-                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GB;
+                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GiB;
             }
             var h = GetHost(v.Host);
             if (!_Validator.IsValid()) return;

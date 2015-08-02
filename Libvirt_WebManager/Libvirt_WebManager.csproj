@@ -215,7 +215,11 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Domain\New_Domain_VM.cs" />
     <Compile Include="ViewModels\Domain\PoolVolume_Selector_VM.cs" />
+    <Compile Include="ViewModels\Domain\Domain_Down.cs" />
+    <Compile Include="ViewModels\Storage\Storage_PoolBase.cs" />
+    <Compile Include="ViewModels\Storage\Storage_Pool_TreeViewDown.cs" />
     <Compile Include="ViewModels\Storage\Storage_Pool_Down.cs" />
+    <Compile Include="ViewModels\Storage\Storage_Volume_Details.cs" />
     <Compile Include="ViewModels\Storage\Storage_Volume_Down.cs" />
     <Compile Include="ViewModels\Storage\Storage_Volume.cs" />
     <Compile Include="ViewModels\Storage\Dir_Pool.cs" />
@@ -233,6 +237,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\contextjs.bootstrap.css" />
     <Content Include="Content\contextjs.standalone.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\jquery.jgrowl.css" />
     <Content Include="Content\jquery.jgrowl.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -269,6 +275,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Icon.png" />
@@ -415,6 +422,10 @@
     <Content Include="x86\libxml2-2.dll" />
     <Content Include="x86\virsh.exe" />
     <Content Include="x86\zlib1.dll" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -459,10 +470,17 @@
     <Content Include="Views\Storage\_Partial_GetPoolInfo_TreeView.cshtml" />
     <Content Include="Views\Storage\_Partial_GetVolumes_TreeView.cshtml" />
     <Content Include="Views\Storage\_Partial_CreateVolume.cshtml" />
-    <Content Include="Views\Storage\_Partial_PoolInfo_MainContent.cshtml" />
+    <Content Include="Views\Storage\_Partial_Pool_Listing_MainContent.cshtml" />
     <Content Include="Views\Domain\_Partial_OS_PoolVolume_Selector.cshtml" />
     <Content Include="Views\Domain\_Partial_OS_Volume_Selector.cshtml" />
-    <Content Include="Views\Storage\_Partial_Volume_Details_Listing.cshtml" />
+    <Content Include="Views\Storage\_Partial_Volume_TableRowDetails.cshtml" />
+    <Content Include="Views\Storage\_Partial_Volume_TableRowDetails_Commands.cshtml" />
+    <Content Include="Views\Storage\_Partial_Pool_TableRowDetails_Commands.cshtml" />
+    <Content Include="Views\Storage\_Partial_Pool_TableRowDetails.cshtml" />
+    <Content Include="Views\Storage\_Partial_PoolInfo_MainContent.cshtml" />
+    <Content Include="Views\Domain\_Partial_Domain_Listing_MainContent.cshtml" />
+    <Content Include="Views\Domain\_Partial_Domain_TableRowDetails.cshtml" />
+    <Content Include="Views\Domain\_Partial_Domain_TableRowDetails_Commands.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

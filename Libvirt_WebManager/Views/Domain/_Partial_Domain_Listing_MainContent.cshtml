@@ -1,0 +1,44 @@
+﻿@model Libvirt_WebManager.ViewModels.Domain.Domain_Down
+
+<div class="page-header">
+    <h2>
+        Domains
+        <a href="#" class="btn btn-primary" title="Add New Domain" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_NewDomain", "Domain", new { host = Model.Host }))');return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Max Mem
+                    </th>
+                    <th>
+                        Used Memory
+                    </th>
+                    <th>
+                       # Vcpus
+                    </th>
+                    <th>
+                        State
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Domains)
+                {
+                    @Html.Partial("_Partial_Domain_TableRowDetails", item)
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

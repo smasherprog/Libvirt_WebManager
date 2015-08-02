@@ -1,80 +1,99 @@
 ﻿@model Libvirt_WebManager.ViewModels.Storage.Storage_Pool_Down
-@{
-    Libvirt._virStoragePoolInfo info;
-    Model.Pool.virStoragePoolGetInfo(out info);
-}
-<script>
-    var pooldata = [{value: @(info.available == 0 ? 0 : (info.available/(1024*1024))), color: "#46BFBD",highlight: "#5AD3D1",label: "Available Space"},{ value: @(info.allocation == 0 ? 0 : (info.allocation / (1024*1024))), color: "#F7464A",highlight: "#FF5A5E",label: "Used Space"}];
-    $(document).ready(function () {
-        var ctx = document.getElementById("Pool_Usage_Graph").getContext("2d");
-        var myNewChart = new Chart(ctx).Pie(pooldata);
-        $('#Poollegend').html(myNewChart.generateLegend());
-    });
-</script>
+
 <div class="page-header">
     <h2>
-        Pool
-        <a class="pull-right btn btn-primary" title="Start Pool" href="#"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
-        <a class="pull-right btn btn-warning" title="Stop Pool" href="#"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
-        <a class="pull-right btn btn-danger" title="Delete Pool" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+        @Model.Pool.virStoragePoolGetName()
     </h2>
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <div class="panel panel-primary">
-          
-            <div class="panel-heading">
-                <h3 class="panel-title">@Model.Pool.virStoragePoolGetName()</h3>
-            </div>
-            <div class="panel-body">
-                <div class="col-sm-6">
-                    <dl class="dl-horizontal">
-                        <dt>
-                            Capacity
-                        </dt>
-                        <dd>
-                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Capacity
+                    </th>
+                    <th>
+                        Allocation
+                    </th>
+                    <th>
+                        Available
+                    </th>
+                    <th>
+                        State
+                    </th>
+                    <th>
+                        Usage
+                    </th>
+                    <th>
 
-                        </dd>
-                        <dt>
-                            Allocation
-                        </dt>
-                        <dd>
-                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)
-
-                        </dd>
-                        <dt>
-                            Available
-                        </dt>
-                        <dd>
-                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.available)
-
-                        </dd>
-                        <dt>
-                            State
-                        </dt>
-                        <dd>
-                            @info.state
-                        </dd>
-                    </dl>
-                </div>
-                <div class="col-sm-6">
-
-                    <div id="Poollegend"></div>
-                    <div style="max-height:200px;max-width:200px;">
-                        <canvas id="Pool_Usage_Graph"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @Html.Partial("_Partial_Pool_TableRowDetails", new Libvirt_WebManager.ViewModels.Storage.Storage_PoolBase { Host = Model.Host, Parent = Model.Parent, Pool = Model.Pool })
+            </tbody>
+        </table>
     </div>
-</div><h2>Volumes</h2>
-@foreach (var vol in Model.Volumes)
-{
-    <div class="row">
-        <div class="col-sm-12">
-            @Html.Partial("_Partial_Volume_Details_Listing", vol)
-        </div>
-    </div>
+</div>
 
-}
+
+<div class="row">
+    <div class="col-sm-12">
+        <h2>
+            Volumes
+            <a href="#" class="btn btn-primary" title="Add New Volume to Pool" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_CreateVolume", "Storage", new { host = Model.Host, pool = @Model.Pool.virStoragePoolGetName() }))');return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+        </h2>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Capacity
+                    </th>
+                    <th>
+                        Allocation
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Path
+                    </th>
+                    <th>
+                        UsedBy
+                    </th>
+                    <th>
+                        Usage
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var vol in Model.Volumes)
+                {
+                    @Html.Partial("_Partial_Volume_TableRowDetails", new Libvirt_WebManager.ViewModels.Storage.Storage_Volume_Details { Host = Model.Host, Parent = Model.Parent, Volume = vol })
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+

@@ -60,40 +60,28 @@
                                 Memory Usage
                             </dt>
                             <dd>
-                       
+
                                 <div class="progress">
                                     @foreach (var item in memstats.Where(a => a.field.ToLower() != "total").OrderByDescending(a => a.value))
                                     {
                                         var percentage = Convert.ToInt32((Convert.ToDouble(item.value) / Convert.ToDouble(totalmemory)) * 100);
                                         var mem = Libvirt_WebManager.Utilities.String.Formatting.Format(((long)item.value) * 1024);
+                                        var cl = "progress-bar-danger";
                                         if (item.field == "free")
                                         {
-                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
-                                                @mem 
-                                            </div>
+                                            cl = "progress-bar-success";
                                         }
                                         else if (item.field == "buffers")
                                         {
-
-                                            <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
-                                                @mem
-                                                
-                                            </div>
+                                            cl = "progress-bar-warning";
                                         }
                                         else if (item.field == "cached")
                                         {
-                                            <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
-                                                @mem
-                                                
-                                            </div>
+                                            cl = "progress-bar-info";
                                         }
-                                        else
-                                        {
-                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
-                                                @mem
-                                                
-                                            </div>
-                                        }
+                                        <div class="progress-bar @cl progress-bar-striped" style="width: @percentage%" title="@mem @item.field">
+                                            @mem
+                                        </div>
                                     }
                                 </div>
                             </dd>
@@ -139,32 +127,23 @@
                                     @foreach (var item in cpustats.OrderByDescending(a => a.value))
                                     {
                                         var percentage = Convert.ToInt32((Convert.ToDouble(item.value) / Convert.ToDouble(cputotalvalue)) * 100);
+                                        var cl = "progress-bar-success";
+
                                         if (item.field == "idle")
                                         {
-                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
-                                                @percentage%
-                                            </div>
+                                            cl = "progress-bar-success";
                                         }
                                         else if (item.field == "iowait")
                                         {
-
-                                            <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
-                                                @percentage%
-                                            </div>
+                                            cl = "progress-bar-warning";
                                         }
                                         else if (item.field == "kernel")
                                         {
-
-                                            <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
-                                                @percentage%
-                                            </div>
+                                            cl = "progress-bar-danger";
                                         }
-                                        else
-                                        {
-                                            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
-                                                @percentage%
-                                            </div>
-                                        }
+                                        <div class="progress-bar @cl progress-bar-striped" style="width: @percentage%" title="@percentage% @item.field">
+                                            @percentage%
+                                        </div>
                                     }
                                 </div>
 

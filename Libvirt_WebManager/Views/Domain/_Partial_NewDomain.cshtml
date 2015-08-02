@@ -14,7 +14,7 @@
             }
         }
         function SelectHDVolumePool() {
-            Libvirt.UI.OpenDialog_sm('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new { Host = Model.Domain.Host }))');
+            Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new { Host = Model.Domain.Host }))');
         }
         $(document).ready(function () {
             $('#Domain_OS_Options').change(function () { SelectOSVolumePool(); });

@@ -31,6 +31,16 @@ namespace Libvirt_WebManager.Controllers
             d.Domain = domain;
             return View(d);
         }
+        public ActionResult _Partial_Domain_Listing_MainContent(string host)
+        {
+            var h = GetHost(host);
+            Libvirt.CS_Objects.Domain[] ds;
+            h.virConnectListAllDomains(out ds, Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT);
+            AddToAutomaticDisposal(ds);
+            return PartialView(new ViewModels.Domain.Domain_Down { Host = host, Parent = host, Domains = ds } );
+        }
+        
+
         private ViewModels.Domain.New_Domain_Down_VM GetDomainDown(string host)
         {
             var h = GetHost(host);

@@ -1,0 +1,31 @@
+﻿@model Libvirt.CS_Objects.Domain
+@{
+    Libvirt._virDomainInfo info;
+    Model.virDomainGetInfo(out info);
+    var name = Model.virDomainGetName();
+    var someuiniqueid = "Domain_Details_" + name.Replace(".", "");
+
+}
+<tr id="@someuiniqueid">
+    <td>
+        <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_Domain_MainContent", "Domain")');return false;">@name</a>
+    </td>
+    <td>
+        @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.maxMem * 1024)
+    </td>
+    <td>
+        @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.memory*1024)
+    </td>
+    <td>
+        @info.nrVirtCpu
+    </td>
+    <td>
+        @info.state.ToString().Split('_').LastOrDefault()
+    </td>
+
+    <td>
+        @Html.Partial("_Partial_Domain_TableRowDetails_Commands", Model)
+    </td>
+</tr>
+
+
