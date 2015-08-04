@@ -1,21 +1,5 @@
-﻿@model Libvirt.CS_Objects.Storage_Pool[]
-@{
-    var firstpoolname = "";
-}
-<script>
-    function ospoolselected() {
-        //$('.OS_Volume_drp').hide();
-        //$('#' + $('#OS_Pool_Selector').val()).show();
-       // $('#').val($('#OS_Pool_Selector').val());
-    }
-    function UpdateSelectors() {
-      //  $('#').val($('#OS_Pool_Selector').val());
-      //  $('#').val($('.OS_Volume_drp').filter(':visible').first().val());
-    }
-    $(document).ready(function () {
-        ospoolselected();
-    });
-</script>
+﻿@model Libvirt_WebManager.ViewModels.Domain.PoolVolume_Selector_Down
+
 <div id="_Partial__Partial_OS_PoolVolume_Selector_Form">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -28,13 +12,9 @@
         <div class="row">
             <div class="col-sm-4">
                 <h3>Available Pools</h3>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Pools)
                 {
                     var name = item.virStoragePoolGetName();
-                    if (string.IsNullOrWhiteSpace(firstpoolname))
-                    {
-                        firstpoolname = name;
-                    }
                     var disabledstring = item.virStoragePoolIsActive() == 0 ? "disabled='disabled'" : "";
 
                     <a href="@Url.Action("_Partial_OS_Volume_Selector", new {Host = ViewBag.Host, pool = name })" class="btn btn-default btn-block" @disabledstring data-ajax-update="#volumearealistingosupdate" data-ajax-mode="replace" data-ajax="true">
@@ -44,9 +24,9 @@
             </div>
             <div class="col-sm-8">
                 <div id="volumearealistingosupdate">
-                    @if (!string.IsNullOrWhiteSpace(firstpoolname))
+                    @if (Model.Pools.Any())
                     {
-                        @Html.Action("_Partial_OS_Volume_Selector", new { Host = ViewBag.Host, pool = firstpoolname })
+                        @Html.Action("_Partial_OS_Volume_Selector", new { Host = ViewBag.Host, pool = Model.Pools.FirstOrDefault().virStoragePoolGetName() })
                     }
                 </div>
             </div>

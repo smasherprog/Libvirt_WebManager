@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Libvirt_WebManager.Controllers
@@ -60,8 +55,10 @@ namespace Libvirt_WebManager.Controllers
             var h = GetHost(Host);
             h.virConnectListAllStoragePools(out pools, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
             AddToAutomaticDisposal(pools);
-            ViewBag.Host = Host;
-            return PartialView(pools);
+            var vm = new ViewModels.Domain.PoolVolume_Selector_Down();
+            vm.Pools = pools;
+            vm.Host = Host;
+            return PartialView(vm);
         }
 
         public ActionResult _Partial_OS_Volume_Selector(string Host, string pool)
@@ -69,11 +66,14 @@ namespace Libvirt_WebManager.Controllers
             var h = GetHost(Host);
             var p = h.virStoragePoolLookupByName(pool);
             AddToAutomaticDisposal(p);
-            var vm = new ViewModels.Storage.Storage_Pool_Down();
-            vm.Pool = p;
+            var vm = new Libvirt_WebManager.ViewModels.Domain.PoolVolume_Selector();
+            vm.Parent = pool;
             Libvirt.CS_Objects.Storage_Volume[] vols;
             p.virStoragePoolListAllVolumes(out vols);
             AddToAutomaticDisposal(vols);
+            vm.Volumes = vols;
+            vm.Host = Host;
+           
             return PartialView(p);
         }
 

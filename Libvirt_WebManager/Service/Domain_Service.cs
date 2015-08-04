@@ -19,14 +19,14 @@ namespace Libvirt_WebManager.Service
 
 
             //Add a hard drive
-            var harddrive = new Libvirt.Models.Concrete.Device();
-            harddrive.Device_Bus_Type = Libvirt.Models.Concrete.Device.Device_Bus_Types.virtio;
-            harddrive.Device_Device_Type = Libvirt.Models.Concrete.Device.Device_Device_Types.disk;
-            harddrive.Device_Type = Libvirt.Models.Concrete.Device.Device_Types.file;
-            harddrive.Driver_Cache_Type = Libvirt.Models.Concrete.Device.Driver_Cache_Types._default;
-            harddrive.Driver_Type = Libvirt.Models.Concrete.Device.Driver_Types.raw;
+            var harddrive = new Libvirt.Models.Concrete.Disk();
+            harddrive.Device_Bus_Type = Libvirt.Models.Concrete.Disk.Disk_Bus_Types.virtio;
+            harddrive.Device_Device_Type = Libvirt.Models.Concrete.Disk.Disk_Device_Types.disk;
+            harddrive.Device_Type = Libvirt.Models.Concrete.Disk.Disk_Types.file;
+            harddrive.Driver_Cache_Type = Libvirt.Models.Concrete.Disk.Driver_Cache_Types._default;
+            harddrive.Driver_Type = Libvirt.Models.Concrete.Disk.Driver_Types.raw;
             harddrive.ReadOnly = false;
-            harddrive.Snapshot_Type = Libvirt.Models.Concrete.Device.Snapshot_Types._default;
+            harddrive.Snapshot_Type = Libvirt.Models.Concrete.Disk.Snapshot_Types._default;
             var source = new Libvirt.Models.Concrete.Device_Source_File();
             using (var hdpool = h.virStoragePoolLookupByName(v.HD_Pool))
             {
@@ -36,18 +36,18 @@ namespace Libvirt_WebManager.Service
                 }
             }
 
-            source.Source_Startup_Policy = Libvirt.Models.Concrete.Device.Source_Startup_Policies.mandatory;
+            source.Source_Startup_Policy = Libvirt.Models.Concrete.Disk.Source_Startup_Policies.mandatory;
             harddrive.Source = source;
-            virtuammachine.Devices.Add(harddrive);
+            virtuammachine.Drives.Add(harddrive);
 
-            var oscdrom = new Libvirt.Models.Concrete.Device();
-            oscdrom.Device_Bus_Type = Libvirt.Models.Concrete.Device.Device_Bus_Types.ide;
-            oscdrom.Device_Device_Type = Libvirt.Models.Concrete.Device.Device_Device_Types.cdrom;
-            oscdrom.Device_Type = Libvirt.Models.Concrete.Device.Device_Types.volume;
-            oscdrom.Driver_Cache_Type = Libvirt.Models.Concrete.Device.Driver_Cache_Types._default;
-            oscdrom.Driver_Type = Libvirt.Models.Concrete.Device.Driver_Types.raw;
+            var oscdrom = new Libvirt.Models.Concrete.Disk();
+            oscdrom.Device_Bus_Type = Libvirt.Models.Concrete.Disk.Disk_Bus_Types.ide;
+            oscdrom.Device_Device_Type = Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom;
+            oscdrom.Device_Type = Libvirt.Models.Concrete.Disk.Disk_Types.volume;
+            oscdrom.Driver_Cache_Type = Libvirt.Models.Concrete.Disk.Driver_Cache_Types._default;
+            oscdrom.Driver_Type = Libvirt.Models.Concrete.Disk.Driver_Types.raw;
             oscdrom.ReadOnly = true;
-            oscdrom.Snapshot_Type = Libvirt.Models.Concrete.Device.Snapshot_Types._default;
+            oscdrom.Snapshot_Type = Libvirt.Models.Concrete.Disk.Snapshot_Types._default;
  
             var cdsource = new Libvirt.Models.Concrete.Device_Source_File();
             using (var hdpool = h.virStoragePoolLookupByName(v.OS_Pool))
@@ -58,9 +58,9 @@ namespace Libvirt_WebManager.Service
                 }
             }
 
-            cdsource.Source_Startup_Policy = Libvirt.Models.Concrete.Device.Source_Startup_Policies.optional;
+            cdsource.Source_Startup_Policy = Libvirt.Models.Concrete.Disk.Source_Startup_Policies.optional;
             oscdrom.Source = cdsource;
-            virtuammachine.Devices.Add(oscdrom);
+            virtuammachine.Drives.Add(oscdrom);
             var testxml = virtuammachine.To_XML();
             using (var domain = h.virDomainDefineXML(virtuammachine))
             {

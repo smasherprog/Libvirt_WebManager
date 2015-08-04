@@ -1,9 +1,18 @@
-﻿@model Libvirt.CS_Objects.Storage_Pool
-@{
-    Libvirt.CS_Objects.Storage_Volume[] vols;
-    Model.virStoragePoolListAllVolumes(out vols);
-}
-
+﻿@model Libvirt_WebManager.ViewModels.Domain.PoolVolume_Selector
+<script>
+    function ospoolselected() {
+        $('.OS_Volume_drp').hide();
+        $('#' + $('#OS_Pool_Selector').val()).show();
+        $('#').val($('#OS_Pool_Selector').val());
+    }
+    function UpdateSelectors() {
+        $('#').val($('#OS_Pool_Selector').val());
+        $('#').val($('.OS_Volume_drp').filter(':visible').first().val());
+    }
+    $(document).ready(function () {
+        ospoolselected();
+    });
+</script>
 <h3>Available Volumes</h3>
 <table class="table table-striped table-striped table-responsive table-hover table-condensed table-bordered">
     <thead>
@@ -20,7 +29,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var vol in vols)
+        @foreach (var vol in Model.Volumes)
         {
             Libvirt._virStorageVolInfo info;
             vol.virStorageVolGetInfo(out info);

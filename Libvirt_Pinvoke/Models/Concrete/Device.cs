@@ -8,33 +8,33 @@ using System.Threading.Tasks;
 namespace Libvirt.Models.Concrete
 {
 
-    public class Device : IXML, IValidation
+    public class Disk : IXML, IValidation
     {
-        public enum Device_Types { file, block, dir, network, volume };
-        public enum Device_Device_Types { floppy, disk, cdrom, lun };//default is disk
+        public enum Disk_Types { file, block, dir, network, volume };
+        public enum Disk_Device_Types { floppy, disk, cdrom, lun };//default is disk
         public enum Snapshot_Types { _internal, external, _default };//Store the snapshots WITH the underlying storage, or seperate?
         public enum Driver_Types { raw, qcow2 };
         public enum Driver_Cache_Types { _default, none, writethrough, writeback, directsync, _unsafe };
         public enum Source_Startup_Policies { mandatory, requisite, optional };
-        public enum Device_Bus_Types { ide, scsi, virtio, usb, sata, sd };//default is disk
-        public Device()
+        public enum Disk_Bus_Types { ide, scsi, virtio, usb, sata, sd };//default is disk
+        public Disk()
         {
-            Device_Type = Device_Types.dir;
-            Device_Device_Type = Device_Device_Types.disk;
+            Device_Type = Disk_Types.dir;
+            Device_Device_Type = Disk_Device_Types.disk;
             Snapshot_Type = Snapshot_Types._default;
             Driver_Type = Driver_Types.raw;
             Driver_Cache_Type = Driver_Cache_Types._default;
-            Device_Bus_Type = Device_Bus_Types.virtio;
+            Device_Bus_Type = Disk_Bus_Types.virtio;
             ReadOnly = false;
             Letter = 'a';
         }
 
-        public Device_Types Device_Type { get; set; }
-        public Device_Device_Types Device_Device_Type { get; set; }
+        public Disk_Types Device_Type { get; set; }
+        public Disk_Device_Types Device_Device_Type { get; set; }
         public Snapshot_Types Snapshot_Type { get; set; }
         public Driver_Types Driver_Type { get; set; }
         public Driver_Cache_Types Driver_Cache_Type { get; set; }
-        public Device_Bus_Types Device_Bus_Type { get; set; }
+        public Disk_Bus_Types Device_Bus_Type { get; set; }
         public IDevice_Source Source { get; set; }
         public bool ReadOnly { get; set; }
         public char Letter { get; set; }
@@ -47,8 +47,8 @@ namespace Libvirt.Models.Concrete
             ret += Source.To_XML();
 
             ret += "<target dev='";
-            if (Device_Bus_Type == Device_Bus_Types.virtio) ret += "vd";
-            else if (Device_Bus_Type == Device_Bus_Types.scsi) ret += "sd";
+            if (Device_Bus_Type == Disk_Bus_Types.virtio) ret += "vd";
+            else if (Device_Bus_Type == Disk_Bus_Types.scsi) ret += "sd";
             else ret += "sd";
             ret += Letter + "' bus='" + Device_Bus_Type.ToString() + "' />";
 
@@ -58,12 +58,12 @@ namespace Libvirt.Models.Concrete
         }
         private void Reset()
         {
-            Device_Type = Device_Types.dir;
-            Device_Device_Type = Device_Device_Types.disk;
+            Device_Type = Disk_Types.dir;
+            Device_Device_Type = Disk_Device_Types.disk;
             Snapshot_Type = Snapshot_Types._default;
             Driver_Type = Driver_Types.raw;
             Driver_Cache_Type = Driver_Cache_Types._default;
-            Device_Bus_Type = Device_Bus_Types.virtio;
+            Device_Bus_Type = Disk_Bus_Types.virtio;
             ReadOnly = false;
             Letter = 'a';
         }
@@ -76,14 +76,14 @@ namespace Libvirt.Models.Concrete
                 var attr = os.Attribute("type");
                 if (attr != null)
                 {
-                    var b = Device_Types.dir;
+                    var b = Disk_Types.dir;
                     Enum.TryParse(attr.Value, true, out b);
                     Device_Type = b;
                 }
                 attr = os.Attribute("device");
                 if (attr != null)
                 {
-                    var b = Device_Device_Types.disk;
+                    var b = Disk_Device_Types.disk;
                     Enum.TryParse(attr.Value, true, out b);
                     Device_Device_Type = b;
                 }
@@ -113,11 +113,11 @@ namespace Libvirt.Models.Concrete
                     Driver_Cache_Type = b;
                 }
             }
-            if (Device_Type == Device_Types.dir) Source = new Device_Source_Dir();
-            else if (Device_Type == Device_Types.file) Source = new Device_Source_File();
-            else if (Device_Type == Device_Types.block) Source = new Device_Source_Block();
-            else if (Device_Type == Device_Types.network) Source = new Device_Source_Network();
-            else if (Device_Type == Device_Types.volume)  Source = new Device_Source_Volume();
+            if (Device_Type == Disk_Types.dir) Source = new Device_Source_Dir();
+            else if (Device_Type == Disk_Types.file) Source = new Device_Source_File();
+            else if (Device_Type == Disk_Types.block) Source = new Device_Source_Block();
+            else if (Device_Type == Disk_Types.network) Source = new Device_Source_Network();
+            else if (Device_Type == Disk_Types.volume)  Source = new Device_Source_Volume();
             if(Source!= null) Source.From_XML(os);
 
             os = xml.Element("target");
@@ -126,7 +126,7 @@ namespace Libvirt.Models.Concrete
                 var attr = os.Attribute("bus");
                 if (attr != null)
                 {
-                    var b = Device_Bus_Types.virtio;
+                    var b = Disk_Bus_Types.virtio;
                     Enum.TryParse(attr.Value, true, out b);
                     Device_Bus_Type = b;
                 }
@@ -142,11 +142,11 @@ namespace Libvirt.Models.Concrete
         }
         public void Validate(IValdiator v)
         {
-            if (Device_Device_Type == Device_Device_Types.cdrom)
+            if (Device_Device_Type == Disk_Device_Types.cdrom)
             {
                 ReadOnly = true;// force this here
             }
-            if (Device_Type == Device_Types.file && Device_Device_Type == Device_Device_Types.cdrom)
+            if (Device_Type == Disk_Types.file && Device_Device_Type == Disk_Device_Types.cdrom)
             {
                 var src = Source as Device_Source_File;
                 if (!string.IsNullOrWhiteSpace(src.file_path))

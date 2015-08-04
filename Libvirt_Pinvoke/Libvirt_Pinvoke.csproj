@@ -79,9 +79,11 @@
     <Compile Include="Models\Concrete\CPU_Layout.cs" />
     <Compile Include="Models\Concrete\Device.cs" />
     <Compile Include="Models\Concrete\Device_Sources.cs" />
+    <Compile Include="Models\Concrete\Graphics.cs" />
     <Compile Include="Models\Concrete\Features.cs" />
     <Compile Include="Models\Concrete\General_Metadata.cs" />
-    <Compile Include="Models\Concrete\Device_Collection.cs" />
+    <Compile Include="Models\Concrete\Disk_Collection.cs" />
+    <Compile Include="Models\Concrete\Graphics_Listen.cs" />
     <Compile Include="Models\Concrete\Storage_Volume.cs" />
     <Compile Include="Models\Concrete\Storage_Pool.cs" />
     <Compile Include="Models\Concrete\Storage_Pool_Items.cs" />

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Libvirt.Service.Concrete
 {
-    public class Device_Validator : IService_Validator<Models.Concrete.Device, CS_Objects.Host>
+    public class Device_Validator : IService_Validator<Models.Concrete.Disk, CS_Objects.Host>
     {
-        public void Validate(IValdiator v, Models.Concrete.Device obj, CS_Objects.Host obj2)
+        public void Validate(IValdiator v, Models.Concrete.Disk obj, CS_Objects.Host obj2)
         {
             if (obj.Source.GetType() == typeof(Libvirt.Models.Concrete.Device_Source_Volume))
             {
@@ -26,12 +26,12 @@ namespace Libvirt.Service.Concrete
             }
         }
     }
-    public class Device_Collection_Validator : IService_Validator<Libvirt.Models.Concrete.Device_Collection, CS_Objects.Host>
+    public class Device_Collection_Validator : IService_Validator<Libvirt.Models.Concrete.Drive_Collection, CS_Objects.Host>
     {
-        public void Validate(IValdiator v, Libvirt.Models.Concrete.Device_Collection obj, CS_Objects.Host obj2)
+        public void Validate(IValdiator v, Libvirt.Models.Concrete.Drive_Collection obj, CS_Objects.Host obj2)
         {
             var d = new Device_Validator();
-            foreach (var item in obj.Devices)
+            foreach (var item in obj.Disks)
             {
                 if (!v.IsValid()) break;
                 d.Validate(v, item, obj2);
