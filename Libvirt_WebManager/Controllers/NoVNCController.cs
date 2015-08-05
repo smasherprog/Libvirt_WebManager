@@ -6,11 +6,11 @@ using System.Web.Mvc;
 
 namespace Libvirt_WebManager.Controllers
 {
-    public class NoVNCController : Controller
+    public class NoVNCController : CommonController
     {
-        public ActionResult _Partial_Console()
+        public ActionResult _Partial_Console(string host, string domain)
         {
-            return PartialView();
+            return PartialView(new ViewModels.NoVNC.ConnectionInfo { Host = host, Path = "websockify", Password = "", Port = "5700" } );
         }
     }
 }

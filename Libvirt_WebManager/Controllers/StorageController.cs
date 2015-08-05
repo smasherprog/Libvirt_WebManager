@@ -19,6 +19,8 @@ namespace Libvirt_WebManager.Controllers
         [HttpGet]
         public ActionResult _Partial_CreatePool(string host)
         {
+            var h = GetHost(host);
+            var st = h.virConnectGetSysinfo();
             return PartialView(new ViewModels.Storage.Storage_Pool { Host = host });
         }
         [HttpPost]

@@ -61,6 +61,7 @@ namespace Libvirt_WebManager.Service
             cdsource.Source_Startup_Policy = Libvirt.Models.Concrete.Disk.Source_Startup_Policies.optional;
             oscdrom.Source = cdsource;
             virtuammachine.Drives.Add(oscdrom);
+            virtuammachine.graphics.Graphics_Listen = new Libvirt_Pinvoke.Models.Concrete.Graphics_Listen { address = "0.0.0.0" };
             var testxml = virtuammachine.To_XML();
             using (var domain = h.virDomainDefineXML(virtuammachine))
             {

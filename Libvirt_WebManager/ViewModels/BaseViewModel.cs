@@ -9,7 +9,10 @@ namespace Libvirt_WebManager.ViewModels
     public class BaseViewModel 
     {
         [Required]
-        public string Host { get; set;}
+        [MaxLength(50)]
+        public string Host { get; set; }
+        [Required]
+        [MaxLength(50)]
         public string Parent { get; set; }
     }
 }

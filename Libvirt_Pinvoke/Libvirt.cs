@@ -1060,16 +1060,17 @@ namespace Libvirt
         }
     }
 
-    public partial struct virNetworkPtr
+    public struct virNetworkPtr : IDisposable
     {
-        public virNetworkPtr(IntPtr pointer)
-        {
-            this.Pointer = pointer;
-        }
-
         public IntPtr Pointer;
+        public void Dispose()
+        {
+            if (Pointer != IntPtr.Zero)
+                PInvoke.virNetworkFree(this);
+            Pointer = IntPtr.Zero;
+            GC.SuppressFinalize(this);
+        }
     }
-
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void virConnectNetworkEventLifecycleCallback(IntPtr @conn, IntPtr @net, int @event, int @detail, IntPtr @opaque);
 
@@ -1086,16 +1087,17 @@ namespace Libvirt
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void virConnectNetworkEventGenericCallback(IntPtr @conn, IntPtr @net, IntPtr @opaque);
 
-    public partial struct virNodeDevicePtr
+    public struct virNodeDevicePtr : IDisposable
     {
-        public virNodeDevicePtr(IntPtr pointer)
-        {
-            this.Pointer = pointer;
-        }
-
         public IntPtr Pointer;
+        public void Dispose()
+        {
+            if (Pointer != IntPtr.Zero)
+                PInvoke.virNodeDeviceFree(this);
+            Pointer = IntPtr.Zero;
+            GC.SuppressFinalize(this);
+        }
     }
-
     public partial struct virNWFilterPtr
     {
         public virNWFilterPtr(IntPtr pointer)

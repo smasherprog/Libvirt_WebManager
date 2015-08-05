@@ -7,14 +7,26 @@
     <script>
         function SelectOSVolumePool() {
             if ($('#Domain_OS_Options').val() == '@Libvirt_WebManager.ViewModels.Domain.NewDomain_OS_Options.Local') {
-                Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new {  Host = Model.Domain.Host }))');
+                Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new Libvirt_WebManager.ViewModels.Domain.BasePoolVolume_Selector {
+                                      Host = Model.Domain.Host,
+                                      Select_ISO = true,
+                                      Parent = Model.Domain.Host,
+                                      PoolSelector = "Domain_OS_Pool",
+                                      VolumeSelector = "Domain_OS_Volume"
+                                  }))');
                 $('#OS_Pool_n_Vol_Area').slideDown();
             } else {
                 $('#OS_Pool_n_Vol_Area').slideUp();
             }
         }
         function SelectHDVolumePool() {
-            Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new { Host = Model.Domain.Host }))');
+            Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new Libvirt_WebManager.ViewModels.Domain.BasePoolVolume_Selector {
+                                      Host = Model.Domain.Host,
+                                      Select_ISO = false,
+                                      Parent = Model.Domain.Host,
+                                      PoolSelector = "Domain_HD_Pool",
+                                      VolumeSelector = "Domain_HD_Volume"
+                                  }))');
         }
         $(document).ready(function () {
             $('#Domain_OS_Options').change(function () { SelectOSVolumePool(); });
@@ -125,8 +137,8 @@
                                @class = "form-control",
                                @type = "number",
                                aria_describedby = "basic-addon2",
-                               min = 1,
-                               step = 1,
+                               min = 128,
+                               step = 64,
                                max = (info.memory / 1024) - 1
                            })
                                 <span class="input-group-addon">MB</span>

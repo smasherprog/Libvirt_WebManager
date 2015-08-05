@@ -1,4 +1,4 @@
-﻿@model Libvirt_WebManager.ViewModels.Domain.Domain_Down
+﻿@model Libvirt_WebManager.ViewModels.Domain.Domain_List_Down
 
 <div class="page-header">
     <h2>
@@ -34,7 +34,7 @@
             <tbody>
                 @foreach (var item in Model.Domains)
                 {
-                    @Html.Partial("_Partial_Domain_TableRowDetails", item)
+                    @Html.Partial("_Partial_Domain_TableRowDetails", new Libvirt_WebManager.ViewModels.Domain.Domain_Down { Host = Model.Host, Parent = Model.Host, Domain = item }  )
                 }
             </tbody>
         </table>

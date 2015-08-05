@@ -45,7 +45,7 @@
     <div class="col-sm-12">
         <h2>
             Volumes
-            <a href="#" class="btn btn-primary" title="Add New Volume to Pool" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_CreateVolume", "Storage", new { host = Model.Host, pool = @Model.Pool.virStoragePoolGetName() }))');return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+            <a href="#" class="btn btn-primary btn-xs" title="Add New Volume to Pool" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_CreateVolume", "Storage", new { host = Model.Host, pool = Model.Pool.virStoragePoolGetName() }))');return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
         </h2>
     </div>
 </div>

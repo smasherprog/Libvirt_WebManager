@@ -48,9 +48,22 @@ namespace Libvirt.Models.Concrete
         }
         public string To_XML()
         {
-            var ret = "<graphics type='" + Graphic_Type.ToString() + "' port='" + _port.ToString() + "' " + (autoport ? "autoport='yes'" : "") + (!string.IsNullOrWhiteSpace(passwd) ? "passwd='" + passwd + "'" : "") + (websocket.HasValue ? "websocket='" + websocket.Value.ToString() + "'" : "") + " >";
-            if (Graphics_Listen != null) ret += Graphics_Listen.To_XML();
-            ret += "</graphics>";
+            var ret = "<graphics type='" + Graphic_Type.ToString() + "'";
+            if (autoport)
+            {
+                ret += " autoport='yes'";
+            }else
+            {
+                ret += "' port='" + _port.ToString() + "'";
+            }
+             ret += (!string.IsNullOrWhiteSpace(passwd) ? " passwd='" + passwd + "'" : "") + (websocket.HasValue ? " websocket='" + websocket.Value.ToString() + "'" : "");
+            if (Graphics_Listen != null)
+            {
+                ret += ">"+Graphics_Listen.To_XML();
+                ret += "</graphics>";
+            }
+            else ret += " />";
+
             return ret;
         }
         public void Validate(IValdiator v)
@@ -99,7 +112,7 @@ namespace Libvirt.Models.Concrete
                 if (type != null)
                 {
                     int a = -1;
-                    if(Int32.TryParse(type.Value, out a))
+                    if (Int32.TryParse(type.Value, out a))
                     {
                         websocket = a;
                     }
