@@ -1,0 +1,40 @@
+﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_Down
+<script>
+    $(document).ready(function () {
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $($(e.relatedTarget).attr('href')).html('');//clear the old source
+            $($(e.target).attr('href')).load($($(e.target).attr('href')).attr('data-urlpart'));
+        })
+    });
+</script>
+<div class="page-header">
+    <h2>
+        @Model.Domain.virDomainGetName()
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#VNC_Console" aria-controls="home" role="tab" data-toggle="tab">Console <i class="fa fa-desktop"></i></a>
+                </li>
+                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="VNC_Console" data-urlpart="@Url.Action("_Partial_Console", "Details", new { Area = "Domain", host = Model.Host, domain = Model.Domain.virDomainGetName() })">
+                </div>
+                <div role="tabpanel" class="tab-pane" id="Edit_Domain"  data-urlpart="@Url.Action("_Partial_Index", "Edit", new { Area = "Domain", host = Model.Host, domain = Model.Domain.virDomainGetName() })">Edit</div>
+                <div role="tabpanel" class="tab-pane" id="messages">dddddddddd</div>
+                <div role="tabpanel" class="tab-pane" id="settings">zzzzzzzzzzzzzzzzzzz.</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

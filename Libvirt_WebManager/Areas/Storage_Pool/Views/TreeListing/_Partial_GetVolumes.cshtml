@@ -1,0 +1,28 @@
+@model Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume_TreeViewDown
+
+<ul>
+
+    @foreach (var volume in Model.Volumes)
+    {
+        var dname = volume.virStorageVolGetName();
+        Libvirt._virStorageVolInfo info;
+        volume.virStorageVolGetInfo(out info);
+
+        var li_id = "x" + Model.Host.Replace(".", "_") + "StoragePools_Volume_" + dname;
+        <li id="@(li_id)" data-html="true" data-toggle="tooltip" data-placement="right" title="Volume:@dname<br>Type:@info.type.ToString().Split('_').LastOrDefault()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">
+            <a href="#">
+                @if (dname.ToLower().EndsWith(".iso"))
+                {
+                    <span class="icon storage_volume_iso_icon"></span>
+                }
+                else
+                {
+                    <span class="icon storage_volume_icon"></span>
+                }
+                @dname
+            </a>
+        </li>
+    }
+</ul>
+
+

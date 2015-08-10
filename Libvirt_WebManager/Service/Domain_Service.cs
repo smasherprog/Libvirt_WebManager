@@ -7,7 +7,7 @@ namespace Libvirt_WebManager.Service
     {
         public Domain_Service(Libvirt.Models.Interface.IValdiator v) : base(v) { }
 
-        public void CreateDomain(ViewModels.Domain.New_Domain_VM v)
+        public void CreateDomain(Libvirt_WebManager.Areas.Domain.Models.New_Domain_VM v)
         {
             var h = GetHost(v.Host);
             Libvirt.Models.Concrete.Virtual_Machine virtuammachine = new Libvirt.Models.Concrete.Virtual_Machine();
@@ -61,10 +61,16 @@ namespace Libvirt_WebManager.Service
             cdsource.Source_Startup_Policy = Libvirt.Models.Concrete.Disk.Source_Startup_Policies.optional;
             oscdrom.Source = cdsource;
             virtuammachine.Drives.Add(oscdrom);
-            virtuammachine.graphics.Graphics_Listen = new Libvirt_Pinvoke.Models.Concrete.Graphics_Listen { address = "0.0.0.0" };
+            virtuammachine.graphics = new Libvirt.Models.Concrete.Graphics();
+            virtuammachine.graphics.Graphic_Type = Libvirt.Models.Concrete.Graphics.Graphic_Types.vnc;
+            virtuammachine.graphics.autoport = true;
+            virtuammachine.graphics.websocket = -1;
+            virtuammachine.graphics.listen = "0.0.0.0";
+
             var testxml = virtuammachine.To_XML();
             using (var domain = h.virDomainDefineXML(virtuammachine))
             {
+            
                 if (domain.IsValid)
                 {
                     if (domain.virDomainCreate() == 0)

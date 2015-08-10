@@ -24,7 +24,7 @@ namespace Libvirt_WebManager.Service
             if (mes != null)
             {
                 Task.Factory.StartNew(() => { 
-                    _hubContext.Clients.All.LogEventReceived(new Libvirt_WebManager.ViewModels.Message.LogMessage() { Body = mes.Body, Title = mes.Title, Message_Type = mes.Message_Type.ToString() }); 
+                    _hubContext.Clients.All.LogEventReceived(new Libvirt_WebManager.ViewModels.Message.LogMessage() { Body = mes.Body, Title = mes.Title, Message_Type = mes.Message_Type.ToString(), Time = DateTime.Now }); 
                 });
             }
         }

@@ -40,7 +40,6 @@ namespace Libvirt.Models.Concrete
             ret += "<devices>";
             ret += "<emulator>/usr/bin/qemu-system-x86_64</emulator>";//according to http://www.linux-kvm.org/page/RunningKVM  (kvm doesn't make a distinction between i386 and x86_64 so even in i386 you should use `qemu-system-x86_64`
             ret += Drives.To_XML();
-    
             ret += graphics.To_XML();
             ret += "</devices>";
             ret += "</domain>";
@@ -92,7 +91,8 @@ namespace Libvirt.Models.Concrete
             if (element != null)
             {
                 Drives.From_XML(element);
-                graphics.From_XML(element);
+               graphics.From_XML(element);
+         
             }
         }
     }

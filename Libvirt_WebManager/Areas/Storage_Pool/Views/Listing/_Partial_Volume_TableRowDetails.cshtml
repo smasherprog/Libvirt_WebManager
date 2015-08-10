@@ -1,0 +1,67 @@
+﻿@model Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume_Details
+@{
+    Libvirt._virStorageVolInfo info;
+    Model.Volume.virStorageVolGetInfo(out info);
+    var name = Model.Volume.virStorageVolGetName();
+    var someuiniqueid = "Volume_Details_" + name.Replace(".", "");
+
+    var percentused = 0;
+    if (info.capacity > 0)
+    {
+        var tmpd = (double)(info.capacity - info.allocation);
+        tmpd = (tmpd / (double)info.capacity);
+        percentused = ((int)(tmpd * 100) - 100) * -1;
+    }
+    var cl = "progress-bar-danger";
+    if(percentused<25)
+    {
+        cl = "progress-bar-success";
+    } else if (percentused < 50)
+    {
+        cl = "progress-bar-info";
+    }
+    else if (percentused < 75)
+    {
+        cl = "progress-bar-warning";
+    }
+}
+<tr id="@someuiniqueid">
+    <td>
+        @name
+    </td>
+    <td>
+        @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)
+    </td>
+    <td>
+        @Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)
+    </td>
+    <td>
+        @info.type.ToString().Split('_').LastOrDefault()
+    </td>
+    <td>
+        @Model.Volume.virStorageVolGetPath()
+    </td>
+    <td>
+        TBA
+    </td>
+    <td>
+        <div class="progress">
+            <div class="progress-bar @cl progress-bar-striped" style="width: @percentused%" title="@percentused">
+
+            </div>
+        </div>
+    </td>
+    <td>
+        <a class="btn btn-xs btn-success" title="Resize Volume: Grow or shrink the volume" href="#"><i class="fa fa-expand"></i></a>
+        <a class="btn btn-xs btn-info" title="Download the volume" href="#"><i class="fa fa-download"></i></a>
+        <span> | </span>
+        <a class="btn btn-xs btn-warning" title="Upload data into the volume" href="#"><i class="fa fa-upload"></i></a>
+        <span> | </span>
+        <a title="Delete Volume" href="@Url.Action("_Partial_Delete_Volume", "Listing", new {Area="Storage_Pool", Host = Model.Host, Pool = Model.Parent, Volume = name })" class="btn btn-xs btn-danger" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-confirm="Are you sure that you want to delete this volume? This operation is non recoverable!">
+            <i class="fa fa-trash"></i>
+        </a>
+        <a class="btn btn-xs btn-warning" title="Wipe Volume: This will set all data to zero's'" href="#"><i class="fa fa-eraser"></i></a>
+    </td>
+</tr>
+
+

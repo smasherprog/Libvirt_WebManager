@@ -1,0 +1,163 @@
+﻿@model Libvirt_WebManager.Areas.Domain.Models.New_Domain_Down_VM
+@{
+    Libvirt._virNodeInfo info;
+    Model.Host.virNodeGetInfo(out info);
+}
+<div id="_Partial_Create_Form">
+    <script>
+        function SelectOSVolumePool() {
+            if ($('#Domain_OS_Options').val() == '@Libvirt_WebManager.Areas.Domain.Models.NewDomain_OS_Options.Local') {
+                Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new Libvirt_WebManager.Areas.Domain.Models.BasePoolVolume_Selector {
+                                      Host = Model.Domain.Host,
+                                      Select_ISO = true,
+                                      Parent = Model.Domain.Host,
+                                      PoolSelector = "Domain_OS_Pool",
+                                      VolumeSelector = "Domain_OS_Volume"
+                                  }))');
+                $('#OS_Pool_n_Vol_Area').slideDown();
+            } else {
+                $('#OS_Pool_n_Vol_Area').slideUp();
+            }
+        }
+        function SelectHDVolumePool() {
+            Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", Html.Controller(), new Libvirt_WebManager.Areas.Domain.Models.BasePoolVolume_Selector {
+                                  Host = Model.Domain.Host,
+                                  Select_ISO = false,
+                                  Parent = Model.Domain.Host,
+                                  PoolSelector = "Domain_HD_Pool",
+                                  VolumeSelector = "Domain_HD_Volume"
+                              }))');
+        }
+        $(document).ready(function () {
+            $('#Domain_OS_Options').change(function () { SelectOSVolumePool(); });
+            if ($('#Domain_OS_Options').val() != '@Libvirt_WebManager.Areas.Domain.Models.NewDomain_OS_Options.Local') $('#OS_Pool_n_Vol_Area').hide();
+
+        });
+    </script>
+
+    @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_Create_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_Create_Form_spinner" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Create Domain</h4>
+        </div>
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    @Html.ValidationSummary()
+
+                    @Html.HiddenFor(a => a.Domain.Host)
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.Domain.Name)
+                        @Html.TextBoxFor(a => a.Domain.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(a => a.Domain.Name)
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.Domain.OS_Options)
+                        @Html.DropDownListFor(a => a.Domain.OS_Options, Model.InstallOptions, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(a => a.Domain.OS_Options)
+                    </div>
+                    <div class="row" id="OS_Pool_n_Vol_Area">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                @Html.LabelFor(a => a.Domain.OS_Pool)
+                                @Html.TextBoxFor(a => a.Domain.OS_Pool, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(a => a.Domain.OS_Pool)
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        @Html.LabelFor(a => a.Domain.OS_Volume)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(a => a.Domain.OS_Volume, new { @class = "form-control", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(a => a.Domain.OS_Volume)
+                                    </div>
+                                    <button class="col-sm-4  btn btn-primary" onclick="SelectOSVolumePool(); return false;">Select</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                @Html.LabelFor(a => a.Domain.HD_Pool)
+                                @Html.TextBoxFor(a => a.Domain.HD_Pool, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(a => a.Domain.HD_Pool)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        @Html.LabelFor(a => a.Domain.HD_Volume)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(a => a.Domain.HD_Volume, new { @class = "form-control", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(a => a.Domain.HD_Volume)
+                                    </div>
+                                    <button class="col-sm-4 btn btn-primary" onclick="SelectHDVolumePool(); return false;">Select</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(a => a.Domain.Cpus)
+                                @Html.TextBoxFor(a => a.Domain.Cpus, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               min = 1,
+                               step = 1,
+                               max = info.cpus
+                           })
+                                @Html.ValidationMessageFor(a => a.Domain.Cpus)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.LabelFor(a => a.Domain.Ram)
+                            <div class="input-group">
+
+                                @Html.TextBoxFor(a => a.Domain.Ram, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               aria_describedby = "basic-addon2",
+                               min = 128,
+                               step = 64,
+                               max = (info.memory / 1024) - 1
+                           })
+                                <span class="input-group-addon">MB</span>
+                                @Html.ValidationMessageFor(a => a.Domain.Ram)
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary pull-right">
+                Create
+                @Html.Spinner("_Partial_Create_Form_spinner")
+            </button>
+        </div>
+    }
+</div>

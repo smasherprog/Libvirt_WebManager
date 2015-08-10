@@ -4,7 +4,7 @@ namespace Libvirt_WebManager.ViewModels
 {
     public class TreeViewModel
     {
-        public enum Node_Types { Host, Domains, Interfaces, Storage_Pools, Domain, Storage_Pool, Storage_Volume }
+        public enum Node_Types { Host, Domains, Interfaces, Storage_Pools, Domain, Storage, Storage_Volume }
         public enum Node_Status_Types
         {
             VIR_DOMAIN_NOSTATE,

@@ -76,7 +76,7 @@ $(document).ready(function () {
                 var progressbar = $(form).find('.progress-bar');
                 if (progressbar.length > 0) {
                     xhr.upload.onprogress = function (e) {
-                        var done = e.position || e.loaded, total = e.totalSize || e.total;
+                        var done =e.loaded, total = e.total;
                         var present = Math.floor(done / total * 100);
                         $(progressbar).css('width', present + '%');
                         $(progressbar).html(present + '%');
@@ -86,9 +86,18 @@ $(document).ready(function () {
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         if (form.dataset.ajaxUpdate) {
+                            
                             var updateTarget = document.querySelector(form.dataset.ajaxUpdate);
+                           
                             if (updateTarget) {
-                                updateTarget.innerHTML = xhr.responseText;
+                                var ajaxmode = $(form).attr('data-ajax-mode');
+                                if (ajaxmode != null) {
+                                    if (ajaxmode == 'replace-with') $(updateTarget).replaceWith(xhr.responseText);
+                                    else $(updateTarget).html(xhr.responseText);
+                                } else {
+                                    $(updateTarget).replaceWith(xhr.responseText);
+                                }
+                      
                             }
                         }
                     }

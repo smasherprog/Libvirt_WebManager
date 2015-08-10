@@ -6,11 +6,20 @@ namespace Libvirt_WebManager.Service
     {
         public Storage_Service(Libvirt.Models.Interface.IValdiator v) : base(v) { }
 
-        public void CreateVolume(ViewModels.Storage.Storage_Volume v, System.Web.HttpPostedFileBase File)
+        public void CreateVolume(Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume v, System.Web.HttpPostedFileBase File)
         {
             var volume = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Storage_Volume>.Map(v);
             if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
             {
+                if (File == null)
+                {
+                    _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
+                    return;
+                } else if(File.ContentLength == 0)
+                {
+                    _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
+                    return;
+                }
                 volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
                 volume.capacity = volume.allocation = File.ContentLength;
             } else {
@@ -42,13 +51,13 @@ namespace Libvirt_WebManager.Service
             }
         }
 
-        public void CreatePool_Dir(ViewModels.Storage.Dir_Pool pool)
+        public void CreatePool_Dir(Libvirt_WebManager.Areas.Storage_Pool.Models.Dir_Pool pool)
         {
-            var h = GetHost(pool._Storage_Pool.Host);
+            var h = GetHost(pool.Storage_Pool.Host);
             if (!_Validator.IsValid()) return;
 
             var p = new Libvirt.Models.Concrete.Storage_Pool();
-            p.name = pool._Storage_Pool.name;
+            p.name = pool.Storage_Pool.name;
             var d = new Libvirt.Models.Concrete.Storage_Pool_Dir();
             p.Storage_Pool_Item = d;
             d.target_path = pool.path;

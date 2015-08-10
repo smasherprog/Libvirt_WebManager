@@ -387,11 +387,41 @@ namespace Libvirt.CS_Objects
         {
             return API.virDomainSaveImageGetXMLDesc(_ConnectPtr, file, flags);
         }
+        public Node_Device virNodeDeviceCreateXML(string xmlDesc)
+        {
+            return new Node_Device(API.virNodeDeviceCreateXML(_ConnectPtr, xmlDesc));
+        }
+   
+        public Node_Device virNodeDeviceLookupByName(string name)
+        {
+            return new Node_Device(API.virNodeDeviceLookupByName(_ConnectPtr, name));
+        }
+        public int virConnectListAllNodeDevices(out Node_Device[] devices, virConnectListAllNodeDeviceFlags flags)
+        {
+            Libvirt.virNodeDevicePtr[] ds;
+            var ret = API.virConnectListAllNodeDevices(_ConnectPtr, out ds, flags);
+            if (ret > -1)
+            {
+                devices = new Node_Device[ds.Length];
+                for (var i = 0; i < ds.Length; i++)
+                {
+                    devices[i] = new Node_Device(ds[i]);
+                }
+            }
+            else devices = new Node_Device[0];
+            return ret;
+        }
+
+        public int virNodeNumOfDevices(string cap)
+        {
+            return API.virNodeNumOfDevices(_ConnectPtr,cap);
+        }
 
         public static Libvirt.virConnectPtr GetPtr(Host p)
         {
             return p._ConnectPtr;
         }
+
         public void Dispose()
         {
             _ConnectPtr.Dispose();

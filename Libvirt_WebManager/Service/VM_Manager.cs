@@ -82,14 +82,18 @@ namespace Libvirt_WebManager.Service
             else
             {
                 Debug.WriteLine("Trying to Connect to " + hostorip);
-                Libvirt_WebManager.Service.Message_Manager.Send(new Libvirt_WebManager.Models.Message.LogMessage { Title = "Connecting to " + hostorip, Message_Type = Libvirt_WebManager.Models.Message_Types.info, Body = "Connecting....Help text should be explicitly associated with the form control it relates to using the aria-describedby attribute. This will ensure that assistive technologies – such as screen readers – will announce this help text when the user focuses or enters the control." });
+                Libvirt_WebManager.Service.Message_Manager.Send(new Libvirt_WebManager.Models.Message.LogMessage { Title = "Connecting to " + hostorip, Message_Type = Libvirt_WebManager.Models.Message_Types.info, Body = "Connecting  . . " });
 
                 var con = Libvirt.CS_Objects.Host.virConnectOpen("qemu+tcp://" + hostorip + "/system");
                 if (con.IsValid)
                 {
                     Connections.Add(hostorip, con);
                     con.virConnSetErrorFunc(_ErrorFunc);
+                    Libvirt_WebManager.Service.Message_Manager.Send(new Libvirt_WebManager.Models.Message.LogMessage { Title = "Connected " + hostorip, Message_Type = Libvirt_WebManager.Models.Message_Types.info, Body = "Connected to host: " + hostorip });
                     return true;
+                } else
+                {
+                    Message_Manager.Send(new Libvirt_WebManager.Models.Message.LogMessage { Title = "Unable to connect! " + hostorip, Message_Type = Libvirt_WebManager.Models.Message_Types.warning, Body = "Could not connect to host: " + hostorip });
                 }
                 con.Dispose();
                 return false;

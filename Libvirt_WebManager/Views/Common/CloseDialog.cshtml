@@ -1,0 +1,7 @@
+﻿@model int
+<div id='scriptcloserhelperthingy_@Model'></div>
+<script>
+    $(document).ready(function () {
+        $('#scriptcloserhelperthingy_@Model').closest('.modal').modal('hide');
+    });
+</script>

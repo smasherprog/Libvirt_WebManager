@@ -1,0 +1,45 @@
+﻿@model  Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Pools
+
+<div class="page-header">
+    <h2>
+        Pool Listing<a href="#" class="btn btn-primary btn-xs" title="Add New Pool" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_CreatePool", "Create", new {Area="Storage_Pool", host = Model.Host }))');return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Capacity
+                    </th>
+                    <th>
+                        Allocation
+                    </th>
+                    <th>
+                        Available
+                    </th>
+                    <th>
+                        State
+                    </th>
+                    <th>
+                        Usage
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Pools)
+                {
+                    @Html.Partial("_Partial_Pool_TableRowDetails", new Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_PoolBase { Host = Model.Host, Parent = Model.Parent, Pool = item })
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

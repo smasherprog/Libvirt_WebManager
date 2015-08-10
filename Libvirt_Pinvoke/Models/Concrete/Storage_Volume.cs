@@ -26,8 +26,7 @@ namespace Libvirt.Models.Concrete
         public string To_XML()
         {
             var ret = "<volume type='file'><name>" + name + "</name><allocation unit='" + Memory_Units + "'>" + (allocation).ToString() + "</allocation>";
-            ret += "<capacity unit='" + Memory_Units + "'>" + (capacity).ToString() + "</capacity>";
-            ret += "<target><format type='" + (Volume_Type == Volume_Types.iso? "raw": Volume_Type.ToString()) + "'/></target></volume>";
+            ret += "<capacity unit='" + Memory_Units + "'>" + (capacity).ToString() + "</capacity></volume>";
             return ret;
         }
         public void From_XML(System.Xml.Linq.XElement xml)

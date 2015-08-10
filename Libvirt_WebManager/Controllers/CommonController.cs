@@ -12,9 +12,10 @@ namespace Libvirt_WebManager.Controllers
         {
             ObjectsToDispose = new List<IDisposable>();
         }
+        static int number = 5;
         protected ActionResult CloseDialog()
         {
-            return Content("<div id='scriptcloserhelperthingy_123'></div><script>$('#scriptcloserhelperthingy_123').closest('.modal').modal('hide');</script>");
+            return PartialView("~/Views/Common/CloseDialog.cshtml", number++);
         }
         protected Libvirt.CS_Objects.Host GetHost(string hostname)
         {

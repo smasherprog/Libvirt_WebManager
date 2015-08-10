@@ -1,0 +1,99 @@
+﻿@model Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Pool_Down
+
+<div class="page-header">
+    <h2>
+        @Model.Pool.virStoragePoolGetName()
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Capacity
+                    </th>
+                    <th>
+                        Allocation
+                    </th>
+                    <th>
+                        Available
+                    </th>
+                    <th>
+                        State
+                    </th>
+                    <th>
+                        Usage
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @Html.Partial("_Partial_Pool_TableRowDetails", new Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_PoolBase { Host = Model.Host, Parent = Model.Parent, Pool = Model.Pool })
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <h2>
+            Volumes
+            <a href="#" class="btn btn-primary btn-xs" title="Add New Volume to Pool" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_CreateVolume", "Create", new { Area="Storage_Pool", host = Model.Host, pool = Model.Pool.virStoragePoolGetName() }))');return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+        </h2>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Capacity
+                    </th>
+                    <th>
+                        Allocation
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Path
+                    </th>
+                    <th>
+                        UsedBy
+                    </th>
+                    <th>
+                        Usage
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var vol in Model.Volumes)
+                {
+                    @Html.Partial("_Partial_Volume_TableRowDetails", new Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume_Details { Host = Model.Host, Parent = Model.Parent, Volume = vol })
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+

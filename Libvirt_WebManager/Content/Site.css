@@ -102,7 +102,7 @@
     }
 
     .tree .domain_icon {
-        background: url(/images/monitor.png) left top no-repeat;
+        background: url(/images/monitor.png) left no-repeat;
         background-size: 18px;
     }
 

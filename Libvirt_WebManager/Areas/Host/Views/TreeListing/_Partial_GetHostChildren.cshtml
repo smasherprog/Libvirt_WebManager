@@ -1,0 +1,30 @@
+@model Libvirt_WebManager.Areas.Host.Models.GetHostsChildren_ViewModel
+
+@{
+    var arr = new string[] { "domain", "interface", "storage_pool" };
+}
+<ul>
+    @foreach (var item in arr)
+    {
+        var plural = item + "s";
+        var li_id = "x" + Model.HostName.Replace(".", "_") + "_" + plural;
+        <li id="@(li_id)">
+            <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_Index", "TreeListing", new { Area=item, host = Model.HostName })" />
+            <label for="item-@(li_id)" onclick="return false;">
+                <span></span><span class="icon @(plural)_icon"></span>
+                <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Listing", new { Area=item, host = Model.HostName })');return false;">@plural</a>
+            </label>
+        </li>
+    }
+</ul>
+<script>
+    $(document).ready(function () {
+        @foreach (var item in arr)
+        {
+            var li_id = "x" + Model.HostName.Replace(".", "_") + "_" + item + "s";
+            <text>registercallsbacks('@li_id');</text>
+        }
+    });
+</script>
+
+

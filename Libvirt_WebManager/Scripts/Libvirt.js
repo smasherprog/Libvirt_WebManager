@@ -48,8 +48,9 @@ Libvirt.UI.Internal.OpenDialog = function (url, ctype) {
     $('body').append(newd);
     $('#' + did + ' .modal-content').load(url);
     $('#' + did).modal('show');
-    $(newd).on('hidden.bs.modal', function () {
-        $(newd).remove();
+    $('#' + did).on('hidden.bs.modal', function () {
+        console.log('hiding stuff '+ did);
+        $('#' + did).remove();
     });
     return newd;
 }

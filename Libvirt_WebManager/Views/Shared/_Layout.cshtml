@@ -12,13 +12,11 @@
     <div class="container-fluid body-content">
         <div class="row">
             <div class="col-sm-3">
-                @Html.Partial("~/Views/Host/_Partial_Host_Listing.cshtml")
+                @Html.Partial("~/Areas/Host/Views/TreeListing/_Partial_Index.cshtml")
             </div>
             <div class="col-sm-9">
                 @RenderBody()
-
                 @Html.Partial("~/Views/Message/_Partial_Log_Listing.cshtml")
-
             </div>
         </div>
         @Html.Partial("~/Views/Message/_Partial_Error_Event.cshtml")

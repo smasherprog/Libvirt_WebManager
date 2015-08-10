@@ -2316,20 +2316,7 @@ namespace Libvirt
         {
 
         }
-        public static int NameArrayHandler(virConnectPtr conn, out string[] @names, int @maxnames, Func<virConnectPtr, IntPtr, int, int> func)
-        {
-            IntPtr namesPtr = Marshal.AllocHGlobal(MaxStringLength);
-            int count = func(conn, namesPtr, maxnames);
-            if (count > 0)
-                names = ptrToStringArray(namesPtr, count, a => { PInvoke.free(a); });
-            else
-            {
-                names = new string[0];
-            }
-            Marshal.FreeHGlobal(namesPtr);
-            return count;
-        }
-        public static int NameArrayHandler(virStoragePoolPtr conn, out string[] @names, int @maxnames, Func<virStoragePoolPtr, IntPtr, int, int> func)
+        public static int NameArrayHandler<T>(T conn, out string[] @names, int @maxnames, Func<T, IntPtr, int, int> func)
         {
             IntPtr namesPtr = Marshal.AllocHGlobal(MaxStringLength);
             int count = func(conn, namesPtr, maxnames);
@@ -3999,6 +3986,79 @@ namespace Libvirt
             PInvoke.virEventUpdateTimeout(timer, timeout);
         }
 
+
+        //NODE_DEVICES START HERE
+
+        public static virNodeDevicePtr virNodeDeviceCreateXML(virConnectPtr conn, string xmlDesc, uint flags = 0)
+        {
+            return PInvoke.virNodeDeviceCreateXML(conn, xmlDesc, flags);
+        }
+        public static int virNodeDeviceDestroy(virNodeDevicePtr conn)
+        {
+            return PInvoke.virNodeDeviceDestroy(conn);
+        }
+        public static int virConnectListAllNodeDevices(virConnectPtr conn, out virNodeDevicePtr[] devices, virConnectListAllNodeDeviceFlags flags)
+        {
+
+            IntPtr faces = IntPtr.Zero;
+            var ret = PInvoke.virConnectListAllNodeDevices(conn, ref faces, (uint)flags);
+            if (ret > -1)
+            {
+                devices = new virNodeDevicePtr[ret];
+                for (var i = 0; i < ret; i++)
+                {
+                    devices[i] = new virNodeDevicePtr();
+                    devices[i].Pointer = Marshal.ReadIntPtr(faces, i * IntPtr.Size);
+                }
+            }
+            else
+            {
+                devices = new virNodeDevicePtr[0];
+            }
+            return ret;
+        }
+        public static virNodeDevicePtr virNodeDeviceLookupByName(virConnectPtr conn, string name)
+        {
+            return PInvoke.virNodeDeviceLookupByName(conn, name);
+        }
+        public static int virNodeNumOfDevices(virConnectPtr conn, string cap, uint flags = 0)
+        {
+            return PInvoke.virNodeNumOfDevices(conn, cap, flags);
+        }
+
+        public static int virNodeDeviceDetachFlags(virNodeDevicePtr device, string driverName, uint flags=0)
+        {
+            return PInvoke.virNodeDeviceDetachFlags(device, driverName, flags);
+        }
+        public static int virNodeDeviceDettach(virNodeDevicePtr device)
+        {
+            return PInvoke.virNodeDeviceDettach(device);
+        }
+        public static string virNodeDeviceGetName(virNodeDevicePtr device)
+        {
+            return PInvoke.virNodeDeviceGetName(device);
+        }
+        public static string virNodeDeviceGetParent(virNodeDevicePtr device)
+        {
+            return PInvoke.virNodeDeviceGetParent(device);
+        }
+        public static string virNodeDeviceGetXMLDesc(virNodeDevicePtr device, uint flags=0)
+        {
+            return PInvoke.virNodeDeviceGetXMLDesc(device, flags);
+        }
+        public static int virNodeDeviceListCaps(virNodeDevicePtr conn, out string[] names, int maxnames)
+        {
+            return NameArrayHandler(conn, out names, maxnames, PInvoke.virNodeDeviceListCaps);
+        }
+        public static int virNodeDeviceNumOfCaps(virNodeDevicePtr device)
+        {
+            return PInvoke.virNodeDeviceNumOfCaps(device);
+        }
+        public static int virNodeDeviceReset(virNodeDevicePtr device)
+        {
+            return PInvoke.virNodeDeviceReset(device);
+        }
+
         //SNAPSHOTS
         public static int virDomainHasCurrentSnapshot(virDomainPtr domain, uint flags = 0)
         {
@@ -5014,7 +5074,7 @@ namespace Libvirt
         public static extern int virNodeListDevices(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @cap, out IntPtr @names, int @maxnames, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virConnectListAllNodeDevices", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virConnectListAllNodeDevices(virConnectPtr @conn, out IntPtr @devices, uint @flags);
+        public static extern int virConnectListAllNodeDevices(virConnectPtr @conn, ref IntPtr @devices, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virNodeDeviceLookupByName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern virNodeDevicePtr virNodeDeviceLookupByName(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @name);
@@ -5023,19 +5083,22 @@ namespace Libvirt
         public static extern virNodeDevicePtr virNodeDeviceLookupSCSIHostByWWN(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @wwnn, [MarshalAs(UnmanagedType.LPStr)] string @wwpn, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virNodeDeviceGetName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
         public static extern string virNodeDeviceGetName(virNodeDevicePtr @dev);
 
         [DllImport(libraryPath, EntryPoint = "virNodeDeviceGetParent", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
         public static extern string virNodeDeviceGetParent(virNodeDevicePtr @dev);
 
         [DllImport(libraryPath, EntryPoint = "virNodeDeviceNumOfCaps", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virNodeDeviceNumOfCaps(virNodeDevicePtr @dev);
 
         [DllImport(libraryPath, EntryPoint = "virNodeDeviceListCaps", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virNodeDeviceListCaps(virNodeDevicePtr @dev, out IntPtr @names, int @maxnames);
+        public static extern int virNodeDeviceListCaps(virNodeDevicePtr @dev, IntPtr @names, int @maxnames);
 
         [DllImport(libraryPath, EntryPoint = "virNodeDeviceGetXMLDesc", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern IntPtr virNodeDeviceGetXMLDesc(virNodeDevicePtr @dev, uint @flags);
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithNativeCleanUpMarshaler))]
+        public static extern string virNodeDeviceGetXMLDesc(virNodeDevicePtr @dev, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virNodeDeviceRef", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virNodeDeviceRef(virNodeDevicePtr @dev);

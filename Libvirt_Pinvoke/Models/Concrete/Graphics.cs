@@ -6,17 +6,18 @@ namespace Libvirt.Models.Concrete
 {
     public class Graphics : IXML, IValidation
     {
-        public enum Graphic_Types { vnc, spice };
+        public enum Graphic_Types { NONE, vnc, spice };
 
         public Graphics()
         {
             Reset();
         }
         public Graphic_Types Graphic_Type { get; set; }
-        public int _port = -1;
+        private int _port = -1;
         public Graphics_Listen Graphics_Listen { get; set; }
         public string listen { get; set; }
         public string passwd { get; set; }
+        public DateTime? passwdValidTo { get; set; }
         public int? websocket { get; set; }
         public int port
         {
@@ -28,7 +29,7 @@ namespace Libvirt.Models.Concrete
                 _port = value;
             }
         }
-        public bool _autoport = true;
+        private bool _autoport = true;
         public bool autoport
         {
             get { return _autoport; }
@@ -41,25 +42,29 @@ namespace Libvirt.Models.Concrete
         }
         private void Reset()
         {
-            Graphic_Type = Graphic_Types.vnc;
+            Graphic_Type = Graphic_Types.NONE;
             _port = -1;
             websocket = -1;
             autoport = true;
         }
         public string To_XML()
         {
+            if (Graphic_Type == Graphic_Types.NONE) return "";
             var ret = "<graphics type='" + Graphic_Type.ToString() + "'";
             if (autoport)
             {
                 ret += " autoport='yes'";
-            }else
+            }
+            else
             {
                 ret += "' port='" + _port.ToString() + "'";
             }
-             ret += (!string.IsNullOrWhiteSpace(passwd) ? " passwd='" + passwd + "'" : "") + (websocket.HasValue ? " websocket='" + websocket.Value.ToString() + "'" : "");
+            ret += (!string.IsNullOrWhiteSpace(listen) ? " listen='" + listen + "'" : "");
+            ret += (!string.IsNullOrWhiteSpace(passwd) ? " passwd='" + passwd + "'" : "") + (websocket.HasValue ? " websocket='" + websocket.Value.ToString() + "'" : "");
+           // ret += (passwdValidTo.HasValue ? " passwdValidTo='" + passwdValidTo.Value.ToFileTimeUtc() + "'" : "");
             if (Graphics_Listen != null)
             {
-                ret += ">"+Graphics_Listen.To_XML();
+                ret += ">" + Graphics_Listen.To_XML();
                 ret += "</graphics>";
             }
             else ret += " />";
@@ -68,6 +73,7 @@ namespace Libvirt.Models.Concrete
         }
         public void Validate(IValdiator v)
         {
+            if (Graphic_Type == Graphic_Types.NONE) return;
             if (_autoport && _port != -1)
             {
                 v.AddError("autoport", "If autoport is true, port must also be -1");
@@ -75,6 +81,13 @@ namespace Libvirt.Models.Concrete
             if (websocket.HasValue && Graphic_Type == Graphic_Types.spice)
             {
                 v.AddError("websocket", "websocket must be null if the graphics type is spice.");
+            }
+            if (passwdValidTo.HasValue)
+            {
+                if (string.IsNullOrWhiteSpace(passwd))
+                {
+                    v.AddError("passwdValidTo", "You must specify a password when using passwdValidTo!");
+                }
             }
         }
 
@@ -117,14 +130,14 @@ namespace Libvirt.Models.Concrete
                         websocket = a;
                     }
                 }
-
-            }
-            var sublisten = element.Element("listen");
-            if (sublisten != null)
-            {
-                Graphics_Listen = new Graphics_Listen();
-                Graphics_Listen.From_XML(sublisten);
-            }
+                var sublisten = element.Element("listen");
+                if (sublisten != null)
+                {
+                    Graphics_Listen = new Graphics_Listen();
+                    Graphics_Listen.From_XML(sublisten);
+                }
+            } else Graphic_Type = Graphic_Types.NONE;
+            
         }
     }
 }

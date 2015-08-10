@@ -26,11 +26,11 @@ namespace Libvirt.CS_Objects
         {
             return API.virDomainAddIOThread(_DomainPtr, iothread_id, flags);
         }
-        public int virDomainAttachDevice(Libvirt.Models.Concrete.Disk device)
+        public int virDomainAttachDevice(Libvirt.Models.Interface.IXML device)
         {
             return API.virDomainAttachDevice(_DomainPtr, device.To_XML());
         }
-        public int virDomainAttachDeviceFlags(Libvirt.Models.Concrete.Disk device, virDomainDeviceModifyFlags flags)
+        public int virDomainAttachDeviceFlags(Libvirt.Models.Interface.IXML device, virDomainDeviceModifyFlags flags)
         {
             return API.virDomainAttachDeviceFlags(_DomainPtr, device.To_XML(), flags);
         }
@@ -279,9 +279,11 @@ namespace Libvirt.CS_Objects
         {
             return API.virDomainGetVcpusFlags(_DomainPtr, flags);
         }
-        public string virDomainGetXMLDesc(virDomainXMLFlags flags)
+        public Libvirt.Models.Concrete.Virtual_Machine virDomainGetXMLDesc(virDomainXMLFlags flags)
         {
-            return API.virDomainGetXMLDesc(_DomainPtr, flags);
+            var vm = new Libvirt.Models.Concrete.Virtual_Machine();
+            vm.From_XML(System.Xml.Linq.XDocument.Parse(API.virDomainGetXMLDesc(_DomainPtr, flags)).Root);
+            return vm;
         }
         public int virDomainHasManagedSaveImage()
         {
@@ -549,9 +551,9 @@ namespace Libvirt.CS_Objects
         {
             return API.virDomainUndefineFlags(_DomainPtr, flags);
         }
-        public int virDomainUpdateDeviceFlags(string xml, virDomainDeviceModifyFlags flags)
+        public int virDomainUpdateDeviceFlags(Models.Interface.IXML xml, virDomainDeviceModifyFlags flags)
         {
-            return API.virDomainUpdateDeviceFlags(_DomainPtr, xml, flags);
+            return API.virDomainUpdateDeviceFlags(_DomainPtr, xml.To_XML(), flags);
         }
 
 
