@@ -21,6 +21,16 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             vm.Domains = ds;
             return PartialView(vm);
         }
-
+        public ActionResult _Partial_Hardware(string host, string domain)
+        {
+            var vm = new Models.Domain_Hardware_Down();
+            using(var d = GetHost(host).virDomainLookupByName(domain))
+            {
+                vm.Machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+                vm.Host = host;
+                vm.Parent = domain;
+            }
+            return PartialView(vm);
+        }
     }
 }

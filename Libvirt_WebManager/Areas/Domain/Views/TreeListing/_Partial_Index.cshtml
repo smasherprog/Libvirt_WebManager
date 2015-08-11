@@ -9,13 +9,19 @@
 
         var li_id = "x" + Model.Host.Replace(".", "_") + "_Domains_" + dname;
         <li id="@(li_id)">
-            <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetDetails", "TreeListing", new { Area="Domain", host = Model.Host, domain = dname })" />
+            <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_Hardware", "TreeListing", new { Area="Domain", host = Model.Host, domain = dname })" />
             <label for="item-@(li_id)" onclick="return false;">
                 <span></span>
-                <span class="icon domain_icon"></span>
+                @if (info.state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING)
+                {
+                    <span class="icon domain_active_icon"></span>
+                }
+                else
+                {
+                    <span class="icon domain_notactive_icon"></span>
+                }
                 <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Details", new {Area="Domain", host = Model.Host, domain = dname})');return false;" data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.state.ToString().Split('_').LastOrDefault()">@dname</a>
             </label>
-
         </li>
     }
 </ul>

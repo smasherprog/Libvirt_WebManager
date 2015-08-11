@@ -190,6 +190,9 @@
     <Compile Include="Areas\Domain\Controllers\CreateController.cs" />
     <Compile Include="Areas\Domain\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Domain\DomainAreaRegistration.cs" />
+    <Compile Include="Areas\Domain\Models\BaseMachineDetails.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Hardware_Down.cs" />
+    <Compile Include="Areas\Domain\Models\General_Metadata_VM.cs" />
     <Compile Include="Areas\Host\Controllers\CreateController.cs" />
     <Compile Include="Areas\Host\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Host\HostAreaRegistration.cs" />
@@ -489,6 +492,8 @@
     <Content Include="Areas\Domain\Views\TreeListing\_Partial_Index.cshtml" />
     <Content Include="Areas\Domain\Views\Details\_Partial_MainContent.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_Index.cshtml" />
+    <Content Include="Areas\Domain\Views\TreeListing\_Partial_Hardware.cshtml" />
+    <Content Include="Areas\Domain\Views\Edit\_Partial_Details_MainContent.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

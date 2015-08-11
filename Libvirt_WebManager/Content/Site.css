@@ -5,6 +5,20 @@
     user-select: none;
 }
 
+
+    .tree a {
+        color: #333;
+        text-decoration: none;
+        display: inline-block;
+       
+        padding-top:2px;
+        padding-bottom:2px;
+    }
+
+        .tree a:hover {
+            background: #BDF;
+        }
+
     .tree > ul {
         padding: 0;
         margin: 0;
@@ -16,6 +30,7 @@
 
     .tree li {
         list-style-type: none;
+     
         margin: 0;
         padding: 0;
         position: relative;
@@ -101,11 +116,14 @@
         background-size: 18px;
     }
 
-    .tree .domain_icon {
+    .tree .domain_active_icon {
         background: url(/images/monitor.png) left no-repeat;
         background-size: 18px;
     }
-
+       .tree .domain_notactive_icon {
+        background: url(/images/monitor_1.png) left no-repeat;
+        background-size: 18px;
+    }
     .tree .domains_icon {
         background: url(/images/connect_established.png) left no-repeat;
         background-size: 18px;
@@ -136,10 +154,40 @@
         background-size: 18px;
     }
 
+    .tree .cdromdrive_icon {
+        background: url(/images/cd_drive.png) left no-repeat;
+        background-size: 18px;
+    }
+
+    .tree .processor_icon {
+        background: url(/images/processor.png) left no-repeat;
+        background-size: 18px;
+    }
+
+    .tree .details_icon {
+        background: url(/images/document_properties.png) left no-repeat;
+        background-size: 18px;
+    }
+
+    .tree .ram_icon {
+        background: url(/images/memory.png) left no-repeat;
+        background-size: 18px;
+    }
+
+    .tree .listing_icon {
+        background: url(/images/numericlist.png) left no-repeat;
+        background-size: 18px;
+    }
+      .tree .add_icon {
+        background: url(/images/add.png) left no-repeat;
+        background-size: 18px;
+    }
+
 .pie-legend > li > span {
     padding: 5px;
     height: 10px;
 }
+
 .field-validation-error {
     color: #a94442;
 }
@@ -577,103 +625,4 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;
-    }
-
-.dropdown-menu .add_icon {
-    background: url(/images/add.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .refresh_icon {
-    background: url(/images/add.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .connect_icon {
-    background: url(/images/connect_established.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .start_icon {
-    background: url(/images/player_play.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .stop_icon {
-    background: url(/images/stop1normalred.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .pause_icon {
-    background: url(/images/player_play.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .shutdown_icon {
-    background: url(/images/connect_creating_256.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .migrate_icon {
-    background: url(/images/ic_arrow_round_move_down.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .edit_icon {
-    background: url(/images/pencil.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .delete_icon {
-    background: url(/images/deletered.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .disconnect_icon {
-    background: url(/images/disconnect.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .settings_icon {
-    background: url(/images/applications_system.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .details_icon {
-    background: url(/images/document_properties.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.dropdown-menu .disconnect_icon {
-    background: url(/images/disconnect.png) left top no-repeat;
-    background-size: 18px;
-    padding-left: 18px;
-}
-
-.tree LI.selected > a {
-    font-weight: bold;
-}
-
-.tree A {
-    color: #333;
-    text-decoration: none;
-    display: inline-block;
-    padding: 0 2px;
-}
-
-    .tree A:hover {
-        background: #BDF;
     }

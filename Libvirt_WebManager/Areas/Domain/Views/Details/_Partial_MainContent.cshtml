@@ -1,33 +1,27 @@
 ﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_Down
-<script>
-    $(document).ready(function () {
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            $($(e.relatedTarget).attr('href')).html('');//clear the old source
-            $($(e.target).attr('href')).load($($(e.target).attr('href')).attr('data-urlpart'));
-        })
-    });
-</script>
+@{
+    Libvirt.virDomainState state;
+    var i = 0;
+    Model.Domain.virDomainGetState(out state, out i);
+}
 <div class="page-header">
     <h2>
         @Model.Domain.virDomainGetName()
+        @if (state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING)
+        {
+            <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_Console", "Details", new { Area = "Domain", host = Model.Host, domain = Model.Parent })');return false;">
+                <i class="fa fa-desktop"></i>
+            </a>
+        }
+        else
+        {
+            <i class="fa fa-desktop"></i>
+        }
     </h2>
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <div>
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#VNC_Console" aria-controls="home" role="tab" data-toggle="tab">Console <i class="fa fa-desktop"></i></a>
-                </li>
-                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Edit <i class="fa fa-edit"></i></a></li>
-            </ul>
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="VNC_Console" data-urlpart="@Url.Action("_Partial_Console", "Details", new { Area = "Domain", host = Model.Host, domain = Model.Domain.virDomainGetName() })">
-                </div>
-                <div role="tabpanel" class="tab-pane" id="Edit_Domain"  data-urlpart="@Url.Action("_Partial_Index", "Edit", new { Area = "Domain", host = Model.Host, domain = Model.Domain.virDomainGetName() })">Edit</div>
-            </div>
 
-        </div>
     </div>
 </div>
 

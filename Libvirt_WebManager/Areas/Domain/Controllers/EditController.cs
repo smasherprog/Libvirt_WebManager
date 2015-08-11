@@ -13,9 +13,27 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         [HttpGet]
         public ActionResult _Partial_Index(string host, string domain)
         {
-
             return PartialView();
         }
+        [HttpGet]
+        public ActionResult _Partial_Details_MainContent(string host, string domain)
+        {
+            using(var d = GetHost(host).virDomainLookupByName(domain))
+            {
+                var vm = new Models.General_Metadata_VM();
+                vm.Host = host;
+                vm.Parent = domain;
 
+                vm.Machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+                return PartialView(vm);
+            }
+         
+        }
+        [HttpPost]
+        public ActionResult _Partial_Details_MainContent(Models.General_Metadata_VM vm)
+        {
+            return PartialView();
+        }
+        
     }
 }

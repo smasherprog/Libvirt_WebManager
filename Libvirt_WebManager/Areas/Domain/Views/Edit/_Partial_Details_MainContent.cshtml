@@ -1,0 +1,45 @@
+﻿@model Libvirt_WebManager.Areas.Domain.Models.General_Metadata_VM
+
+<div id="Generalmetadata1235">
+
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm("_Partial_Details_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Generalmetadata1235", LoadingElementId= "_Generalmetadata1235_Form_spinner" }))
+            {
+                @Html.ValidationSummary()
+
+                <div class="form-group">
+                    @Html.LabelFor(a => a.name)
+                    @Html.TextBoxFor(a => a.name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(a => a.name)
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(a => a.uuid)
+                    @Html.TextBoxFor(a => a.uuid, new { @class = "form-control", @readonly="readonly" })
+                    @Html.ValidationMessageFor(a => a.uuid)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(a => a.title)
+                    @Html.TextBoxFor(a => a.title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(a => a.title)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(a => a.description)
+                    @Html.TextAreaFor(a => a.description, new { @class = "form-control", rows=5 })
+                    @Html.ValidationMessageFor(a => a.description)
+                </div>
+                <button class="btn btn-primary btn-block btn-xs" >
+                    Save
+                    @Html.Spinner("_Generalmetadata1235_Form_spinner")
+                </button>
+            }
+        </div>
+    </div>
+</div>
