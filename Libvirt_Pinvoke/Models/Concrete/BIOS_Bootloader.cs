@@ -25,11 +25,13 @@ namespace Libvirt.Models.Concrete
         public List<Boot_Types> BootOrder { get; set; }
         public Guest_OS_Bitness Bitness { get; set; }
         public bool ShowBootMenu { get; set; }
+        private string _machine;
+        public string machine { get { return _machine; }  }
         public string To_XML()
         {
             var ret = "<os>";
 
-            ret += "<type arch='" + Bitness.ToString() + "' machine='pc'>" + type.ToString() + "</type>";//is everything a pc? I dont know.. 
+            ret += "<type arch='" + Bitness.ToString() + "'>" + type.ToString() + "</type>";//is everything a pc? I dont know.. 
             foreach (var item in BootOrder)
             {
                 ret += "<boot dev='" + item.ToString() + "'/>";
@@ -45,6 +47,7 @@ namespace Libvirt.Models.Concrete
         {
             type = Hypervisor_VM_Types.hvm;
             BootOrder = new List<Boot_Types>();
+            BootOrder.Add(Boot_Types.cdrom);
             BootOrder.Add(Boot_Types.hd);
             Bitness = Guest_OS_Bitness.x86_64;
             ShowBootMenu = false;
@@ -65,7 +68,9 @@ namespace Libvirt.Models.Concrete
                     Enum.TryParse(attr.Value, true, out b);
                     Bitness = b;
                 }
-
+                attr = element.Attribute("machine");
+                if (attr != null) _machine = attr.Value;
+                  
                 var m = type;
                 Enum.TryParse(element.Value, true, out m);
                 type = m;

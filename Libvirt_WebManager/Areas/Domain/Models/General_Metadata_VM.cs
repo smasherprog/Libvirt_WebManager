@@ -4,16 +4,16 @@ using System.Web.Mvc;
 
 namespace Libvirt_WebManager.Areas.Domain.Models
 {
-    public class General_Metadata_VM : BaseMachineDetails
+    public class General_Metadata_VM : ViewModels.BaseViewModel
     {
         [Required]
         [MinLength(3)]
         [MaxLength(35)]
         [Display(Name = "Name")]
         public string name { get; set; }
-
-        public string uuid { get; }
-
+        [Display(Name = "Guid")]
+        public string uuid { get; set; }
+        
         [Required]
         [MinLength(3)]
         [MaxLength(100)]

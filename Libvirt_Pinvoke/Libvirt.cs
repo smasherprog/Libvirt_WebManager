@@ -1014,16 +1014,22 @@ namespace Libvirt
         public IntPtr Pointer;
     }
 
-    public partial struct virDomainSnapshotPtr
+
+    public struct virDomainSnapshotPtr : IDisposable
     {
-        public virDomainSnapshotPtr(IntPtr pointer)
+        public virDomainSnapshotPtr(IntPtr ptr)
         {
-            this.Pointer = pointer;
+            Pointer = ptr;
         }
-
         public IntPtr Pointer;
+        public void Dispose()
+        {
+            if (Pointer != IntPtr.Zero)
+                PInvoke.virDomainSnapshotFree(this);
+            Pointer = IntPtr.Zero;
+            GC.SuppressFinalize(this);
+        }
     }
-
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void virEventHandleCallback(int @watch, int @fd, int @events, IntPtr @opaque);
 

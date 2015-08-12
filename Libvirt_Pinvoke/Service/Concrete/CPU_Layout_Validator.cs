@@ -14,9 +14,9 @@ namespace Libvirt.Service.Concrete
         {
             Libvirt._virNodeInfo info;
             obj2.virNodeGetInfo(out info);
-            if (obj.vCpu_Count >= info.cpus)
+            if (obj.vCpu_Count > info.cpus)
             {
-                v.AddError("CPU_Layout.vCpu_Count", "Cannot exceed the Maximum Available!");
+                v.AddError("vCpu_Count", "Cannot exceed the Maximum Available!");
             }
         }
 

@@ -1,0 +1,32 @@
+﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_Migrate_Down
+
+<div id="hostmigration_form">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Migrate Domain</h4>
+    </div>
+    @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new { Area = Html.Area() }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "hostmigration_form", LoadingElementId = "_Generalmetadata1235_Form_spinner" }))
+            {
+        <div class="modal-body">
+
+            @Html.ValidationSummary()
+            @Html.HiddenFor(a => a.Host)
+            @Html.HiddenFor(a => a.Parent)
+
+            <div class="form-group">
+                @Html.Label("selected_host")
+                @Html.DropDownList("selected_host", Model.Hosts, new { @class="form-control" })
+                @Html.ValidationMessage("selected_host")
+            </div>
+
+        </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-block">
+                    Move
+                    @Html.Spinner("_Generalmetadata1235_Form_spinner")
+                </button>
+            </div>
+    }
+</div>

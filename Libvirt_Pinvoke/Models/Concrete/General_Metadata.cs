@@ -14,8 +14,8 @@ namespace Libvirt.Models.Concrete
 
         }
         public string name { get; set; }
-        private string _uuid = "";
-        public string uuid { get { return _uuid; } }//uuid is ommited for xml generation because it is only a read operation, it cannot be set
+       
+        public string uuid { get; set; }
         public string title { get; set; }
         public string description { get; set; }
         public string To_XML()
@@ -24,6 +24,7 @@ namespace Libvirt.Models.Concrete
             ret += "<name>" + name + "</name>";
             ret += "<title>" + title + "</title>";
             ret += "<description>" + description + "</description>";
+            if(!string.IsNullOrWhiteSpace(uuid)) ret += "<uuid>" + uuid + "</uuid>";
             return ret;
         }
         public void Validate(IValdiator v)
@@ -62,7 +63,7 @@ namespace Libvirt.Models.Concrete
             element = xml.Element("uuid");
             if (element != null)
             {
-                _uuid = element.Value;
+                uuid = element.Value;
             }
         }
     }

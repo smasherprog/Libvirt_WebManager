@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Web.Mvc;
 
 namespace Libvirt_WebManager.Areas.Domain.Controllers
@@ -67,8 +68,32 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             }
             return PartialView("_Partial_TableRowDetails", new Libvirt_WebManager.Areas.Domain.Models.Domain_Down { Host = host, Parent = host, Domain = d });
         }
- 
 
-
+        [HttpGet]
+        public ActionResult _Partial_Migrate(string host, string domain)
+        {
+            var vm = new Models.Domain_Migrate_Down();
+            foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Connections)
+            {
+                if (item.Key.ToLower() == host.ToLower()) continue;
+                vm.Hosts.Add(new SelectListItem { Text = item.Key, Value = item.Key });
+            }
+            return PartialView(vm);
+        }
+        [HttpPost]
+        public ActionResult _Partial_Migrate(string host, string domain, string selected_host)
+        {
+            using (var d = GetHost(host).virDomainLookupByName(domain))
+            {
+               //migrate coed hereree
+            }
+            var vm = new Models.Domain_Migrate_Down();
+            foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Connections)
+            {
+                if (item.Key.ToLower() == host.ToLower()) continue;
+                vm.Hosts.Add(new SelectListItem { Text = item.Key, Value = item.Key });
+            }
+            return PartialView(vm);
+        }
     }
 }

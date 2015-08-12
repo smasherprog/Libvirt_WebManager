@@ -190,8 +190,11 @@
     <Compile Include="Areas\Domain\Controllers\CreateController.cs" />
     <Compile Include="Areas\Domain\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Domain\DomainAreaRegistration.cs" />
-    <Compile Include="Areas\Domain\Models\BaseMachineDetails.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_CPU_Down_VM.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_CPU_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Migrate_Down.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Hardware_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Details_Down.cs" />
     <Compile Include="Areas\Domain\Models\General_Metadata_VM.cs" />
     <Compile Include="Areas\Host\Controllers\CreateController.cs" />
     <Compile Include="Areas\Host\Controllers\TreeListingController.cs" />
@@ -494,6 +497,9 @@
     <Content Include="Areas\Domain\Views\Edit\_Partial_Index.cshtml" />
     <Content Include="Areas\Domain\Views\TreeListing\_Partial_Hardware.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_Details_MainContent.cshtml" />
+    <Content Include="Areas\Domain\Views\Edit\_Partial_CPU_MainContent.cshtml" />
+    <Content Include="Areas\Domain\Views\Edit\_Partial_Memory_MainContent.cshtml" />
+    <Content Include="Areas\Domain\Views\Listing\_Partial_Migrate.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

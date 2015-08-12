@@ -1,41 +1,48 @@
-﻿@model Libvirt_WebManager.Areas.Domain.Models.General_Metadata_VM
-
+﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_Details_Down
+<div class="page-header">
+    <h2>
+        Domain Details
+    </h2>
+</div>
 <div id="Generalmetadata1235">
-
-    <script>
-        $(document).ready(function () {
-
-        });
-    </script>
 
     <div class="row">
         <div class="col-sm-12">
-            @using (Ajax.BeginForm("_Partial_Details_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Generalmetadata1235", LoadingElementId= "_Generalmetadata1235_Form_spinner" }))
+            <dl class="dl-horizontal">
+                <dt>Hypervisor</dt>
+                <dd>@Model.type</dd>
+                <dt>Guid</dt>
+                <dd>@Model.MetaData.uuid</dd>
+                <dt>Architecture</dt>
+                <dd>@Model.Bios.Bitness</dd>
+                <dt>Chipset</dt>
+                <dd>@Model.Bios.machine</dd>
+
+            </dl>
+
+            @using (Ajax.BeginForm("_Partial_Details_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Generalmetadata1235", LoadingElementId = "_Generalmetadata1235_Form_spinner" }))
             {
                 @Html.ValidationSummary()
+                @Html.HiddenFor(a => a.MetaData.Host)
+                @Html.HiddenFor(a => a.MetaData.Parent)
+                @Html.HiddenFor(a => a.MetaData.uuid)
+                <div class="form-group">
+                    @Html.LabelFor(a => a.MetaData.name)
+                    @Html.TextBoxFor(a => a.MetaData.name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(a => a.MetaData.name)
+                </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(a => a.name)
-                    @Html.TextBoxFor(a => a.name, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(a => a.name)
-                </div>
-                
-                <div class="form-group">
-                    @Html.LabelFor(a => a.uuid)
-                    @Html.TextBoxFor(a => a.uuid, new { @class = "form-control", @readonly="readonly" })
-                    @Html.ValidationMessageFor(a => a.uuid)
+                    @Html.LabelFor(a => a.MetaData.title)
+                    @Html.TextBoxFor(a => a.MetaData.title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(a => a.MetaData.title)
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(a => a.title)
-                    @Html.TextBoxFor(a => a.title, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(a => a.title)
+                    @Html.LabelFor(a => a.MetaData.description)
+                    @Html.TextAreaFor(a => a.MetaData.description, new { @class = "form-control", rows = 5 })
+                    @Html.ValidationMessageFor(a => a.MetaData.description)
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(a => a.description)
-                    @Html.TextAreaFor(a => a.description, new { @class = "form-control", rows=5 })
-                    @Html.ValidationMessageFor(a => a.description)
-                </div>
-                <button class="btn btn-primary btn-block btn-xs" >
+                <button class="btn btn-primary btn-block">
                     Save
                     @Html.Spinner("_Generalmetadata1235_Form_spinner")
                 </button>
