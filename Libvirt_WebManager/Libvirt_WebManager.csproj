@@ -190,6 +190,9 @@
     <Compile Include="Areas\Domain\Controllers\CreateController.cs" />
     <Compile Include="Areas\Domain\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Domain\DomainAreaRegistration.cs" />
+    <Compile Include="Areas\Domain\Models\BaseDomain_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Memory_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Memory_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_CPU_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_CPU_Down.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Migrate_Down.cs" />
@@ -260,8 +263,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\contextjs.bootstrap.css" />
     <Content Include="Content\contextjs.standalone.css" />
-    <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\jquery.jgrowl.css" />
     <Content Include="Content\jquery.jgrowl.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -297,6 +298,8 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="css\font-awesome.css" />
+    <Content Include="css\font-awesome.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -347,8 +350,6 @@
     <Content Include="images\esc.png" />
     <Content Include="images\ethernet_card_vista.png" />
     <Content Include="images\exit.png" />
-    <Content Include="images\favicon.ico" />
-    <Content Include="images\favicon.png" />
     <Content Include="images\forward.png" />
     <Content Include="images\fullscreen.png" />
     <Content Include="images\gnome_audio_volume_medium.png" />
@@ -483,10 +484,6 @@
     <Content Include="x86\libxml2-2.dll" />
     <Content Include="x86\virsh.exe" />
     <Content Include="x86\zlib1.dll" />
-    <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="include\Orbitron700.ttf" />
     <Content Include="include\Orbitron700.woff" />
     <Content Include="Areas\Domain\Views\web.config" />
@@ -494,12 +491,16 @@
     <Content Include="Areas\Host\Views\web.config" />
     <Content Include="Areas\Domain\Views\TreeListing\_Partial_Index.cshtml" />
     <Content Include="Areas\Domain\Views\Details\_Partial_MainContent.cshtml" />
-    <Content Include="Areas\Domain\Views\Edit\_Partial_Index.cshtml" />
-    <Content Include="Areas\Domain\Views\TreeListing\_Partial_Hardware.cshtml" />
+    <Content Include="Areas\Domain\Views\Edit\_Partial_IndexMainContent.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_Details_MainContent.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_CPU_MainContent.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_Memory_MainContent.cshtml" />
     <Content Include="Areas\Domain\Views\Listing\_Partial_Migrate.cshtml" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

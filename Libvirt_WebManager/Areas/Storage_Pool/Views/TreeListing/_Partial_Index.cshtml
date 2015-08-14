@@ -12,7 +12,7 @@
             <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetVolumes", "TreeListing", new { Area="Storage_Pool", host = Model.Host, pool = dname })" />
             <label for="item-@(li_id)" onclick="return false;">
                 <span></span>
-                <span class="icon storage_pool_icon"></span>
+                <i class="fa fa-database"></i>
                 <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_DetailsMainContent", "Listing", new {Area="Storage_Pool", host = Model.Host, pool = dname})');return false;" data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.state.ToString().Split('_').LastOrDefault()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>available:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.available)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">@dname</a>
             </label>
 

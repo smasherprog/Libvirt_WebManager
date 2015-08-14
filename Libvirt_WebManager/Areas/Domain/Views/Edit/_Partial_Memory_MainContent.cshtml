@@ -1,43 +1,56 @@
-﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_CPU_Down
+﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_Memory_Down
 
-<div id="Generalmetadata1235">
-    <div class="page-header">
-        <h2>
-            RAM Details
-        </h2>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new { Area = Html.Area() }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Generalmetadata1235", LoadingElementId = "_Generalmetadata1235_Form_spinner" }))
+<div id="GeneramMemoryArre1243">
+    <div class="panel panel-default">
+        <div class="panel-heading">Memory</div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    @using (Ajax.BeginForm("_Partial_Memory_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "GeneramMemoryArre1243", LoadingElementId = "_GeneramMemoryArre1243_Form_spinner" }, new { @class = "form-horizontal" }))
             {
-                @Html.ValidationSummary()
-                @Html.HiddenFor(a => a.CpuInfo.Host)
-                @Html.HiddenFor(a => a.CpuInfo.Parent)
+                        @Html.ValidationSummary()
+                        @Html.HiddenFor(a => a.MemoryInfo.Host)
+                        @Html.HiddenFor(a => a.MemoryInfo.Parent)
 
-                <div class="form-group">
-                    @Html.LabelFor(a => a.CpuInfo.Cpu_Model)
-                    @Html.EnumDropDownListFor(a => a.CpuInfo.Cpu_Model, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(a => a.CpuInfo.Cpu_Model)
+                        <div class="form-group" title = "This is the amount of ram that the Guest Initially reserves from the host when it starts up.">
+                            @Html.LabelFor(a => a.MemoryInfo.currentMemory, new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(a => a.MemoryInfo.currentMemory, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               min = 128,
+                               step = 64,
+                               max = Model.NodeCpuInfo.memory / 1024
+                           })
+                                @Html.ValidationMessageFor(a => a.MemoryInfo.currentMemory)
+                            </div>
+                        </div>
+
+                        <div class="form-group" title = "This is the total amount of memory that the guest can use.">
+                            @Html.LabelFor(a => a.MemoryInfo.memory, new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(a => a.MemoryInfo.memory, new
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               min = 128,
+                               step = 64,
+                               max = Model.NodeCpuInfo.memory/1024
+                           })
+                                @Html.ValidationMessageFor(a => a.MemoryInfo.memory)
+                            </div>
+                        </div>
+
+                        <button class="col-sm-offset-2 col-sm-10 btn btn-primary btn-block">
+                            Save
+                            @Html.Spinner("_GeneramMemoryArre1243_Form_spinner")
+                        </button>
+
+                    }
                 </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(a => a.CpuInfo.vCpu_Count)
-                    @Html.TextBoxFor(a => a.CpuInfo.vCpu_Count, new
-               {
-                   @class = "form-control",
-                   @type = "number",
-                   min = 1,
-                   step = 1,
-                   max = Model.NodeCpuInfo.cpus
-               })
-                    @Html.ValidationMessageFor(a => a.CpuInfo.vCpu_Count)
-                </div>
-
-                <button class="btn btn-primary btn-block">
-                    Save
-                    @Html.Spinner("_Generalmetadata1235_Form_spinner")
-                </button>
-            }
+            </div>
         </div>
     </div>
 </div>

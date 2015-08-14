@@ -1,43 +1,46 @@
 ﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_CPU_Down
 
-<div id="Generalmetadata1235">
-    <div class="page-header">
-        <h2>
-            CPU Details
-        </h2>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new { Area = Html.Area() }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Generalmetadata1235", LoadingElementId = "_Generalmetadata1235_Form_spinner" }))
+<div id="cpudetails1235t343">
+    <div class="panel panel-default">
+        <div class="panel-heading">CPU Details</div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    @using (Ajax.BeginForm("_Partial_CPU_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "cpudetails1235t343", LoadingElementId = "cpudetails1235t343_Form_spinner" }, new { @class = "form-horizontal" }))
             {
-                @Html.ValidationSummary()
-                @Html.HiddenFor(a => a.CpuInfo.Host)
-                @Html.HiddenFor(a => a.CpuInfo.Parent)
+                        @Html.ValidationSummary()
+                        @Html.HiddenFor(a => a.CpuInfo.Host)
+                        @Html.HiddenFor(a => a.CpuInfo.Parent)
 
-                <div class="form-group">
-                    @Html.LabelFor(a => a.CpuInfo.Cpu_Model)
-                    @Html.EnumDropDownListFor(a => a.CpuInfo.Cpu_Model, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(a => a.CpuInfo.Cpu_Model)
+                        <div class="form-group">
+                            @Html.LabelFor(a => a.CpuInfo.Cpu_Model, new { @class = "col-sm-2 control-label" })   <div class="col-sm-10">
+                                @Html.EnumDropDownListFor(a => a.CpuInfo.Cpu_Model, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(a => a.CpuInfo.Cpu_Model)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(a => a.CpuInfo.vCpu_Count, new { @class = "col-sm-2 control-label" })   <div class="col-sm-10">
+                                @Html.TextBoxFor(a => a.CpuInfo.vCpu_Count, new
+                       {
+                           @class = "form-control",
+                           @type = "number",
+                           min = 1,
+                           step = 1,
+                           max = Model.NodeCpuInfo.cpus
+                       })
+                            </div>
+                            @Html.ValidationMessageFor(a => a.CpuInfo.vCpu_Count)
+                        </div>
+                        <button class="col-sm-offset-2 col-sm-10 btn btn-primary btn-block">
+                            Save
+                            @Html.Spinner("cpudetails1235t343_Form_spinner")
+                        </button>
+
+                    }
                 </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(a => a.CpuInfo.vCpu_Count)
-                    @Html.TextBoxFor(a => a.CpuInfo.vCpu_Count, new
-               {
-                   @class = "form-control",
-                   @type = "number",
-                   min = 1,
-                   step = 1,
-                   max = Model.NodeCpuInfo.cpus
-               })
-                    @Html.ValidationMessageFor(a => a.CpuInfo.vCpu_Count)
-                </div>
-
-                <button class="btn btn-primary btn-block">
-                    Save
-                    @Html.Spinner("_Generalmetadata1235_Form_spinner")
-                </button>
-            }
+            </div>
         </div>
     </div>
 </div>

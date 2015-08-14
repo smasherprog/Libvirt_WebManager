@@ -645,10 +645,13 @@ namespace Libvirt
         public ulong @allocation;
     }
 
-
-    public struct virConnectPtr : IDisposable
+    public interface virBase
     {
-        public IntPtr Pointer;
+        IntPtr Pointer { get; set; }
+    }
+    public struct virConnectPtr : virBase,  IDisposable
+    {
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             Debug.WriteLine("Disposing");
@@ -659,9 +662,9 @@ namespace Libvirt
         }
     }
 
-    public struct virStreamPtr : IDisposable
+    public struct virStreamPtr : virBase, IDisposable
     {
-        public IntPtr Pointer;
+        public IntPtr Pointer { get;  set;}
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -757,13 +760,13 @@ namespace Libvirt
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void virConnectCloseFunc(IntPtr @conn, int @reason, IntPtr @opaque);
 
-    public struct virDomainPtr : IDisposable
+    public struct virDomainPtr : virBase, IDisposable
     {
         public virDomainPtr(IntPtr ptr)
         {
             Pointer = ptr;
         }
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -1015,13 +1018,13 @@ namespace Libvirt
     }
 
 
-    public struct virDomainSnapshotPtr : IDisposable
+    public struct virDomainSnapshotPtr : virBase, IDisposable
     {
         public virDomainSnapshotPtr(IntPtr ptr)
         {
             Pointer = ptr;
         }
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -1054,9 +1057,9 @@ namespace Libvirt
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int virEventRemoveTimeoutFunc(int @timer);
 
-    public struct virInterfacePtr : IDisposable
+    public struct virInterfacePtr : virBase, IDisposable
     {
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -1066,9 +1069,9 @@ namespace Libvirt
         }
     }
 
-    public struct virNetworkPtr : IDisposable
+    public struct virNetworkPtr : virBase, IDisposable
     {
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -1093,9 +1096,9 @@ namespace Libvirt
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void virConnectNetworkEventGenericCallback(IntPtr @conn, IntPtr @net, IntPtr @opaque);
 
-    public struct virNodeDevicePtr : IDisposable
+    public struct virNodeDevicePtr : virBase, IDisposable
     {
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -1124,9 +1127,9 @@ namespace Libvirt
         public IntPtr Pointer;
     }
 
-    public struct virStoragePoolPtr : IDisposable
+    public struct virStoragePoolPtr : virBase, IDisposable
     {
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -1147,9 +1150,9 @@ namespace Libvirt
         public IntPtr Pointer;
     }
 
-    public struct virStorageVolPtr : IDisposable
+    public struct virStorageVolPtr : virBase, IDisposable
     {
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
         public void Dispose()
         {
             if (Pointer != IntPtr.Zero)
@@ -2318,6 +2321,8 @@ namespace Libvirt
             }
             return ret;
         }
+
+
         public static void DummyvirFreeCallback_Func(IntPtr dummy)
         {
 
@@ -2326,6 +2331,19 @@ namespace Libvirt
         {
             IntPtr namesPtr = Marshal.AllocHGlobal(MaxStringLength);
             int count = func(conn, namesPtr, maxnames);
+            if (count > 0)
+                names = ptrToStringArray(namesPtr, count, a => { PInvoke.free(a); });
+            else
+            {
+                names = new string[0];
+            }
+            Marshal.FreeHGlobal(namesPtr);
+            return count;
+        }
+        public static int NameArrayHandler<T, I>(T conn, out string[] @names, int @maxnames, I flags, Func<T, IntPtr, int, I, int> func)
+        {
+            IntPtr namesPtr = Marshal.AllocHGlobal(MaxStringLength);
+            int count = func(conn, namesPtr, maxnames, flags);
             if (count > 0)
                 names = ptrToStringArray(namesPtr, count, a => { PInvoke.free(a); });
             else
@@ -4005,7 +4023,6 @@ namespace Libvirt
         }
         public static int virConnectListAllNodeDevices(virConnectPtr conn, out virNodeDevicePtr[] devices, virConnectListAllNodeDeviceFlags flags)
         {
-
             IntPtr faces = IntPtr.Zero;
             var ret = PInvoke.virConnectListAllNodeDevices(conn, ref faces, (uint)flags);
             if (ret > -1)
@@ -4071,6 +4088,106 @@ namespace Libvirt
             return PInvoke.virDomainHasCurrentSnapshot(domain, flags);
         }
 
+        public static int virDomainListAllSnapshots(virDomainPtr domain, out virDomainSnapshotPtr[] snaps, virDomainSnapshotListFlags flags)
+        {
+            IntPtr faces = IntPtr.Zero;
+            var ret = PInvoke.virDomainListAllSnapshots(domain, ref faces, (uint)flags);
+            if (ret > -1)
+            {
+                snaps = new virDomainSnapshotPtr[ret];
+                for (var i = 0; i < ret; i++)
+                {
+                    snaps[i] = new virDomainSnapshotPtr();
+                    snaps[i].Pointer = Marshal.ReadIntPtr(faces, i * IntPtr.Size);
+                }
+            }
+            else
+            {
+                snaps = new virDomainSnapshotPtr[0];
+            }
+            return ret;
+        }
+        public static int virDomainRevertToSnapshot(virDomainSnapshotPtr snapshot, virDomainSnapshotRevertFlags flags)
+        {
+            return PInvoke.virDomainRevertToSnapshot(snapshot, (uint)flags);
+        }
+        public static virDomainSnapshotPtr virDomainSnapshotCreateXML(virDomainPtr domain, string xmlDesc, virDomainSnapshotCreateFlags flags)
+        {
+            return PInvoke.virDomainSnapshotCreateXML(domain, xmlDesc, (uint)flags);
+        }
+        public static virDomainSnapshotPtr virDomainSnapshotCurrent(virDomainPtr domain, uint flags =0)
+        {
+            return PInvoke.virDomainSnapshotCurrent(domain, (uint)flags);
+        }
+        public static int virDomainSnapshotDelete(virDomainSnapshotPtr snapshot, virDomainSnapshotDeleteFlags flags)
+        {
+            return PInvoke.virDomainSnapshotDelete(snapshot, (uint)flags);
+        }
+        public static int virDomainSnapshotFree(virDomainSnapshotPtr snapshot)
+        {
+            return PInvoke.virDomainSnapshotFree(snapshot);
+        }
+        public static string virDomainSnapshotGetName  (virDomainSnapshotPtr snapshot)
+        {
+            return PInvoke.virDomainSnapshotGetName(snapshot);
+        }
+        public static  virDomainSnapshotPtr virDomainSnapshotGetParent(virDomainSnapshotPtr snapshot,uint flags =0)
+        {
+            return PInvoke.virDomainSnapshotGetParent(snapshot, flags);
+        }
+        public static string virDomainSnapshotGetXMLDesc(virDomainSnapshotPtr snapshot, virDomainXMLFlags flags)
+        {
+            return PInvoke.virDomainSnapshotGetXMLDesc(snapshot, (uint)flags);
+        }
+        public static int virDomainSnapshotHasMetadata(virDomainSnapshotPtr snapshot, uint flags = 0)
+        {
+            return PInvoke.virDomainSnapshotHasMetadata(snapshot, (uint)flags);
+        }
+        public static int virDomainSnapshotIsCurrent(virDomainSnapshotPtr snapshot, uint flags = 0)
+        {
+            return PInvoke.virDomainSnapshotIsCurrent(snapshot, (uint)flags);
+        }
+        public static int virDomainSnapshotListAllChildren(virDomainSnapshotPtr snapshot, out virDomainSnapshotPtr[] snaps, virDomainSnapshotListFlags flags)
+        {
+            IntPtr faces = IntPtr.Zero;
+            var ret = PInvoke.virDomainSnapshotListAllChildren(snapshot, ref faces, (uint)flags);
+            if (ret > -1)
+            {
+                snaps = new virDomainSnapshotPtr[ret];
+                for (var i = 0; i < ret; i++)
+                {
+                    snaps[i] = new virDomainSnapshotPtr();
+                    snaps[i].Pointer = Marshal.ReadIntPtr(faces, i * IntPtr.Size);
+                }
+            }
+            else
+            {
+                snaps = new virDomainSnapshotPtr[0];
+            }
+            return ret;
+        }
+        public static int virDomainSnapshotListChildrenNames(virDomainSnapshotPtr snapshot, out string[] names,  int nameslen, virDomainSnapshotListFlags flags)
+        {
+            return NameArrayHandler(snapshot, out names, nameslen, (uint)flags, PInvoke.virDomainSnapshotListChildrenNames);
+
+        }
+        public static int virDomainSnapshotListNames(virDomainPtr domain, out string[] names, int nameslen, virDomainSnapshotListFlags flags)
+        {
+            return NameArrayHandler(domain, out names, nameslen, (uint)flags, PInvoke.virDomainSnapshotListNames);
+        }
+        public static virDomainSnapshotPtr virDomainSnapshotLookupByName(virDomainPtr domain, string name, uint flags = 0)
+        {
+            return PInvoke.virDomainSnapshotLookupByName(domain, name, flags);
+        }
+        public static int virDomainSnapshotNum(virDomainPtr domain, virDomainSnapshotListFlags flags)
+        {
+            return PInvoke.virDomainSnapshotNum(domain,  (uint)flags);
+        }
+
+        public static int virDomainSnapshotNumChildren(virDomainSnapshotPtr snapshot, virDomainSnapshotListFlags flags)
+        {
+            return PInvoke.virDomainSnapshotNumChildren(snapshot, (uint)flags);
+        }
     }
 
 
@@ -4826,8 +4943,8 @@ namespace Libvirt
         [DllImport(libraryPath, EntryPoint = "virDomainSetUserPassword", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virDomainSetUserPassword(virDomainPtr @dom, [MarshalAs(UnmanagedType.LPStr), In] string @user, [MarshalAs(UnmanagedType.LPStr), In] string @password, uint flags);
 
-
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotGetName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
         public static extern string virDomainSnapshotGetName(virDomainSnapshotPtr @snapshot);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotGetDomain", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
@@ -4840,25 +4957,26 @@ namespace Libvirt
         public static extern virDomainSnapshotPtr virDomainSnapshotCreateXML(virDomainPtr @domain, [MarshalAs(UnmanagedType.LPStr)] string @xmlDesc, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotGetXMLDesc", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern IntPtr virDomainSnapshotGetXMLDesc(virDomainSnapshotPtr @snapshot, uint @flags);
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithNativeCleanUpMarshaler))]
+        public static extern string virDomainSnapshotGetXMLDesc(virDomainSnapshotPtr @snapshot, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotNum", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virDomainSnapshotNum(virDomainPtr @domain, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotListNames", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virDomainSnapshotListNames(virDomainPtr @domain, out IntPtr @names, int @nameslen, uint @flags);
+        public static extern int virDomainSnapshotListNames(virDomainPtr @domain, IntPtr @names, int @nameslen, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainListAllSnapshots", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virDomainListAllSnapshots(virDomainPtr @domain, out IntPtr @snaps, uint @flags);
+        public static extern int virDomainListAllSnapshots(virDomainPtr @domain, ref IntPtr @snaps, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotNumChildren", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virDomainSnapshotNumChildren(virDomainSnapshotPtr @snapshot, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotListChildrenNames", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virDomainSnapshotListChildrenNames(virDomainSnapshotPtr @snapshot, out IntPtr @names, int @nameslen, uint @flags);
+        public static extern int virDomainSnapshotListChildrenNames(virDomainSnapshotPtr @snapshot,  IntPtr @names, int @nameslen, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotListAllChildren", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virDomainSnapshotListAllChildren(virDomainSnapshotPtr @snapshot, out IntPtr @snaps, uint @flags);
+        public static extern int virDomainSnapshotListAllChildren(virDomainSnapshotPtr @snapshot, ref IntPtr @snaps, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotLookupByName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern virDomainSnapshotPtr virDomainSnapshotLookupByName(virDomainPtr @domain, [MarshalAs(UnmanagedType.LPStr)] string @name, uint @flags);

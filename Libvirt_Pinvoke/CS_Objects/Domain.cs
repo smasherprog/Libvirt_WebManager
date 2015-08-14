@@ -17,6 +17,42 @@ namespace Libvirt.CS_Objects
         {
             _DomainPtr = ptr;
         }
+        public int virDomainHasCurrentSnapshot()
+        {
+            return API.virDomainHasCurrentSnapshot(_DomainPtr);
+        }
+
+        public int virDomainListAllSnapshots(out Domain_Shapshot[] snaps, virDomainSnapshotListFlags flags)
+        {
+            virDomainSnapshotPtr[] items = new virDomainSnapshotPtr[0];
+            var ret = API.virDomainListAllSnapshots(_DomainPtr, out items, flags);
+            snaps = new Domain_Shapshot[items.Length];
+            for (var i = 0; i < items.Length; i++)
+                snaps[i] = new Domain_Shapshot(items[i]);
+            return ret;
+        }
+        public Domain_Shapshot virDomainSnapshotCreateXML(string xmlDesc, virDomainSnapshotCreateFlags flags)
+        {
+            return new Domain_Shapshot(API.virDomainSnapshotCreateXML(_DomainPtr, xmlDesc, flags));
+        }
+        public Domain_Shapshot virDomainSnapshotCurrent()
+        {
+            return new Domain_Shapshot(API.virDomainSnapshotCurrent(_DomainPtr));
+        }
+        public int virDomainSnapshotListNames(out string[] names, int nameslen, virDomainSnapshotListFlags flags)
+        {
+            return API.virDomainSnapshotListNames(_DomainPtr, out names, nameslen, flags);
+        }
+        public Domain_Shapshot virDomainSnapshotLookupByName(string name)
+        {
+            return new Domain_Shapshot(API.virDomainSnapshotLookupByName(_DomainPtr, name));
+        }
+
+        public int virDomainSnapshotNum(virDomainSnapshotListFlags flags)
+        {
+            return API.virDomainSnapshotNum(_DomainPtr, flags);
+        }
+
 
         public int virDomainAbortJob()
         {
@@ -148,7 +184,7 @@ namespace Libvirt.CS_Objects
             int count = 0;
             return API.virDomainGetBlockIoTune(_DomainPtr, disk, out pars, ref count, flags);
         }
-        public int virDomainGetBlockJobInfo(string disk, out  _virDomainBlockJobInfo info, virDomainBlockJobInfoFlags flags)
+        public int virDomainGetBlockJobInfo(string disk, out _virDomainBlockJobInfo info, virDomainBlockJobInfoFlags flags)
         {
             return API.virDomainGetBlockJobInfo(_DomainPtr, disk, out info, flags);
         }
@@ -201,7 +237,7 @@ namespace Libvirt.CS_Objects
         }
         public int virDomainGetJobStats(virDomainJobType type, out virTypedParameter[] pars, int nparams, virDomainGetJobStatsFlags flags)
         {
-            return API.virDomainGetJobStats(_DomainPtr, type, out  pars, ref nparams, flags);
+            return API.virDomainGetJobStats(_DomainPtr, type, out pars, ref nparams, flags);
         }
         public uint virDomainGetMaxMemory()
         {
@@ -403,11 +439,11 @@ namespace Libvirt.CS_Objects
         }
         public int virDomainPinEmulator(out byte[] cpumap, int maplen, virDomainModificationImpact flags)
         {
-            return API.virDomainPinEmulator(_DomainPtr, out  cpumap, maplen, flags);
+            return API.virDomainPinEmulator(_DomainPtr, out cpumap, maplen, flags);
         }
         public int virDomainPinIOThread(uint iothread_id, out byte[] cpumap, int maplen, virDomainModificationImpact flags)
         {
-            return API.virDomainPinIOThread(_DomainPtr, iothread_id, out  cpumap, maplen, flags);
+            return API.virDomainPinIOThread(_DomainPtr, iothread_id, out cpumap, maplen, flags);
         }
         public int virDomainPinVcpu(uint vcpu, out byte[] cpumap, int maplen)
         {
@@ -559,7 +595,7 @@ namespace Libvirt.CS_Objects
 
         public static Libvirt.virDomainPtr GetPtr(Domain p)
         {
-        
+
             return p._DomainPtr;
         }
         public void Dispose()

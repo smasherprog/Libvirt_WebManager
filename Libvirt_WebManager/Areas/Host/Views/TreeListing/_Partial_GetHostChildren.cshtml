@@ -1,7 +1,9 @@
 @model Libvirt_WebManager.Areas.Host.Models.GetHostsChildren_ViewModel
 
 @{
-    var arr = new string[] { "domain", "interface", "storage_pool" };
+    var arr = new string[] { "domain", "interface", "network", "storage_pool", "secret" };
+    var arr_icons= new string[] { "fa-cube", "fa-wifi", "fa-cubes", "fa-cloud" ,"fa-user-secret"};
+    var i = 0;
 }
 <ul>
     @foreach (var item in arr)
@@ -11,7 +13,10 @@
         <li id="@(li_id)">
             <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_Index", "TreeListing", new { Area=item, host = Model.HostName })" />
             <label for="item-@(li_id)" onclick="return false;">
-                <span></span><span class="icon @(plural)_icon"></span>
+                <span></span>
+
+                <i class="fa @arr_icons[i++]"></i>
+
                 <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Listing", new { Area=item, host = Model.HostName })');return false;">@plural</a>
             </label>
         </li>

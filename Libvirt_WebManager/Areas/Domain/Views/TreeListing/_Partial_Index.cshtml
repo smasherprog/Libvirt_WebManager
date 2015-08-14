@@ -9,28 +9,20 @@
 
         var li_id = "x" + Model.Host.Replace(".", "_") + "_Domains_" + dname;
         <li id="@(li_id)">
-            <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_Hardware", "TreeListing", new { Area="Domain", host = Model.Host, domain = dname })" />
+            <input type="checkbox" id="item-@(li_id)" />
             <label for="item-@(li_id)" onclick="return false;">
                 <span></span>
                 @if (info.state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING)
                 {
-                    <span class="icon domain_active_icon"></span>
+                    <i class="fa fa-desktop"></i>
                 }
                 else
-                {
-                    <span class="icon domain_notactive_icon"></span>
+                {   <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+
                 }
-                <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Details", new {Area="Domain", host = Model.Host, domain = dname})');return false;" data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.state.ToString().Split('_').LastOrDefault()">@dname</a>
+                <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_IndexMainContent", "Edit", new {Area="Domain", host = Model.Host, domain = dname})');return false;" data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.state.ToString().Split('_').LastOrDefault()">@dname</a>
             </label>
         </li>
     }
 </ul>
-<script>
-    $(document).ready(function () {
-        @foreach (var d in Model.Domains)
-    {
-            var li_id = "x" + Model.Host.Replace(".", "_") + "_Domains_" + d.virDomainGetName();
-            <text>registercallsbacks('@li_id');</text>
-    }
-    });
-</script>
+

@@ -13,16 +13,19 @@
             <a href="#">
                 @if (dname.ToLower().EndsWith(".iso"))
                 {
-                    <span class="icon storage_volume_iso_icon"></span>
+                    <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
                 }
                 else
                 {
-                    <span class="icon storage_volume_icon"></span>
+                    <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
                 }
                 @dname
             </a>
         </li>
     }
 </ul>
+
+
+
 
 

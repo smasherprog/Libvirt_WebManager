@@ -12,25 +12,24 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         }
 
         [HttpGet]
-        public ActionResult _Partial_Index(string host, string domain)
+        public ActionResult _Partial_IndexMainContent(string host, string domain)
         {
-            return PartialView();
-        }
-        [HttpGet]
-        public ActionResult _Partial_Details_MainContent(string host, string domain)
-        {
-            using (var d = GetHost(host).virDomainLookupByName(domain))
+            var h = GetHost(host);
+            using (var d = h.virDomainLookupByName(domain))
             {
-                var vm = new Models.Domain_Details_Down();
-                var machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
-                vm.MetaData = Utilities.AutoMapper.Mapper<Models.General_Metadata_VM>.Map(machine.Metadata);
-                vm.type = machine.type;
-                vm.MetaData.Host = host;
-                vm.MetaData.Parent = domain;
-                vm.Bios = machine.BootLoader;
-                return PartialView(vm);
+                Libvirt._virNodeInfo info;
+                h.virNodeGetInfo(out info);
+                return PartialView(new Libvirt_WebManager.Areas.Domain.Models.BaseDomain_Down
+                {
+                    Host = host,
+                    Parent = domain,
+                    Machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT),
+                    NodeInfo = info
+                });
             }
+
         }
+
         [HttpPost]
         public ActionResult _Partial_Details_MainContent(Models.General_Metadata_VM MetaData)
         {
@@ -55,29 +54,10 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             vm.MetaData.Parent = MetaData.Parent;
             vm.Bios = machine.BootLoader;
             return PartialView(vm);
-        
+
         }
 
 
-
-
-        [HttpGet]
-        public ActionResult _Partial_CPU_MainContent(string host, string domain)
-        {
-            var h = GetHost(host);
-            using (var d = h.virDomainLookupByName(domain))
-            {
-                var vm = new Models.Domain_CPU_Down();
-                Libvirt._virNodeInfo info;
-                h.virNodeGetInfo(out info);
-                vm.NodeCpuInfo = info;
-                var machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
-                vm.CpuInfo = Utilities.AutoMapper.Mapper<Models.Domain_CPU_Down_VM>.Map(machine.CPU);
-                vm.CpuInfo.Host = host;
-                vm.CpuInfo.Parent = domain;
-                return PartialView(vm);
-            }
-        }
         [HttpPost]
         public ActionResult _Partial_CPU_MainContent(Models.Domain_CPU_Down_VM CpuInfo)
         {
@@ -85,7 +65,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             using (var d = h.virDomainLookupByName(CpuInfo.Parent))
             {
                 var validator = new Libvirt.Service.Concrete.CPU_Layout_Validator();
-                var cpulayout= Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.CPU_Layout>.Map(CpuInfo);
+                var cpulayout = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.CPU_Layout>.Map(CpuInfo);
                 validator.Validate(new Libvirt_WebManager.Models.Validator(ModelState), cpulayout, h);
                 var machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
                 if (ModelState.IsValid)
@@ -101,6 +81,38 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
                 h.virNodeGetInfo(out info);
                 vm.NodeCpuInfo = info;
                 vm.CpuInfo = CpuInfo;
+                return PartialView(vm);
+            }
+
+        }
+        [HttpPost]
+        public ActionResult _Partial_Memory_MainContent(Models.Domain_Memory_Down_VM MemoryInfo)
+        {
+
+            var h = GetHost(MemoryInfo.Host);
+            using (var d = h.virDomainLookupByName(MemoryInfo.Parent))
+            {
+                var validator = new Libvirt.Service.Concrete.Memory_Allocation_Validator();
+                var memorylayout = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Memory_Allocation>.Map(MemoryInfo);
+                memorylayout.memory_unit= memorylayout.currentMemory_unit = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.MiB;
+                validator.Validate(new Libvirt_WebManager.Models.Validator(ModelState), memorylayout, h);
+                var machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+                if (ModelState.IsValid)
+                {
+                    machine.Memory = memorylayout;
+                    using (var newd = h.virDomainDefineXML(machine))
+                    {
+                        Debug.WriteLine("got here");
+                    }
+                }
+                var vm = new Models.Domain_Memory_Down();
+                Libvirt._virNodeInfo info;
+                h.virNodeGetInfo(out info);
+                vm.NodeCpuInfo = info;
+                vm.MemoryInfo.Host = MemoryInfo.Host;
+                vm.MemoryInfo.Parent = MemoryInfo.Parent;
+                vm.MemoryInfo.currentMemory = vm.MemoryInfo.currentMemory > 0 ? vm.MemoryInfo.currentMemory / 1024 : 0;
+                vm.MemoryInfo.memory = vm.MemoryInfo.memory > 0 ? vm.MemoryInfo.memory / 1024 : 0;
                 return PartialView(vm);
             }
 
