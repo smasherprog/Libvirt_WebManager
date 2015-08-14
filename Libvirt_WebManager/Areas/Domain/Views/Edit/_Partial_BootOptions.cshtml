@@ -1,0 +1,62 @@
+﻿
+<div id="Bootoptionsfd2345">
+    <div class="panel panel-default">
+        <div class="panel-heading">Boot Options</div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    @using (Ajax.BeginForm("_Partial_Memory", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Bootoptionsfd2345", LoadingElementId = "Bootoptionsfd2345_Form_spinner" }, new { @class = "form-horizontal" }))
+            {
+                        @Html.ValidationSummary()
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                Autostart
+                            </label>
+                          
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> Start virtual machine on host boot up
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+            
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                Boot device order
+                            </label>
+                            <div class="col-sm-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"> <span class="glyphicon glyphicon-hdd"></span> Disk 1
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"> <span class="glyphicon glyphicon-cd"></span>CD Rom
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            
+                            </div>
+                        </div>
+
+                        <button class="col-sm-offset-2 col-sm-10 btn btn-primary btn-block">
+                            Save
+                            @Html.Spinner("Bootoptionsfd2345_Form_spinner")
+                        </button>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

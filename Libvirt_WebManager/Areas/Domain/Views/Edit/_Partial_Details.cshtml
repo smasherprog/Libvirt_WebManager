@@ -19,7 +19,7 @@
 
                     </dl>
 
-                    @using (Ajax.BeginForm("_Partial_Details_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Generalmetadata1235", LoadingElementId = "_Generalmetadata1235_Form_spinner" }, new { @class = "form-horizontal" }))
+                    @using (Ajax.BeginForm("_Partial_Details", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Generalmetadata1235", LoadingElementId = "_Generalmetadata1235_Form_spinner" }, new { @class = "form-horizontal" }))
             {
                         @Html.ValidationSummary()
                         @Html.HiddenFor(a => a.MetaData.Host)

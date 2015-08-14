@@ -7,29 +7,31 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    @using (Ajax.BeginForm("_Partial_CPU_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "cpudetails1235t343", LoadingElementId = "cpudetails1235t343_Form_spinner" }, new { @class = "form-horizontal" }))
+                    @using (Ajax.BeginForm("_Partial_CPU", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "cpudetails1235t343", LoadingElementId = "cpudetails1235t343_Form_spinner" }, new { @class = "form-horizontal" }))
             {
                         @Html.ValidationSummary()
                         @Html.HiddenFor(a => a.CpuInfo.Host)
                         @Html.HiddenFor(a => a.CpuInfo.Parent)
 
                         <div class="form-group">
-                            @Html.LabelFor(a => a.CpuInfo.Cpu_Model, new { @class = "col-sm-2 control-label" })   <div class="col-sm-10">
+                            @Html.LabelFor(a => a.CpuInfo.Cpu_Model, new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
                                 @Html.EnumDropDownListFor(a => a.CpuInfo.Cpu_Model, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(a => a.CpuInfo.Cpu_Model)
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(a => a.CpuInfo.vCpu_Count, new { @class = "col-sm-2 control-label" })   <div class="col-sm-10">
+                            @Html.LabelFor(a => a.CpuInfo.vCpu_Count, new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
                                 @Html.TextBoxFor(a => a.CpuInfo.vCpu_Count, new
-                       {
-                           @class = "form-control",
-                           @type = "number",
-                           min = 1,
-                           step = 1,
-                           max = Model.NodeCpuInfo.cpus
-                       })
+                           {
+                               @class = "form-control",
+                               @type = "number",
+                               min = 1,
+                               step = 1,
+                               max = Model.NodeCpuInfo.cpus
+                           })
                             </div>
                             @Html.ValidationMessageFor(a => a.CpuInfo.vCpu_Count)
                         </div>

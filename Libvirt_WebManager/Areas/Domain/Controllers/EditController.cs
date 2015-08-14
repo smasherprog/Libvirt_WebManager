@@ -31,7 +31,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         }
 
         [HttpPost]
-        public ActionResult _Partial_Details_MainContent(Models.General_Metadata_VM MetaData)
+        public ActionResult _Partial_Details(Models.General_Metadata_VM MetaData)
         {
             var vm = new Models.Domain_Details_Down();
             Libvirt.Models.Concrete.Virtual_Machine machine = new Libvirt.Models.Concrete.Virtual_Machine();
@@ -59,7 +59,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
 
 
         [HttpPost]
-        public ActionResult _Partial_CPU_MainContent(Models.Domain_CPU_Down_VM CpuInfo)
+        public ActionResult _Partial_CPU(Models.Domain_CPU_Down_VM CpuInfo)
         {
             var h = GetHost(CpuInfo.Host);
             using (var d = h.virDomainLookupByName(CpuInfo.Parent))
@@ -86,7 +86,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
 
         }
         [HttpPost]
-        public ActionResult _Partial_Memory_MainContent(Models.Domain_Memory_Down_VM MemoryInfo)
+        public ActionResult _Partial_Memory(Models.Domain_Memory_Down_VM MemoryInfo)
         {
 
             var h = GetHost(MemoryInfo.Host);

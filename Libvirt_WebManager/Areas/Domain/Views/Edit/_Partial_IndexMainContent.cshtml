@@ -24,7 +24,7 @@
             };
             detailsmodel.MetaData.Host = Model.Host;
             detailsmodel.MetaData.Parent = Model.Parent;
-            @Html.Partial("_Partial_Details_MainContent", detailsmodel)
+            @Html.Partial("_Partial_Details", detailsmodel)
         }
 
     </div>
@@ -42,7 +42,7 @@
             };
             cpumodel.CpuInfo.Host = Model.Host;
             cpumodel.CpuInfo.Parent = Model.Parent;
-            @Html.Partial("_Partial_CPU_MainContent", cpumodel)
+            @Html.Partial("_Partial_CPU", cpumodel)
         }
 
     </div>
@@ -61,7 +61,7 @@
             memorymodel.MemoryInfo.memory = memorymodel.MemoryInfo.memory > 0 ? memorymodel.MemoryInfo.memory / 1024 : 0;
             memorymodel.MemoryInfo.Host = Model.Host;
             memorymodel.MemoryInfo.Parent = Model.Parent;
-            @Html.Partial("_Partial_Memory_MainContent", memorymodel)
+            @Html.Partial("_Partial_Memory", memorymodel)
         }
 
     </div>
@@ -69,6 +69,11 @@
 <div class="row">
     <a href="#" onclick="$(this).next().slideToggle(); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-gears fa-lg"></i> Boot Options</a>
     <div class="col-sm-10" style="display:none;">
-   
+        @Html.Partial("_Partial_BootOptions")
+    </div>
+</div>
+<div class="row">
+    <a href="#" onclick="Libvirt.UI.OpenDialog_lg(@Url.Action("_Partial_IndexMainContent","AddHardware", new { Area="Domains" })); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-plus-square-o fa-lg"></i> Add Hardware</a>
+    <div class="col-sm-10">
     </div>
 </div>

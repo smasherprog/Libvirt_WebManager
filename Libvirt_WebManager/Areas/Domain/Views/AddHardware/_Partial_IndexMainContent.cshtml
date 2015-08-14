@@ -1,0 +1,22 @@
+﻿
+<div id="_Partial_Add_Form">
+
+
+    @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_Add_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "__Partial_Add_Form_spinner" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Add Hardware</h4>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary pull-right">
+                Add
+                @Html.Spinner("__Partial_Add_Form_spinner")
+            </button>
+        </div>
+    }
+</div>

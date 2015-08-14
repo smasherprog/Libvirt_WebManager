@@ -7,7 +7,7 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    @using (Ajax.BeginForm("_Partial_Memory_MainContent", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "GeneramMemoryArre1243", LoadingElementId = "_GeneramMemoryArre1243_Form_spinner" }, new { @class = "form-horizontal" }))
+                    @using (Ajax.BeginForm("_Partial_Memory", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "GeneramMemoryArre1243", LoadingElementId = "_GeneramMemoryArre1243_Form_spinner" }, new { @class = "form-horizontal" }))
             {
                         @Html.ValidationSummary()
                         @Html.HiddenFor(a => a.MemoryInfo.Host)
