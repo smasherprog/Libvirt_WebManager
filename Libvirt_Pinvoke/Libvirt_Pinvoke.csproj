@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -117,12 +119,69 @@
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="x64\iconv.dll" />
+    <Content Include="x64\libcrypto-10.dll" />
+    <Content Include="x64\libcurl-4.dll" />
+    <Content Include="x64\libffi-6.dll" />
+    <Content Include="x64\libgcc_s_seh-1.dll" />
+    <Content Include="x64\libgmp-10.dll" />
+    <Content Include="x64\libgnutls-28.dll" />
+    <Content Include="x64\libhogweed-2-5.dll" />
+    <Content Include="x64\libidn-11.dll" />
+    <Content Include="x64\libintl-8.dll" />
+    <Content Include="x64\libnettle-4-7.dll" />
+    <Content Include="x64\libp11-kit-0.dll" />
+    <Content Include="x64\libportablexdr-0.dll" />
+    <Content Include="x64\libssh2-1.dll" />
+    <Content Include="x64\libssl-10.dll" />
+    <Content Include="x64\libtasn1-6.dll" />
+    <Content Include="x64\libvirt-0.dll" />
+    <Content Include="x64\libvirt-lxc-0.dll" />
+    <Content Include="x64\libvirt-qemu-0.dll" />
+    <Content Include="x64\libwinpthread-1.dll" />
+    <Content Include="x64\libxml2-2.dll" />
+    <Content Include="x64\virsh.exe" />
+    <Content Include="x64\zlib1.dll" />
+    <Content Include="x86\iconv.dll" />
+    <Content Include="x86\libcrypto-10.dll" />
+    <Content Include="x86\libcurl-4.dll" />
+    <Content Include="x86\libffi-6.dll" />
+    <Content Include="x86\libgcc_s_sjlj-1.dll" />
+    <Content Include="x86\libgmp-10.dll" />
+    <Content Include="x86\libgnutls-28.dll" />
+    <Content Include="x86\libhogweed-2-5.dll" />
+    <Content Include="x86\libidn-11.dll" />
+    <Content Include="x86\libintl-8.dll" />
+    <Content Include="x86\libnettle-4-7.dll" />
+    <Content Include="x86\libp11-kit-0.dll" />
+    <Content Include="x86\libportablexdr-0.dll" />
+    <Content Include="x86\libssh2-1.dll" />
+    <Content Include="x86\libssl-10.dll" />
+    <Content Include="x86\libtasn1-6.dll" />
+    <Content Include="x86\libvirt-0.dll" />
+    <Content Include="x86\libvirt-lxc-0.dll" />
+    <Content Include="x86\libvirt-qemu-0.dll" />
+    <Content Include="x86\libwinpthread-1.dll" />
+    <Content Include="x86\libxml2-2.dll" />
+    <Content Include="x86\virsh.exe" />
+    <Content Include="x86\zlib1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\Libvirt_Binaries.1.0.1\build\Libvirt_Binaries.targets" Condition="Exists('..\packages\Libvirt_Binaries.1.0.1\build\Libvirt_Binaries.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Libvirt_Binaries.1.0.1\build\Libvirt_Binaries.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Libvirt_Binaries.1.0.1\build\Libvirt_Binaries.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
