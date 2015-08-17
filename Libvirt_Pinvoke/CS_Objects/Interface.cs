@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Libvirt.CS_Objects
 {
-    public class Interface : IDisposable
+    public class virInterface : IDisposable
     {
         private virInterfacePtr _virInterfacePtr;
         public bool IsValid { get { return _virInterfacePtr.Pointer != IntPtr.Zero; } }
-        public Interface(virInterfacePtr ptr)
+        public virInterface(virInterfacePtr ptr)
         {
             _virInterfacePtr = ptr;
         }

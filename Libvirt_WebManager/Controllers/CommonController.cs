@@ -19,11 +19,8 @@ namespace Libvirt_WebManager.Controllers
         }
         protected Libvirt.CS_Objects.Host GetHost(string hostname)
         {
-            Libvirt.CS_Objects.Host t = null;
-            if (!Libvirt_WebManager.Service.VM_Manager.Instance.Connections.TryGetValue(hostname.ToLower(), out t))
-            {
-                ModelState.AddModelError("Host Does not Exist", "The host does not exist!");
-            }
+            var t = Service.VM_Manager.Instance.virConnectOpen(hostname);
+            if(t==null) ModelState.AddModelError("Host Does not Exist", "The host does not exist!");
             return t;
         }
         protected List<IDisposable> ObjectsToDispose { get; set; }
@@ -38,7 +35,6 @@ namespace Libvirt_WebManager.Controllers
                 foreach (var item in ObjectsToDispose) item.Dispose();
                 ObjectsToDispose.Clear();
             }
-
             base.Dispose(disposing);
         }
     }

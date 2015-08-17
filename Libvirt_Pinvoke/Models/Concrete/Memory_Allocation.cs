@@ -34,13 +34,11 @@ namespace Libvirt.Models.Concrete
                 v.AddError("currentMemory_unit", "Must equal memory_unit");
                 v.AddError("memory_unit", "Must equal currentMemory_unit");
             }
-            else
-            {
-                if (currentMemory < memory)
+            else if (currentMemory < memory)
                 {
                     v.AddError("currentMemory", "currentMemory Cannot be less than memory!");
                 }
-            }
+            
         }
 
         private void Reset()

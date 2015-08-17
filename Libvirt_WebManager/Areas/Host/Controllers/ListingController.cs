@@ -13,7 +13,7 @@ namespace Libvirt_WebManager.Areas.Host.Controllers
         }
         public ActionResult _Partial_GetHosts()
         {
-            return PartialView(Libvirt_WebManager.Service.VM_Manager.Instance.Connections);
+            return PartialView(Libvirt_WebManager.Service.VM_Manager.Instance.Hosts);
         }
         public ActionResult _Partial_GetHostChildren(string host)
         {

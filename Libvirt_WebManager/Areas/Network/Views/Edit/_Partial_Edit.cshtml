@@ -1,0 +1,102 @@
+﻿@model Libvirt_WebManager.Areas.Network.Models.Create_Network_Down
+
+<div id="Editnetworkthing345@(Model.name)">
+    <script>
+        function updatecreatenetworjuithingy() {
+            if ($('#Forward_Type :selected').text() == '@Libvirt.Models.Concrete.Network.Forward_Types.nat') {
+                $('.natconfigurations').show();
+            } else {
+                $('.natconfigurations').hide();
+            }
+        }
+        $(document).ready(function () {
+            updatecreatenetworjuithingy();
+            $('#Forward_Type').change(function () { updatecreatenetworjuithingy(); });
+            $('#Configuration_default_gateway_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+                translation: { 'Z': { pattern: /[0-9]/, optional: true } }
+            });
+            $('#Configuration_netmask').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+                translation: { 'Z': { pattern: /[0-9]/, optional: true } }
+            });
+            $('#Configuration_dhcp_range_start').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+                translation: { 'Z': { pattern: /[0-9]/, optional: true } }
+            });
+            $('#Configuration_dhcp_range_end').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+                translation: { 'Z': { pattern: /[0-9]/, optional: true } }
+            });
+        });
+    </script>
+    @using (Ajax.BeginForm(Html.Action(), Html.Controller(), new { Area = "Network" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Editnetworkthing345" + Model.name, LoadingElementId = "Editnetworkthing345" + Model.name + "_Form_spinner" }, new { @class = "form-horizontal" }))
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(a => a.Host)
+        @Html.HiddenFor(a => a.Parent)
+        @Html.HiddenFor(a => a.uuid)
+        <h4>Network Details</h4>
+        <div class="form-group">
+            @Html.LabelFor(a => a.name, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.TextBoxFor(a => a.name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(a => a.name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(a => a.ipv6, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.CheckBoxFor(a => a.ipv6)
+                @Html.ValidationMessageFor(a => a.ipv6)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(a => a.Forward_Type, new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+
+                @Html.EnumDropDownListFor(a => a.Forward_Type, new { @class = "form-control", title="A bridge type network will use the Hosts dhcp, default gateway, and dns settings. A nat network must specify additional settings." })
+                @Html.ValidationMessageFor(a => a.Forward_Type)
+            </div>
+        </div>
+            <div class="natconfigurations row">
+                <div class="col-sm-12">
+
+                    <h4>NAT Configuration</h4>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.Configuration.default_gateway_address, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+
+                            @Html.TextBoxFor(a => a.Configuration.default_gateway_address, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(a => a.Configuration.default_gateway_address)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.Configuration.netmask, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+
+                            @Html.TextBoxFor(a => a.Configuration.netmask, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(a => a.Configuration.netmask)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.Configuration.dhcp_range_start, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(a => a.Configuration.dhcp_range_start, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(a => a.Configuration.dhcp_range_start)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.Configuration.dhcp_range_end, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+
+                            @Html.TextBoxFor(a => a.Configuration.dhcp_range_end, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(a => a.Configuration.dhcp_range_end)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <button class="col-sm-12 btn btn-primary btn-block">
+                    Save
+                    @Html.Spinner("Editnetworkthing345" + Model.name + "_Form_spinner")
+                </button>
+
+    }
+</div>

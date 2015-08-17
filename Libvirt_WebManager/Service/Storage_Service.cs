@@ -25,7 +25,7 @@ namespace Libvirt_WebManager.Service
             } else {
                 volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GiB;
             }
-            var h = GetHost(v.Host);
+            var h = Service.VM_Manager.Instance.virConnectOpen(v.Host);
             if (!_Validator.IsValid()) return;
             using (var p = h.virStoragePoolLookupByName(v.Parent))
             {
@@ -53,7 +53,8 @@ namespace Libvirt_WebManager.Service
 
         public void CreatePool_Dir(Libvirt_WebManager.Areas.Storage_Pool.Models.Dir_Pool pool)
         {
-            var h = GetHost(pool.Storage_Pool.Host);
+            var h = Service.VM_Manager.Instance.virConnectOpen(pool.Storage_Pool.Host);
+         
             if (!_Validator.IsValid()) return;
 
             var p = new Libvirt.Models.Concrete.Storage_Pool();

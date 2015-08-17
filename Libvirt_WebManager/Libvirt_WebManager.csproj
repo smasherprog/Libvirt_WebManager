@@ -185,13 +185,15 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Domain\Code\ViewModelFactory.cs" />
     <Compile Include="Areas\Domain\Controllers\EditController.cs" />
     <Compile Include="Areas\Domain\Controllers\DetailsController.cs" />
     <Compile Include="Areas\Domain\Controllers\CreateController.cs" />
     <Compile Include="Areas\Domain\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Domain\DomainAreaRegistration.cs" />
-    <Compile Include="Areas\Domain\Models\BaseDomain_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Bios_Down.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Memory_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Bios_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Memory_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_CPU_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_CPU_Down.cs" />
@@ -203,6 +205,15 @@
     <Compile Include="Areas\Host\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Host\HostAreaRegistration.cs" />
     <Compile Include="Areas\Host\Models\GetHostsChildren_ViewModel.cs" />
+    <Compile Include="Areas\Network\Controllers\CreateController.cs" />
+    <Compile Include="Areas\Network\Controllers\EditController.cs" />
+    <Compile Include="Areas\Network\Controllers\ListingController.cs" />
+    <Compile Include="Areas\Network\Controllers\TreeListingController.cs" />
+    <Compile Include="Areas\Network\NetworkAreaRegistration.cs" />
+    <Compile Include="Areas\Network\Models\Create_Network_Down.cs" />
+    <Compile Include="Areas\Network\Models\Create_Network_Down_VM.cs" />
+    <Compile Include="Areas\Network\Models\Network_Down.cs" />
+    <Compile Include="Areas\Network\Models\Network_List_Down.cs" />
     <Compile Include="Areas\Storage_Pool\Controllers\ListingController.cs" />
     <Compile Include="Areas\Storage_Pool\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Storage_Pool\Models\Storage_Pools.cs" />
@@ -234,6 +245,7 @@
     <Compile Include="Signalr\Libvirt_ManagerHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AutoMapper\Mapper.cs" />
+    <Compile Include="Utilities\IPVHelper.cs" />
     <Compile Include="Utilities\String\Formatting.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Down.cs" />
@@ -253,6 +265,7 @@
     <Compile Include="Areas\Host\Models\virConnectOpen.cs" />
     <Compile Include="ViewModels\Message\ErrorMessage.cs" />
     <Compile Include="ViewModels\Message\LogMessage.cs" />
+    <Compile Include="ViewModels\Validators\IPv4Attribute.cs" />
     <Compile Include="ViewModels\Validators\HostAttribute.cs" />
     <Compile Include="ViewModels\Validators\MaxFileSize.cs" />
   </ItemGroup>
@@ -418,6 +431,7 @@
     <Content Include="Scripts\context.js" />
     <Content Include="Scripts\jquery.jgrowl.js" />
     <Content Include="Scripts\jquery.jgrowl.min.js" />
+    <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
@@ -503,6 +517,13 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_BootOptions.cshtml" />
     <Content Include="Areas\Domain\Views\AddHardware\_Partial_IndexMainContent.cshtml" />
+    <Content Include="Areas\Network\Views\web.config" />
+    <Content Include="Areas\Network\Views\TreeListing\_Partial_Index.cshtml" />
+    <Content Include="Areas\Network\Views\Listing\_Partial_MainContent.cshtml" />
+    <Content Include="Areas\Network\Views\Listing\_Partial_TableRowDetails.cshtml" />
+    <Content Include="Areas\Network\Views\Edit\_Partial_IndexMainContent.cshtml" />
+    <Content Include="Areas\Network\Views\Edit\_Partial_Edit.cshtml" />
+    <Content Include="Areas\Network\Views\Create\_Partial_Create.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -562,6 +583,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Domain\Views\Shared\" />
     <Folder Include="Areas\Host\Views\Shared\" />
+    <Folder Include="Areas\Network\Views\Shared\" />
     <Folder Include="Areas\Storage_Pool\Views\Shared\" />
     <Folder Include="include\chrome-app\" />
     <Folder Include="include\web-socket-js-project\" />

@@ -1,15 +1,15 @@
-@model Dictionary<string, Libvirt.CS_Objects.Host>
+@model IEnumerable<string>
 
 @if (Model.Any())
 {
     <ul>
         @foreach (var item in Model)
         {
-            var li_id = "x" + item.Key.Replace(".", "_");
+            var li_id = "x" + item.Replace(".", "_");
        
             <li id="@(li_id)">
-                <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetHostChildren", "TreeListing", new { Area="Host", host = item.Key })" />
-                <label for="item-@(li_id)" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Listing", new {Area="Host", host = item.Key})');return false;"><span></span><i class="fa fa-server"></i>@item.Key</label>
+                <input type="checkbox" id="item-@(li_id)" data-urlpart="@Url.Action("_Partial_GetHostChildren", "TreeListing", new { Area="Host", host = item })" />
+                <label for="item-@(li_id)" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Listing", new {Area="Host", host = item})');return false;"><span></span><i class="fa fa-server"></i>@item</label>
             </li>
         }
     </ul>
@@ -17,7 +17,7 @@
         $(document).ready(function () {
             @foreach(var item in Model)
             {
-                var li_id = "x" + item.Key.Replace(".", "_");
+                var li_id = "x" + item.Replace(".", "_");
               <text>registercallsbacks('@li_id');</text>
             }
         });

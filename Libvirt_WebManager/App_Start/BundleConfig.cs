@@ -25,6 +25,7 @@ namespace Libvirt_WebManager
                                  "~/Scripts/Libvirt.js",
                                     "~/Scripts/context.js",
                                     "~/Scripts/Chart.min.js",
+                                    "~/Scripts/jquery.mask.js",
                     "~/Scripts/Common.js"
                         ));
 

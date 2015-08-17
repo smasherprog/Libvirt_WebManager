@@ -1,51 +1,92 @@
-﻿
+﻿@model Libvirt_WebManager.Areas.Domain.Models.Domain_Bios_Down
+
 <div id="Bootoptionsfd2345">
+    <script>
+        $(document).ready(function () {
+            $(".sortable_drives").sortable({
+                revert: true,
+                stop: function () {
+                    reorganize_drive_ids();
+                }
+            });
+        });
+        function reorganize_drive_ids() {
+            $(".sortable_drives input[type=checkbox]").each(function (index) {
+                console.log(index);
+                $(this).attr('name', 'BiosInfo.BootOrder[' + index + '].Enabled');
+            });
+            $(".sortable_drives input[type=hidden]").each(function (index) {
+                console.log(index);
+                $(this).attr('name', 'BiosInfo.BootOrder[' + index + '].BootType');
+            });
+        }     
+    </script>
     <div class="panel panel-default">
         <div class="panel-heading">Boot Options</div>
         <div class="panel-body">
 
             <div class="row">
                 <div class="col-sm-12">
-                    @using (Ajax.BeginForm("_Partial_Memory", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Bootoptionsfd2345", LoadingElementId = "Bootoptionsfd2345_Form_spinner" }, new { @class = "form-horizontal" }))
+                    @using (Ajax.BeginForm("_Partial_BootOptions", "Edit", new { Area = "Domain" }, new AjaxOptions { InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Bootoptionsfd2345", LoadingElementId = "Bootoptionsfd2345_Form_spinner" }, new { @class = "form-horizontal" }))
             {
                         @Html.ValidationSummary()
-
+                        @Html.HiddenFor(a => a.BiosInfo.Host)
+                        @Html.HiddenFor(a => a.BiosInfo.Parent)
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">
-                                Autostart
-                            </label>
-                          
+                            @Html.LabelFor(a => a.BiosInfo.StartGuestAutomatically, new { @class = "col-sm-2 control-label" })
                             <div class="col-sm-10">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox"> Start virtual machine on host boot up
+                                        @Html.CheckBoxFor(a => a.BiosInfo.StartGuestAutomatically) Start Guest automatically on host startup
                                     </label>
                                 </div>
+                                @Html.ValidationMessageFor(a => a.BiosInfo.StartGuestAutomatically)
                             </div>
                         </div>
 
-            
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">
-                                Boot device order
-                            </label>
+                            @Html.LabelFor(a => a.BiosInfo.ShowBootMenu, new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(a => a.BiosInfo.ShowBootMenu) Show Bios Menu on Guest Startup
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(a => a.BiosInfo.ShowBootMenu)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(a => a.BiosInfo.BootOrder, new { @class = "col-sm-2 control-label" })
                             <div class="col-sm-4">
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"> <span class="glyphicon glyphicon-hdd"></span> Disk 1
-                                            </label>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"> <span class="glyphicon glyphicon-cd"></span>CD Rom
-                                            </label>
-                                        </div>
+                                        <ul class="sortable_drives">
+                                            @for (var i = 0; i < Model.BiosInfo.BootOrder.Count; i++)
+                                            {
+                                                <li class="list-unstyled">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            @Html.CheckBox("BiosInfo.BootOrder["+i.ToString()+ "].Enabled", Model.BiosInfo.BootOrder[i].Enabled)
+                                                            @Html.Hidden("BiosInfo.BootOrder[" + i.ToString() + "].BootType", Model.BiosInfo.BootOrder[i].BootType)
+                                                            @if (Model.BiosInfo.BootOrder[i].BootType == Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.cdrom)
+                                                            {
+                                                                <span class=" glyphicon glyphicon-cd"></span><span>CD Rom</span>
+                                                            }
+                                                            else if (Model.BiosInfo.BootOrder[i].BootType == Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.hd)
+                                                            {
+                                                                <span class="glyphicon glyphicon-hdd"></span><span>Hard Drive</span>
+                                                            }
+                                                            else if (Model.BiosInfo.BootOrder[i].BootType == Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.network)
+                                                            {
+                                                                <i class="fa fa-wifi"></i><span>Hard Drive</span>
+                                                            }
+                                                        </label>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
                                     </div>
                                 </div>
-
-                            
                             </div>
                         </div>
 

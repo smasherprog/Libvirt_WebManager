@@ -73,10 +73,10 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         public ActionResult _Partial_Migrate(string host, string domain)
         {
             var vm = new Models.Domain_Migrate_Down();
-            foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Connections)
+            foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Hosts)
             {
-                if (item.Key.ToLower() == host.ToLower()) continue;
-                vm.Hosts.Add(new SelectListItem { Text = item.Key, Value = item.Key });
+                if (item.ToLower() == host.ToLower()) continue;
+                vm.Hosts.Add(new SelectListItem { Text = item, Value = item });
             }
             return PartialView(vm);
         }
@@ -88,10 +88,10 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
                //migrate coed hereree
             }
             var vm = new Models.Domain_Migrate_Down();
-            foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Connections)
+            foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Hosts)
             {
-                if (item.Key.ToLower() == host.ToLower()) continue;
-                vm.Hosts.Add(new SelectListItem { Text = item.Key, Value = item.Key });
+                if (item.ToLower() == host.ToLower()) continue;
+                vm.Hosts.Add(new SelectListItem { Text = item, Value = item });
             }
             return PartialView(vm);
         }

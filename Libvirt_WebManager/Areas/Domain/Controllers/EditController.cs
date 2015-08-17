@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace Libvirt_WebManager.Areas.Domain.Controllers
 {
@@ -14,108 +15,133 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         [HttpGet]
         public ActionResult _Partial_IndexMainContent(string host, string domain)
         {
-            var h = GetHost(host);
-            using (var d = h.virDomainLookupByName(domain))
-            {
-                Libvirt._virNodeInfo info;
-                h.virNodeGetInfo(out info);
-                return PartialView(new Libvirt_WebManager.Areas.Domain.Models.BaseDomain_Down
-                {
-                    Host = host,
-                    Parent = domain,
-                    Machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT),
-                    NodeInfo = info
-                });
-            }
-
+            return PartialView(new ViewModels.BaseViewModel { Host = host, Parent = domain });
+        }
+        [HttpGet]
+        public ActionResult _Partial_Details(string Host, string Parent)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            return PartialView(Code.ViewModelFactory.Build_Domain_Details_Down(Host, Parent, out machine));
         }
 
         [HttpPost]
         public ActionResult _Partial_Details(Models.General_Metadata_VM MetaData)
         {
-            var vm = new Models.Domain_Details_Down();
-            Libvirt.Models.Concrete.Virtual_Machine machine = new Libvirt.Models.Concrete.Virtual_Machine();
-            if (ModelState.IsValid)
-            {
-                var h = GetHost(MetaData.Host);
-                using (var d = h.virDomainLookupByName(MetaData.Parent))
-                {
-                    machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
-                    machine.Metadata = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.General_Metadata>.Map(MetaData);
-                    using (var newd = h.virDomainDefineXML(machine))
-                    {
-                        Debug.WriteLine("got here");
-                    }
-                }
-            }
-            vm.type = machine.type;
-            vm.MetaData = Utilities.AutoMapper.Mapper<Models.General_Metadata_VM>.Map(machine.Metadata);
-            vm.MetaData.Host = MetaData.Host;
-            vm.MetaData.Parent = MetaData.Parent;
-            vm.Bios = machine.BootLoader;
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            var vm = Code.ViewModelFactory.Build_Domain_Details_Down(MetaData.Host, MetaData.Parent, out machine);
+            machine.Metadata = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.General_Metadata>.Map(MetaData);
+            if (ModelState.IsValid) virDomainDefineXML(machine, GetHost(MetaData.Host));
+            vm.MetaData = MetaData;
             return PartialView(vm);
-
         }
 
-
+        [HttpGet]
+        public ActionResult _Partial_CPU(string Host, string Parent)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            return PartialView(Code.ViewModelFactory.Build_Domain_CPU_Down(Host, Parent, out machine));
+        }
         [HttpPost]
         public ActionResult _Partial_CPU(Models.Domain_CPU_Down_VM CpuInfo)
         {
-            var h = GetHost(CpuInfo.Host);
-            using (var d = h.virDomainLookupByName(CpuInfo.Parent))
-            {
-                var validator = new Libvirt.Service.Concrete.CPU_Layout_Validator();
-                var cpulayout = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.CPU_Layout>.Map(CpuInfo);
-                validator.Validate(new Libvirt_WebManager.Models.Validator(ModelState), cpulayout, h);
-                var machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
-                if (ModelState.IsValid)
-                {
-                    machine.CPU = cpulayout;
-                    using (var newd = h.virDomainDefineXML(machine))
-                    {
-                        Debug.WriteLine("got here");
-                    }
-                }
-                var vm = new Models.Domain_CPU_Down();
-                Libvirt._virNodeInfo info;
-                h.virNodeGetInfo(out info);
-                vm.NodeCpuInfo = info;
-                vm.CpuInfo = CpuInfo;
-                return PartialView(vm);
-            }
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            var vm = Code.ViewModelFactory.Build_Domain_CPU_Down(CpuInfo.Host, CpuInfo.Parent, out machine);
 
+            var validator = new Libvirt.Service.Concrete.CPU_Layout_Validator();
+            var cpulayout = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.CPU_Layout>.Map(CpuInfo);
+            validator.Validate(new Libvirt_WebManager.Models.Validator(ModelState), cpulayout, GetHost(CpuInfo.Host));
+            machine.CPU = cpulayout;
+            if (ModelState.IsValid) virDomainDefineXML(machine, GetHost(CpuInfo.Host));
+
+            vm.CpuInfo = CpuInfo;
+            return PartialView(vm);
+        }
+
+        [HttpGet]
+        public ActionResult _Partial_Memory(string Host, string Parent)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            return PartialView(Code.ViewModelFactory.Build_Domain_Memory_Down(Host, Parent, out machine));
         }
         [HttpPost]
         public ActionResult _Partial_Memory(Models.Domain_Memory_Down_VM MemoryInfo)
         {
-
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            var vm = Code.ViewModelFactory.Build_Domain_Memory_Down(MemoryInfo.Host, MemoryInfo.Parent, out machine);
             var h = GetHost(MemoryInfo.Host);
-            using (var d = h.virDomainLookupByName(MemoryInfo.Parent))
+
+            var validator = new Libvirt.Service.Concrete.Memory_Allocation_Validator();
+            var memorylayout = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Memory_Allocation>.Map(MemoryInfo);
+            memorylayout.memory_unit = memorylayout.currentMemory_unit = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.MiB;
+            validator.Validate(new Libvirt_WebManager.Models.Validator(ModelState), memorylayout, h);
+            machine.Memory = memorylayout;
+
+            if(ModelState.IsValid) virDomainDefineXML(machine, h);
+
+            vm.MemoryInfo = MemoryInfo;
+            return PartialView(vm);
+        }
+        [HttpGet]
+        public ActionResult _Partial_BootOptions(string Host, string Parent)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            var vm = Code.ViewModelFactory.Build_Domain_Bios_Down(Host, Parent, out machine);
+            BuildBootOrder(vm.BiosInfo, machine);
+            return PartialView(vm);
+        }
+
+        [HttpPost]
+        public ActionResult _Partial_BootOptions(Models.Domain_Bios_Down_VM BiosInfo)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+
+            var vm = Code.ViewModelFactory.Build_Domain_Bios_Down(BiosInfo.Host, BiosInfo.Parent, out machine);
+            machine.BootLoader.BootOrder = BiosInfo.BootOrder.Where(a => a.Enabled).Select(a => (Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types)System.Enum.Parse(typeof(Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types), a.BootType.ToString())).ToList();
+            machine.BootLoader.ShowBootMenu = BiosInfo.ShowBootMenu;
+            if (ModelState.IsValid)
             {
-                var validator = new Libvirt.Service.Concrete.Memory_Allocation_Validator();
-                var memorylayout = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Memory_Allocation>.Map(MemoryInfo);
-                memorylayout.memory_unit= memorylayout.currentMemory_unit = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.MiB;
-                validator.Validate(new Libvirt_WebManager.Models.Validator(ModelState), memorylayout, h);
-                var machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
-                if (ModelState.IsValid)
+                var h = GetHost(BiosInfo.Host);
+                using (var d = h.virDomainLookupByName(BiosInfo.Parent))
                 {
-                    machine.Memory = memorylayout;
-                    using (var newd = h.virDomainDefineXML(machine))
-                    {
-                        Debug.WriteLine("got here");
-                    }
+                    d.virDomainSetAutostart(BiosInfo.StartGuestAutomatically ? 1 : 0);
                 }
-                var vm = new Models.Domain_Memory_Down();
-                Libvirt._virNodeInfo info;
-                h.virNodeGetInfo(out info);
-                vm.NodeCpuInfo = info;
-                vm.MemoryInfo.Host = MemoryInfo.Host;
-                vm.MemoryInfo.Parent = MemoryInfo.Parent;
-                vm.MemoryInfo.currentMemory = vm.MemoryInfo.currentMemory > 0 ? vm.MemoryInfo.currentMemory / 1024 : 0;
-                vm.MemoryInfo.memory = vm.MemoryInfo.memory > 0 ? vm.MemoryInfo.memory / 1024 : 0;
-                return PartialView(vm);
+                virDomainDefineXML(machine, h);
             }
 
+            vm.BiosInfo = BiosInfo;
+            BuildBootOrder(vm.BiosInfo, machine);
+            return PartialView(vm);
+        }
+        private void BuildBootOrder(Models.Domain_Bios_Down_VM BiosInfo, Libvirt.Models.Concrete.Virtual_Machine machine)
+        {
+            BiosInfo.BootOrder.Clear();
+            if (machine.Drives.Disks.Any(a => a.Device_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom))
+            {
+                BiosInfo.BootOrder.Add(new Models.BootOrder_VM
+                {
+                    Enabled = machine.BootLoader.BootOrder.Any(b => b == Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.cdrom),
+                    BootType = Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.cdrom
+                });
+            }
+            if (machine.Drives.Disks.Any(a => a.Device_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.disk))
+            {
+                BiosInfo.BootOrder.Add(new Models.BootOrder_VM
+                {
+                    Enabled = machine.BootLoader.BootOrder.Any(b => b == Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.hd),
+                    BootType = Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.hd
+                });
+            }
+        }
+
+        private void virDomainDefineXML(Libvirt.Models.Concrete.Virtual_Machine machine, Libvirt.CS_Objects.Host h)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var newd = h.virDomainDefineXML(machine))
+                {
+                    Debug.WriteLine("virDomainDefineXML Called");
+                }
+            }
         }
     }
 }

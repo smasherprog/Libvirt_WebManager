@@ -1,0 +1,21 @@
+﻿@model Libvirt_WebManager.Areas.Network.Models.Network_List_Down
+
+<ul>
+    @foreach (var d in Model.Networks)
+    {
+        var dname = d.virNetworkGetBridgeName();
+        var active = d.virNetworkIsActive() == 1;
+
+        <li  data-html="true" data-toggle="tooltip" data-placement="right" title="Network: @dname<br>Status: @(active ? "Running" : "NOT Running")">
+            @if (active)
+            {
+                <i class="fa fa-wifi"></i>
+            }
+            else
+            {
+                <i class="fa fa-frown-o"></i>
+            }
+            <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_IndexMainContent", "Details", new {Area="Network", host = Model.Host, network = dname})');return false;">@dname</a>
+        </li>
+    }
+</ul>

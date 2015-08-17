@@ -1,0 +1,40 @@
+﻿@model Libvirt_WebManager.Areas.Network.Models.Network_List_Down
+
+<div class="page-header">
+    <h2>
+        Networks
+        <a href="#" class="btn btn-primary" title="Add New Network" onclick="LoadMainContent('@Html.Raw(Url.Action("_Partial_Create", "Create", new { Area="Network", host = Model.Host }))');return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        ipv
+                    </th>
+                    <th>Gateway</th>
+                    <th>DHCP Start</th>
+                    <th>DHCP End</th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Networks)
+                {
+                    @Html.Partial("_Partial_TableRowDetails", new Libvirt_WebManager.Areas.Network.Models.Network_Down { Host = Model.Host, Parent = Model.Host, Network = item }  )
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

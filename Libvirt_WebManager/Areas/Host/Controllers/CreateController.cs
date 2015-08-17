@@ -16,7 +16,7 @@ namespace Libvirt_WebManager.Areas.Host.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Libvirt_WebManager.Service.VM_Manager.Instance.virConnectOpen(obj.host_or_ip)) return CloseDialog();
+                if (Libvirt_WebManager.Service.VM_Manager.Instance.virConnectOpen(obj.host_or_ip)!=null) return CloseDialog();
             }
             return PartialView(obj);
         }

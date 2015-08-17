@@ -7,11 +7,12 @@ namespace Libvirt_WebManager.Areas.Host.Controllers
     {
         public ActionResult _Partial_GetHosts()
         {
-            return PartialView(Libvirt_WebManager.Service.VM_Manager.Instance.Connections);
+            return PartialView(Libvirt_WebManager.Service.VM_Manager.Instance.Hosts);
         }
         public ActionResult _Partial_GetHostChildren(string host)
         {
-            return PartialView(new Models.GetHostsChildren_ViewModel { Host = GetHost(host), HostName = host });
+            var h = GetHost(host);
+            return PartialView(new Models.GetHostsChildren_ViewModel { Host = h, HostName = host });
         }
     }
 }

@@ -1,0 +1,41 @@
+﻿@model Libvirt_WebManager.Areas.Network.Models.Network_Down
+@{
+    var desc = Model.Network.virNetworkGetXMLDesc(Libvirt.virNetworkXMLFlags.VIR_DEFAULT);
+    var someuiniqueid = "Network_Details_" + desc.name.Replace(".", "");
+    var disabledstring = "disabled=disabled";
+    var disabled = Model.Network.virNetworkIsActive() == 1;
+}
+<tr id="@someuiniqueid">
+    <td>
+        @desc.name
+    </td>
+    <td>
+      @desc.Forward_Type
+    </td>
+    <td>
+        @(desc.ipv6 ? "ipv6" : "ipv4")
+    </td>
+    <td>
+        @desc.Configuration.default_gateway_address
+    </td>
+    <td>
+        @desc.Configuration.dhcp_range_start
+    </td>
+    <td>
+        @desc.Configuration.dhcp_range_end
+    </td>
+    <td>
+        <a  title="Start the network." href="@Url.Action("_Partial_Start", new { Area="Network", host = Model.Host, network = desc.name })" class="btn btn-xs btn-success" @(disabled ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST" >
+            <i class="fa fa-play"></i>
+        </a>
+
+        <a title="This will disable the underlying network." href="@Url.Action("_Partial_Disable", new { Area="Network",host = Model.Host, network = desc.name})" class="btn btn-xs btn-warning" @(!disabled ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
+            <i class="fa fa-power-off"></i>
+        </a>
+   
+        <a  title="This will DELETE the underlying network." href="@Url.Action("_Partial_Delete", new { Area="Network",host = Model.Host, network = desc.name })" class="btn btn-xs btn-danger" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
+            <i class="fa fa-trash"></i>
+        </a>
+    </td>
+</tr>
+

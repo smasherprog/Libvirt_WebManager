@@ -9,7 +9,7 @@ namespace Libvirt_WebManager.Service
 
         public void CreateDomain(Libvirt_WebManager.Areas.Domain.Models.New_Domain_VM v)
         {
-            var h = GetHost(v.Host);
+            var h = Service.VM_Manager.Instance.virConnectOpen(v.Host);
             Libvirt.Models.Concrete.Virtual_Machine virtuammachine = new Libvirt.Models.Concrete.Virtual_Machine();
             virtuammachine.CPU.vCpu_Count = v.Cpus;
             virtuammachine.type = Libvirt.Models.Concrete.Virtual_Machine.Domain_Types.qemu;

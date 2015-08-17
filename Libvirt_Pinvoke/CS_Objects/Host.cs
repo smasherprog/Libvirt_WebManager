@@ -84,7 +84,7 @@ namespace Libvirt.CS_Objects
         }
         public static Host virConnectOpenAuth(string @name, _virConnectAuth @auth, virConnectFlags @flags)
         {
-            return new Host( API.virConnectOpenAuth(@name, @auth, @flags));
+            return new Host(API.virConnectOpenAuth(@name, @auth, @flags));
         }
 
         public int virConnectRegisterCloseCallback(virConnectCloseFunc cb)
@@ -159,22 +159,29 @@ namespace Libvirt.CS_Objects
             return API.virNodeSuspendForDuration(_ConnectPtr, target, duration);
         }
         //Interface stuff
-        public Interface virInterfaceLookupByMACString(string mac)
+        public virInterface virInterfaceLookupByMACString(string mac)
         {
-            return new Interface(API.virInterfaceLookupByMACString(_ConnectPtr, mac));
+            return new virInterface(API.virInterfaceLookupByMACString(_ConnectPtr, mac));
         }
-        public Interface virInterfaceDefineXML(string xml)
+        public virInterface virInterfaceDefineXML(string xml)
         {
-            return new Interface(API.virInterfaceDefineXML(_ConnectPtr, xml));
+            return new virInterface(API.virInterfaceDefineXML(_ConnectPtr, xml));
         }
-        public Interface virInterfaceLookupByName(string name)
+        public virInterface virInterfaceLookupByName(string name)
         {
-            return new Interface(API.virInterfaceLookupByName(_ConnectPtr, name));
+            return new virInterface(API.virInterfaceLookupByName(_ConnectPtr, name));
         }
 
-        public int virConnectListAllInterfaces(out virInterfacePtr[] ifaces, virConnectListAllInterfacesFlags flags)
+        public int virConnectListAllInterfaces(out virInterface[] ifaces, virConnectListAllInterfacesFlags flags)
         {
-            return API.virConnectListAllInterfaces(_ConnectPtr, out ifaces, flags);
+            virInterfacePtr[] ptrs;
+            var ret = API.virConnectListAllInterfaces(_ConnectPtr, out ptrs, flags);
+            ifaces = new virInterface[ptrs.Length];
+            for (var i = 0; i < ptrs.Length; i++)
+            {
+                ifaces[i] = new virInterface(ptrs[i]);
+            }
+            return ret;
         }
         public int virConnectListDefinedInterfaces(out string[] names, int maxnames)
         {
@@ -369,7 +376,7 @@ namespace Libvirt.CS_Objects
         }
         public Domain virDomainDefineXMLFlags(Libvirt.Models.Concrete.Virtual_Machine machine_def, virDomainDefineFlags flags)
         {
-            return new Domain(API.virDomainDefineXMLFlags(_ConnectPtr, machine_def.To_XML(),  flags));
+            return new Domain(API.virDomainDefineXMLFlags(_ConnectPtr, machine_def.To_XML(), flags));
         }
         public int virDomainRestore(string from)
         {
@@ -391,7 +398,7 @@ namespace Libvirt.CS_Objects
         {
             return new Node_Device(API.virNodeDeviceCreateXML(_ConnectPtr, xmlDesc));
         }
-   
+
         public Node_Device virNodeDeviceLookupByName(string name)
         {
             return new Node_Device(API.virNodeDeviceLookupByName(_ConnectPtr, name));
@@ -414,8 +421,72 @@ namespace Libvirt.CS_Objects
 
         public int virNodeNumOfDevices(string cap)
         {
-            return API.virNodeNumOfDevices(_ConnectPtr,cap);
+            return API.virNodeNumOfDevices(_ConnectPtr, cap);
         }
+
+        public int virConnectListAllNetworks(out Network[] nets, virConnectListAllNetworksFlags flags)
+        {
+            Libvirt.virNetworkPtr[] ds;
+            var ret = API.virConnectListAllNetworks(_ConnectPtr, out ds, flags);
+            if (ret > -1)
+            {
+                nets = new Network[ds.Length];
+                for (var i = 0; i < ds.Length; i++)
+                {
+                    nets[i] = new Network(ds[i]);
+                }
+            }
+            else nets = new Network[0];
+            return ret;
+        }
+        public int virConnectListDefinedNetworks(out string[] nets, int maxnames)
+        {
+            return API.virConnectListDefinedNetworks(_ConnectPtr, out nets, maxnames);
+        }
+        public int virConnectListNetworks(out string[] nets, int maxnames)
+        {
+            return API.virConnectListNetworks(_ConnectPtr, out nets, maxnames);
+        }
+        public int virConnectNetworkEventDeregisterAny(int callbackid)
+        {
+            return API.virConnectNetworkEventDeregisterAny(_ConnectPtr, callbackid);
+        }
+
+        public int virConnectNetworkEventRegisterAny(Network net, int eventID, virConnectNetworkEventGenericCallback cb, IntPtr opaque, virFreeCallback freecb)
+        {
+            return API.virConnectNetworkEventRegisterAny(_ConnectPtr, Network.GetPtr(net), eventID, cb, opaque, freecb);
+        }
+        public int virConnectNumOfDefinedNetworks()
+        {
+            return API.virConnectNumOfDefinedNetworks(_ConnectPtr);
+        }
+        public int virConnectNumOfNetworks()
+        {
+            return API.virConnectNumOfNetworks(_ConnectPtr);
+        }
+        public Network virNetworkCreateXML(Libvirt.Models.Concrete.Network xmlDesc)
+        {
+            return new Network(API.virNetworkCreateXML(_ConnectPtr, xmlDesc.To_XML()));
+        }
+        public Network virNetworkDefineXML(Libvirt.Models.Concrete.Network xmlDesc)
+        {
+            return new Network(API.virNetworkDefineXML(_ConnectPtr, xmlDesc.To_XML()));
+        }
+        public Network virNetworkLookupByName(string name)
+        {
+            return new Network(API.virNetworkLookupByName(_ConnectPtr, name));
+        }
+        public Network virNetworkLookupByUUID(byte[] uuid)
+        {
+            return new Network(API.virNetworkLookupByUUID(_ConnectPtr, uuid));
+        }
+        public Network virNetworkLookupByUUIDString(string uuid)
+        {
+            return new Network(API.virNetworkLookupByUUIDString(_ConnectPtr, uuid));
+        }
+
+
+
 
         public static Libvirt.virConnectPtr GetPtr(Host p)
         {

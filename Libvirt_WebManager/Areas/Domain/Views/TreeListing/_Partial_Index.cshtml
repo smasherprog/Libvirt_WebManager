@@ -7,21 +7,18 @@
         Libvirt._virDomainInfo info;
         d.virDomainGetInfo(out info);
 
-        var li_id = "x" + Model.Host.Replace(".", "_") + "_Domains_" + dname;
-        <li id="@(li_id)">
-            <input type="checkbox" id="item-@(li_id)" />
-            <label for="item-@(li_id)" onclick="return false;">
-                <span></span>
-                @if (info.state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING)
-                {
-                    <i class="fa fa-desktop"></i>
-                }
-                else
-                {   <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+        <li>
 
-                }
-                <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_IndexMainContent", "Edit", new {Area="Domain", host = Model.Host, domain = dname})');return false;" data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.state.ToString().Split('_').LastOrDefault()">@dname</a>
-            </label>
+            @if (info.state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING)
+                {
+                <i class="fa fa-desktop"></i>
+            }
+            else
+            {   <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+
+            }
+            <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_IndexMainContent", "Edit", new {Area="Domain", host = Model.Host, domain = dname})');return false;" data-html="true" data-toggle="tooltip" data-placement="right" title="Pool:@dname<br>Status:@info.state.ToString().Split('_').LastOrDefault()">@dname</a>
+
         </li>
     }
 </ul>

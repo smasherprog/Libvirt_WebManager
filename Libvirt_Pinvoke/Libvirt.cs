@@ -1071,6 +1071,10 @@ namespace Libvirt
 
     public struct virNetworkPtr : virBase, IDisposable
     {
+        public virNetworkPtr(IntPtr ptr)
+        {
+            Pointer = ptr;
+        }
         public IntPtr Pointer { get; set; }
         public void Dispose()
         {
@@ -1083,15 +1087,22 @@ namespace Libvirt
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void virConnectNetworkEventLifecycleCallback(IntPtr @conn, IntPtr @net, int @event, int @detail, IntPtr @opaque);
 
-    public partial struct virNetworkDHCPLeasePtr
+    public struct virNetworkDHCPLeasePtr : virBase, IDisposable
     {
-        public virNetworkDHCPLeasePtr(IntPtr pointer)
+        public virNetworkDHCPLeasePtr(IntPtr poiinter)
         {
-            this.Pointer = pointer;
+            Pointer = poiinter;
         }
-
-        public IntPtr Pointer;
+        public IntPtr Pointer { get; set; }
+        public void Dispose()
+        {
+            if (Pointer != IntPtr.Zero)
+                PInvoke.virNetworkDHCPLeaseFree(this);
+            Pointer = IntPtr.Zero;
+            GC.SuppressFinalize(this);
+        }
     }
+ 
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void virConnectNetworkEventGenericCallback(IntPtr @conn, IntPtr @net, IntPtr @opaque);
@@ -1129,6 +1140,10 @@ namespace Libvirt
 
     public struct virStoragePoolPtr : virBase, IDisposable
     {
+        public virStoragePoolPtr(IntPtr ptr)
+        {
+            Pointer = ptr;
+        }
         public IntPtr Pointer { get; set; }
         public void Dispose()
         {
@@ -2630,6 +2645,7 @@ namespace Libvirt
                     ifaces[i] = new virInterfacePtr();
                     ifaces[i].Pointer = Marshal.ReadIntPtr(faces, i * IntPtr.Size);
                 }
+                PInvoke.free(faces);//free the array
             }
             else
             {
@@ -2715,6 +2731,168 @@ namespace Libvirt
         {
             return PInvoke.virInterfaceUndefine(@conn);
         }
+        ////NETWORKS
+
+
+        public static int virConnectListAllNetworks(virConnectPtr conn, out virNetworkPtr[] ifaces, virConnectListAllNetworksFlags flags)
+        {
+            IntPtr faces = IntPtr.Zero;
+            var ret = PInvoke.virConnectListAllNetworks(conn, ref faces, (uint)flags);
+            if (ret > -1)
+            {
+                ifaces = new virNetworkPtr[ret];
+                for (var i = 0; i < ret; i++)
+                {
+                    ifaces[i] = new virNetworkPtr(Marshal.ReadIntPtr(faces, i * IntPtr.Size));
+                }
+                PInvoke.free(faces);//free the array
+            }
+            else
+            {
+                ifaces = new virNetworkPtr[0];
+            }
+            return ret;
+        }
+
+        public static int virConnectListDefinedNetworks(virConnectPtr @conn, out string[] @names, int @maxnames)
+        {
+            return NameArrayHandler(conn, out @names, @maxnames, PInvoke.virConnectListDefinedNetworks);
+        }
+        public static int virConnectListNetworks(virConnectPtr @conn, out string[] @names, int @maxnames)
+        {
+            return NameArrayHandler(conn, out @names, @maxnames, PInvoke.virConnectListNetworks);
+        }
+        public static int virConnectNetworkEventDeregisterAny(virConnectPtr conn, int callbackID)
+        {
+            return PInvoke.virConnectNetworkEventDeregisterAny(conn, callbackID);
+        }
+        public static int virConnectNetworkEventRegisterAny(virConnectPtr conn,virNetworkPtr net, int eventID,virConnectNetworkEventGenericCallback cb, IntPtr opaque, virFreeCallback freecb)
+        {
+            return PInvoke.virConnectNetworkEventRegisterAny(conn, net, eventID, cb, opaque, freecb);
+        }
+  
+        public static int virConnectNumOfDefinedNetworks(virConnectPtr conn)
+        {
+            return PInvoke.virConnectNumOfDefinedNetworks(conn);
+        }
+        public static int virConnectNumOfNetworks(virConnectPtr conn)
+        {
+            return PInvoke.virConnectNumOfNetworks(conn);
+        }
+        public static int virNetworkCreate(virNetworkPtr @ifac)
+        {
+            return PInvoke.virNetworkCreate(@ifac);
+        }
+        public static virNetworkPtr virNetworkCreateXML(virConnectPtr conn, string xml)
+        {
+            return PInvoke.virNetworkCreateXML(conn, xml);
+        }
+
+        public static void virNetworkDHCPLeaseFree(virNetworkDHCPLeasePtr lease)
+        {
+            PInvoke.virNetworkDHCPLeaseFree(lease);
+        }
+        public static virNetworkPtr virNetworkDefineXML(virConnectPtr conn, string xml)
+        {
+            return PInvoke.virNetworkDefineXML(conn, xml);
+        }
+    
+        public static int virNetworkDestroy(virNetworkPtr @iface)
+        {
+            return PInvoke.virNetworkDestroy(@iface);
+        }
+
+        public static int virNetworkFree(virNetworkPtr @iface)
+        {
+            return PInvoke.virNetworkFree(@iface);
+        }
+
+        public static int virNetworkGetAutostart(virNetworkPtr @iface, ref int autostart)
+        {
+            return PInvoke.virNetworkGetAutostart(@iface, ref autostart);
+        }
+        public static string virNetworkGetBridgeName(virNetworkPtr @iface)
+        {
+            return PInvoke.virNetworkGetBridgeName(@iface);
+        }
+        public static int virNetworkGetDHCPLeases(virNetworkPtr @iface, string mac, out _virNetworkDHCPLease[] leases, uint flags=0)
+        {
+            IntPtr faces = IntPtr.Zero;
+            var ret = PInvoke.virNetworkGetDHCPLeases(@iface, mac, ref faces, flags);
+            if (ret > 0)//an extra element is allocated
+            {
+                leases = new _virNetworkDHCPLease[ret-1];
+                for (var i = 0; i < ret-1; i++)
+                {
+                    using (var ptr = new virNetworkDHCPLeasePtr(Marshal.ReadIntPtr(faces, i * IntPtr.Size)))
+                    {
+                        leases[i] = (_virNetworkDHCPLease)Marshal.PtrToStructure(ptr.Pointer, typeof(_virNetworkDHCPLease));
+                    }
+                }
+            }
+            else
+            {
+                leases = new _virNetworkDHCPLease[0];
+            }
+            return ret;
+        }
+        public static string virNetworkGetName(virNetworkPtr @iface)
+        {
+            return PInvoke.virNetworkGetName(@iface);
+        }
+        public static int virNetworkGetUUID(virNetworkPtr @conn, out byte[] uuid)
+        {
+            uuid = new byte[VIR_UUID_BUFLEN];
+            return PInvoke.virNetworkGetUUID(@conn, uuid);
+        }
+        public static int virNetworkGetUUIDString(virNetworkPtr @conn, out string uuid)
+        {
+            var bytes = new byte[VIR_UUID_BUFLEN];
+            var rret = PInvoke.virNetworkGetUUIDString(@conn, bytes);
+            uuid = System.Text.Encoding.UTF8.GetString(bytes);
+            return rret;
+        }
+        public static string virNetworkGetXMLDesc(virNetworkPtr @iface, virNetworkXMLFlags flags)
+        {
+            return PInvoke.virNetworkGetXMLDesc(@iface, (uint)flags);
+        }
+        public static int virNetworkIsActive(virNetworkPtr @conn)
+        {
+            return PInvoke.virNetworkIsActive(@conn);
+        }
+        public static int virNetworkIsPersistent(virNetworkPtr @conn)
+        {
+            return PInvoke.virNetworkIsPersistent(@conn);
+        }
+        public static virNetworkPtr virNetworkLookupByName(virConnectPtr @conn, string name)
+        {
+            return PInvoke.virNetworkLookupByName(@conn, name);
+        }
+        public static virNetworkPtr virNetworkLookupByUUID(virConnectPtr @conn, byte[] uuid)
+        {
+            return PInvoke.virNetworkLookupByUUID(@conn, uuid);
+        }
+        public static virNetworkPtr virNetworkLookupByUUIDString(virConnectPtr @conn, string uuid)
+        {
+            return PInvoke.virNetworkLookupByUUIDString(@conn, uuid);
+        }
+        public static int virNetworkRef(virNetworkPtr @conn)
+        {
+            return PInvoke.virNetworkRef(@conn);
+        }
+        public static int virNetworkSetAutostart(virNetworkPtr @conn, int autostart)
+        {
+            return PInvoke.virNetworkSetAutostart(@conn, autostart);
+        }
+        public static int virNetworkUndefine(virNetworkPtr @conn)
+        {
+            return PInvoke.virNetworkUndefine(@conn);
+        }
+        public static int virNetworkUpdate(virNetworkPtr network, virNetworkUpdateCommand command, virNetworkUpdateSection section, int parentIndex, string xml, virNetworkUpdateFlags flags)
+        {
+            return PInvoke.virNetworkUpdate(network, (uint)command, (uint)section, parentIndex, xml, (uint)flags);
+        }
+
 
         ///////STORAGE
         public static string virConnectFindStoragePoolSources(virConnectPtr conn, string type, string srcSpec, uint flags = 0)
@@ -2726,12 +2904,12 @@ namespace Libvirt
         {
             var ptr = IntPtr.Zero;
             var numofpools = PInvoke.virConnectListAllStoragePools(@conn, out ptr, (uint)@flags);
-            if (numofpools > 0)
+            if (numofpools > -1)
             {
                 pools = new virStoragePoolPtr[numofpools];
                 for (var i = 0; i < numofpools; i++)
                 {
-                    pools[i].Pointer = Marshal.ReadIntPtr(ptr, i * IntPtr.Size);
+                    pools[i] = new virStoragePoolPtr(Marshal.ReadIntPtr(ptr, i * IntPtr.Size));
                 }
                 PInvoke.free(ptr);//free the array
             }
@@ -2827,7 +3005,7 @@ namespace Libvirt
         {
             var ptr = IntPtr.Zero;
             var numofvols = PInvoke.virStoragePoolListAllVolumes(@conn, out ptr, @flags);
-            if (numofvols > 0)
+            if (numofvols > -1)
             {
                 @vols = new virStorageVolPtr[numofvols];
                 for (var i = 0; i < numofvols; i++)
@@ -3149,7 +3327,7 @@ namespace Libvirt
         {
             IntPtr ptr = IntPtr.Zero;
             var ret = PInvoke.virConnectListAllDomains(conn, ref ptr, (uint)flags);
-            if (ret >= 0)
+            if (ret >-1)
             {
                 domains = new virDomainPtr[ret];
                 for (var i = 0; i < ret; i++)
@@ -4033,6 +4211,7 @@ namespace Libvirt
                     devices[i] = new virNodeDevicePtr();
                     devices[i].Pointer = Marshal.ReadIntPtr(faces, i * IntPtr.Size);
                 }
+                PInvoke.free(faces);//free the array
             }
             else
             {
@@ -4100,6 +4279,7 @@ namespace Libvirt
                     snaps[i] = new virDomainSnapshotPtr();
                     snaps[i].Pointer = Marshal.ReadIntPtr(faces, i * IntPtr.Size);
                 }
+                PInvoke.free(faces);//free the array
             }
             else
             {
@@ -4159,6 +4339,7 @@ namespace Libvirt
                     snaps[i] = new virDomainSnapshotPtr();
                     snaps[i].Pointer = Marshal.ReadIntPtr(faces, i * IntPtr.Size);
                 }
+                PInvoke.free(faces);//free the array
             }
             else
             {
@@ -4954,7 +5135,7 @@ namespace Libvirt
         public static extern virConnectPtr virDomainSnapshotGetConnect(virDomainSnapshotPtr @snapshot);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotCreateXML", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virDomainSnapshotPtr virDomainSnapshotCreateXML(virDomainPtr @domain, [MarshalAs(UnmanagedType.LPStr)] string @xmlDesc, uint @flags);
+        public static extern virDomainSnapshotPtr virDomainSnapshotCreateXML(virDomainPtr @domain, [MarshalAs(UnmanagedType.LPStr), In] string @xmlDesc, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotGetXMLDesc", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithNativeCleanUpMarshaler))]
@@ -4979,7 +5160,7 @@ namespace Libvirt
         public static extern int virDomainSnapshotListAllChildren(virDomainSnapshotPtr @snapshot, ref IntPtr @snaps, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainSnapshotLookupByName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virDomainSnapshotPtr virDomainSnapshotLookupByName(virDomainPtr @domain, [MarshalAs(UnmanagedType.LPStr)] string @name, uint @flags);
+        public static extern virDomainSnapshotPtr virDomainSnapshotLookupByName(virDomainPtr @domain, [MarshalAs(UnmanagedType.LPStr), In] string @name, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virDomainHasCurrentSnapshot", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virDomainHasCurrentSnapshot(virDomainPtr @domain, uint @flags);
@@ -5072,7 +5253,7 @@ namespace Libvirt
         public static extern string virInterfaceGetXMLDesc(virInterfacePtr @iface, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virInterfaceDefineXML", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virInterfacePtr virInterfaceDefineXML(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @xmlDesc, uint @flags);
+        public static extern virInterfacePtr virInterfaceDefineXML(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr), In] string @xmlDesc, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virInterfaceUndefine", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virInterfaceUndefine(virInterfacePtr @iface);
@@ -5108,37 +5289,37 @@ namespace Libvirt
         public static extern int virConnectNumOfNetworks(virConnectPtr @conn);
 
         [DllImport(libraryPath, EntryPoint = "virConnectListNetworks", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virConnectListNetworks(virConnectPtr @conn, out IntPtr @names, int @maxnames);
+        public static extern int virConnectListNetworks(virConnectPtr @conn, IntPtr @names, int @maxnames);
 
         [DllImport(libraryPath, EntryPoint = "virConnectNumOfDefinedNetworks", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virConnectNumOfDefinedNetworks(virConnectPtr @conn);
 
         [DllImport(libraryPath, EntryPoint = "virConnectListDefinedNetworks", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virConnectListDefinedNetworks(virConnectPtr @conn, out IntPtr @names, int @maxnames);
+        public static extern int virConnectListDefinedNetworks(virConnectPtr @conn, IntPtr @names, int @maxnames);
 
         [DllImport(libraryPath, EntryPoint = "virConnectListAllNetworks", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virConnectListAllNetworks(virConnectPtr @conn, out IntPtr @nets, uint @flags);
+        public static extern int virConnectListAllNetworks(virConnectPtr @conn, ref IntPtr @nets, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkLookupByName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virNetworkPtr virNetworkLookupByName(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @name);
+        public static extern virNetworkPtr virNetworkLookupByName(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr), In] string @name);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkLookupByUUID", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virNetworkPtr virNetworkLookupByUUID(virConnectPtr @conn, IntPtr @uuid);
+        public static extern virNetworkPtr virNetworkLookupByUUID(virConnectPtr @conn, [In] byte[] @uuid);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkLookupByUUIDString", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virNetworkPtr virNetworkLookupByUUIDString(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @uuid);
+        public static extern virNetworkPtr virNetworkLookupByUUIDString(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr), In] string @uuid);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkCreateXML", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virNetworkPtr virNetworkCreateXML(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @xmlDesc);
+        public static extern virNetworkPtr virNetworkCreateXML(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr), In] string @xmlDesc);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkDefineXML", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern virNetworkPtr virNetworkDefineXML(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr)] string @xmlDesc);
+        public static extern virNetworkPtr virNetworkDefineXML(virConnectPtr @conn, [MarshalAs(UnmanagedType.LPStr), In] string @xmlDesc);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkUndefine", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virNetworkUndefine(virNetworkPtr @network);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkUpdate", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virNetworkUpdate(virNetworkPtr @network, uint @command, uint @section, int @parentIndex, [MarshalAs(UnmanagedType.LPStr)] string @xml, uint @flags);
+        public static extern int virNetworkUpdate(virNetworkPtr @network, uint @command, uint @section, int @parentIndex, [MarshalAs(UnmanagedType.LPStr), In] string @xml, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkCreate", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virNetworkCreate(virNetworkPtr @network);
@@ -5153,22 +5334,25 @@ namespace Libvirt
         public static extern int virNetworkFree(virNetworkPtr @network);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithNativeCleanUpMarshaler))]
         public static extern string virNetworkGetName(virNetworkPtr @network);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetUUID", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virNetworkGetUUID(virNetworkPtr @network, IntPtr @uuid);
+        public static extern int virNetworkGetUUID(virNetworkPtr @network, byte[] @uuid);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetUUIDString", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virNetworkGetUUIDString(virNetworkPtr @network, IntPtr @buf);
+        public static extern int virNetworkGetUUIDString(virNetworkPtr @network, byte[] @buf);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetXMLDesc", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern IntPtr virNetworkGetXMLDesc(virNetworkPtr @network, uint @flags);
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithNativeCleanUpMarshaler))]
+        public static extern string virNetworkGetXMLDesc(virNetworkPtr @network, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetBridgeName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern IntPtr virNetworkGetBridgeName(virNetworkPtr @network);
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithNativeCleanUpMarshaler))]
+        public static extern string virNetworkGetBridgeName(virNetworkPtr @network);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetAutostart", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virNetworkGetAutostart(virNetworkPtr @network, IntPtr @autostart);
+        public static extern int virNetworkGetAutostart(virNetworkPtr @network, ref int @autostart);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkSetAutostart", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virNetworkSetAutostart(virNetworkPtr @network, int @autostart);
@@ -5183,7 +5367,7 @@ namespace Libvirt
         public static extern void virNetworkDHCPLeaseFree(virNetworkDHCPLeasePtr @lease);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetDHCPLeases", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        public static extern int virNetworkGetDHCPLeases(virNetworkPtr @network, [MarshalAs(UnmanagedType.LPStr)] string @mac, out IntPtr @leases, uint @flags);
+        public static extern int virNetworkGetDHCPLeases(virNetworkPtr @network, [MarshalAs(UnmanagedType.LPStr)] string @mac, ref IntPtr @leases, uint @flags);
 
         [DllImport(libraryPath, EntryPoint = "virConnectNetworkEventRegisterAny", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
         public static extern int virConnectNetworkEventRegisterAny(virConnectPtr @conn, virNetworkPtr @net, int @eventID, virConnectNetworkEventGenericCallback @cb, IntPtr @opaque, virFreeCallback @freecb);

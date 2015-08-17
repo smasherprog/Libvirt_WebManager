@@ -1,8 +1,10 @@
-﻿@model Libvirt_WebManager.Areas.Domain.Models.BaseDomain_Down
+﻿@model Libvirt_WebManager.ViewModels.BaseViewModel
 <script>
-    $(document).ready(function () {
-
-    });
+    function showsomearea676(element, url){
+        if($(element).is(':hidden')) $(element).load(url);
+        else  $(element).empty();//good housekeeping!
+        $(element).toggle();
+    }
 </script>
 <div class="page-header">
     <h2>
@@ -10,70 +12,23 @@
     </h2>
 </div>
 <div class="row">
-
-    <a href="#" onclick="$(this).next().slideToggle(); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-info-circle fa-lg"></i> Details</a>
-
+    <a href="#" onclick="showsomearea676($(this).next(),'@Url.Action("_Partial_Details", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent })'); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-info-circle fa-lg"></i> Details</a>
     <div class="col-sm-10">
-        @{
-            var detailsmodel = new Libvirt_WebManager.Areas.Domain.Models.Domain_Details_Down
-            {
-                Bios = Model.Machine.BootLoader,
-                MetaData = Libvirt_WebManager.Utilities.AutoMapper.Mapper<Libvirt_WebManager.Areas.Domain.Models.General_Metadata_VM>.Map(Model.Machine.Metadata),
-                type = Model.Machine.type,
-
-            };
-            detailsmodel.MetaData.Host = Model.Host;
-            detailsmodel.MetaData.Parent = Model.Parent;
-            @Html.Partial("_Partial_Details", detailsmodel)
-        }
-
+        @Html.Action("_Partial_Details", "Edit", new { Area = "Domain", Host = Model.Host, Parent = Model.Parent })
     </div>
 </div>
 <div class="row">
-
-    <a href="#" onclick="$(this).next().slideToggle(); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-dashboard  fa-lg"></i> Processor</a>
-
+    <a href="#" onclick="showsomearea676($(this).next(),'@Url.Action("_Partial_CPU", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent })'); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-dashboard  fa-lg"></i> Processor</a>
     <div class="col-sm-10" style="display:none;">
-        @{
-            var cpumodel = new Libvirt_WebManager.Areas.Domain.Models.Domain_CPU_Down
-            {
-                CpuInfo = Libvirt_WebManager.Utilities.AutoMapper.Mapper<Libvirt_WebManager.Areas.Domain.Models.Domain_CPU_Down_VM>.Map(Model.Machine.CPU),
-                NodeCpuInfo = Model.NodeInfo
-            };
-            cpumodel.CpuInfo.Host = Model.Host;
-            cpumodel.CpuInfo.Parent = Model.Parent;
-            @Html.Partial("_Partial_CPU", cpumodel)
-        }
-
     </div>
 </div>
 <div class="row">
-    <a href="#" onclick="$(this).next().slideToggle(); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-sliders fa-lg"></i> Memory</a>
+    <a href="#" onclick="showsomearea676($(this).next(),'@Url.Action("_Partial_Memory", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent })'); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-sliders fa-lg"></i> Memory</a>
     <div class="col-sm-10" style="display:none;">
-        @{
-            var memorymodel = new Libvirt_WebManager.Areas.Domain.Models.Domain_Memory_Down
-            {
-                MemoryInfo = Libvirt_WebManager.Utilities.AutoMapper.Mapper<Libvirt_WebManager.Areas.Domain.Models.Domain_Memory_Down_VM>.Map(Model.Machine.Memory),
-                NodeCpuInfo = Model.NodeInfo
-            };
-
-            memorymodel.MemoryInfo.currentMemory = memorymodel.MemoryInfo.currentMemory > 0 ? memorymodel.MemoryInfo.currentMemory / 1024 : 0;
-            memorymodel.MemoryInfo.memory = memorymodel.MemoryInfo.memory > 0 ? memorymodel.MemoryInfo.memory / 1024 : 0;
-            memorymodel.MemoryInfo.Host = Model.Host;
-            memorymodel.MemoryInfo.Parent = Model.Parent;
-            @Html.Partial("_Partial_Memory", memorymodel)
-        }
-
     </div>
 </div>
 <div class="row">
-    <a href="#" onclick="$(this).next().slideToggle(); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-gears fa-lg"></i> Boot Options</a>
+    <a href="#" onclick="showsomearea676($(this).next(),'@Url.Action("_Partial_BootOptions", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent })'); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-gears fa-lg"></i> Boot Options</a>
     <div class="col-sm-10" style="display:none;">
-        @Html.Partial("_Partial_BootOptions")
-    </div>
-</div>
-<div class="row">
-    <a href="#" onclick="Libvirt.UI.OpenDialog_lg(@Url.Action("_Partial_IndexMainContent","AddHardware", new { Area="Domains" })); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-plus-square-o fa-lg"></i> Add Hardware</a>
-    <div class="col-sm-10">
     </div>
 </div>

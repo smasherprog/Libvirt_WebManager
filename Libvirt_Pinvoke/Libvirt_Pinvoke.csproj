@@ -72,6 +72,7 @@
     <Compile Include="CS_Objects\Extensions\Storage_Volume_Extensions.cs" />
     <Compile Include="CS_Objects\Host.cs" />
     <Compile Include="CS_Objects\Domain_Shapshot.cs" />
+    <Compile Include="CS_Objects\Network.cs" />
     <Compile Include="CS_Objects\Node_Device.cs" />
     <Compile Include="CS_Objects\Interface.cs" />
     <Compile Include="CS_Objects\Stream.cs" />
@@ -79,7 +80,8 @@
     <Compile Include="Libvirt.cs" />
     <Compile Include="Models\Concrete\BIOS_Bootloader.cs" />
     <Compile Include="Models\Concrete\CPU_Layout.cs" />
-    <Compile Include="Models\Concrete\Device.cs" />
+    <Compile Include="Models\Concrete\Network.cs" />
+    <Compile Include="Models\Concrete\Disk.cs" />
     <Compile Include="Models\Concrete\Device_Sources.cs" />
     <Compile Include="Models\Concrete\Graphics.cs" />
     <Compile Include="Models\Concrete\Features.cs" />
