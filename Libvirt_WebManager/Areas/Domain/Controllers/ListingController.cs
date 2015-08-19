@@ -80,6 +80,8 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             }
             return PartialView(vm);
         }
+
+
         [HttpPost]
         public ActionResult _Partial_Migrate(string host, string domain, string selected_host)
         {
@@ -94,6 +96,16 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
                 vm.Hosts.Add(new SelectListItem { Text = item, Value = item });
             }
             return PartialView(vm);
+        }
+        [HttpPost]
+        public ActionResult _Partial_AutoStart(string host, string domain, bool autostart)
+        {
+            var h = GetHost(host);
+            var d = h.virDomainLookupByName(domain);
+            AddToAutomaticDisposal(d);
+            if (autostart) d.virDomainSetAutostart(1);
+            else d.virDomainSetAutostart(0);
+            return PartialView("_Partial_TableRowDetails", new Libvirt_WebManager.Areas.Domain.Models.Domain_Down { Host = host, Parent = host, Domain = d });
         }
     }
 }

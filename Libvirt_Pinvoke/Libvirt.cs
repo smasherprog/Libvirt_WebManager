@@ -5334,7 +5334,7 @@ namespace Libvirt
         public static extern int virNetworkFree(virNetworkPtr @network);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
         public static extern string virNetworkGetName(virNetworkPtr @network);
 
         [DllImport(libraryPath, EntryPoint = "virNetworkGetUUID", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
@@ -5463,6 +5463,7 @@ namespace Libvirt
         public static extern int virNWFilterFree(virNWFilterPtr @nwfilter);
 
         [DllImport(libraryPath, EntryPoint = "virNWFilterGetName", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
         public static extern string virNWFilterGetName(virNWFilterPtr @nwfilter);
 
         [DllImport(libraryPath, EntryPoint = "virNWFilterGetUUID", CallingConvention = CallingConvention.Cdecl, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]

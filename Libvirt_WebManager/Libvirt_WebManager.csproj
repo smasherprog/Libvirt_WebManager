@@ -176,6 +176,8 @@
     <Compile Include="Areas\Domain\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Domain\DomainAreaRegistration.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Bios_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Network_Down_VM.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Network_Down.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Memory_Down.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Bios_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Memory_Down_VM.cs" />
@@ -222,6 +224,7 @@
     <Compile Include="Service\Interface\IService.cs" />
     <Compile Include="Service\LogMessage_Service.cs" />
     <Compile Include="Service\Message_Manager.cs" />
+    <Compile Include="Service\Network_Service.cs" />
     <Compile Include="Service\Nodes\NodeBuilder.cs" />
     <Compile Include="Service\Domain_Service.cs" />
     <Compile Include="Service\Storage_Service.cs" />
@@ -488,6 +491,8 @@
     <Content Include="x86\libxml2-2.dll" />
     <Content Include="x86\virsh.exe" />
     <Content Include="x86\zlib1.dll" />
+    <Content Include="Areas\Network\Views\Edit\EditorTemplates\Create_Network_QOS.cshtml" />
+    <Content Include="Areas\Domain\Views\Edit\_Partial_Network.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

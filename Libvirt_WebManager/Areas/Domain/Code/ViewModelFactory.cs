@@ -61,6 +61,20 @@ namespace Libvirt_WebManager.Areas.Domain.Code
             vm.MemoryInfo.Parent = domain;
             return vm;
         }
+        public static Models.Domain_Network_Down Build_Domain_Network_Down(string host, string domain, out Libvirt.Models.Concrete.Virtual_Machine machine)
+        {
+            machine = GetMachine(host, domain, null);
+            var h = Service.VM_Manager.Instance.virConnectOpen(host);
+           
+            var vm = new Models.Domain_Network_Down();
+            vm.Network = Utilities.AutoMapper.Mapper<Models.Domain_Network_Down_VM>.Map(machine.Iface);
+            Libvirt.CS_Objects.Network[] ns;
+            h.virConnectListAllNetworks(out ns, Libvirt.virConnectListAllNetworksFlags.VIR_DEFAULT);
+            vm.Networks = ns.Select(a => a.virNetworkGetXMLDesc(Libvirt.virNetworkXMLFlags.VIR_DEFAULT)).ToList();
+            foreach (var item in ns) item.Dispose();
+            return vm;
+        }
+        
         public static Models.Domain_Bios_Down Build_Domain_Bios_Down(string host, string domain, out Libvirt.Models.Concrete.Virtual_Machine machine)
         {
             using (var d = Service.VM_Manager.Instance.virConnectOpen(host).virDomainLookupByName(domain))

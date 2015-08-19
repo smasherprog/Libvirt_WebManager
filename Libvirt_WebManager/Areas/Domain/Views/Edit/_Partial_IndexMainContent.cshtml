@@ -28,6 +28,11 @@
     </div>
 </div>
 <div class="row">
+    <a href="#" onclick="showsomearea676($(this).next(),'@Url.Action("_Partial_Network", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent })'); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-wifi fa-lg"></i> Network</a>
+    <div class="col-sm-10" style="display:none;">
+    </div>
+</div>
+<div class="row">
     <a href="#" onclick="showsomearea676($(this).next(),'@Url.Action("_Partial_BootOptions", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent })'); return false;" class="btn btn-primary col-sm-2"><i class="fa fa-gears fa-lg"></i> Boot Options</a>
     <div class="col-sm-10" style="display:none;">
     </div>

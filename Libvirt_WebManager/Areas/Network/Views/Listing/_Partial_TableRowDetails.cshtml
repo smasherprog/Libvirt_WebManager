@@ -4,13 +4,15 @@
     var someuiniqueid = "Network_Details_" + desc.name.Replace(".", "");
     var disabledstring = "disabled=disabled";
     var disabled = Model.Network.virNetworkIsActive() == 1;
+    var autostart = 0;
+    Model.Network.virNetworkGetAutostart(ref autostart);
 }
 <tr id="@someuiniqueid">
     <td>
         @desc.name
     </td>
     <td>
-      @desc.Forward_Type
+        @desc.Forward_Type
     </td>
     <td>
         @(desc.ipv6 ? "ipv6" : "ipv4")
@@ -25,15 +27,30 @@
         @desc.Configuration.dhcp_range_end
     </td>
     <td>
-        <a  title="Start the network." href="@Url.Action("_Partial_Start", new { Area="Network", host = Model.Host, network = desc.name })" class="btn btn-xs btn-success" @(disabled ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST" >
+        @if (autostart == 1)
+        {
+            <a title="Disable starting when the Host starts" href="@Url.Action("_Partial_AutoStart", new { Area = "Network", host = Model.Host, network = desc.name, autostart = false })" class="btn btn-xs" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
+                <i class="fa fa-toggle-on"></i>
+            </a>
+        }
+        else
+        {
+            <a title="Enable start when the Host starts" href="@Url.Action("_Partial_AutoStart", new { Area="Network", host = Model.Host, network = desc.name, autostart = true  })" class="btn btn-xs" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
+                <i class="fa fa-toggle-off"></i>
+            </a>
+        }
+
+    </td>
+    <td>
+        <a title="Start the network." href="@Url.Action("_Partial_Start", new { Area="Network", host = Model.Host, network = desc.name })" class="btn btn-xs btn-success" @(disabled ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
             <i class="fa fa-play"></i>
         </a>
 
         <a title="This will disable the underlying network." href="@Url.Action("_Partial_Disable", new { Area="Network",host = Model.Host, network = desc.name})" class="btn btn-xs btn-warning" @(!disabled ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
             <i class="fa fa-power-off"></i>
         </a>
-   
-        <a  title="This will DELETE the underlying network." href="@Url.Action("_Partial_Delete", new { Area="Network",host = Model.Host, network = desc.name })" class="btn btn-xs btn-danger" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
+
+        <a title="This will DELETE the underlying network." href="@Url.Action("_Partial_Delete", new { Area="Network",host = Model.Host, network = desc.name })" class="btn btn-xs btn-danger" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
             <i class="fa fa-trash"></i>
         </a>
     </td>

@@ -5,12 +5,13 @@
     var name = Model.Domain.virDomainGetName();
     var someuiniqueid = "Domain_Details_" + name.Replace(".", "");
     var disabledstring = "disabled=disabled";
-    
+    var autostart = 0;
+    Model.Domain.virDomainGetAutostart(ref autostart);
 }
 <tr id="@someuiniqueid">
     <td>
-        <a class="btn btn-default btn-xs" href="#" title="View Domain Details" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Details", new { Area = "Domain", host = Model.Host, domain = name })');return false;">@name</a>
-        <a class="btn btn-default btn-xs @(info.state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING ? "btn-primary" : "")" href="#" @(info.state != Libvirt.virDomainState.VIR_DOMAIN_RUNNING ? disabledstring : "") onclick="LoadMainContent('@Url.Action("_Partial_Console", Html.Controller(), new {Area=Html.Area(), host = Model.Host, domain = name })');return false;"><i class="fa fa-desktop"></i></a>
+        <a href="#" title="View Domain Details" onclick="LoadMainContent('@Url.Action("_Partial_MainContent", "Details", new { Area = "Domain", host = Model.Host, domain = name })');return false;">@name</a>
+        <a class="btn btn-default btn-xs @(info.state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING ? "btn-primary" : "")" href="#" @(info.state != Libvirt.virDomainState.VIR_DOMAIN_RUNNING ? disabledstring : "") onclick="LoadMainContent('@Url.Action("_Partial_Console", "Details", new {Area=Html.Area(), host = Model.Host, domain = name })');return false;"><i class="fa fa-desktop"></i></a>
         <a class="btn btn-default btn-xs href="#" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_Migrate", Html.Controller(), new {Area=Html.Area(), host = Model.Host, domain = name }))');return false;"><i class="fa fa-long-arrow-right"></i></a>
 
     </td>
@@ -26,7 +27,21 @@
     <td>
         @info.state.ToString().Split('_').LastOrDefault()
     </td>
-
+    
+    <td>
+        @if (autostart == 1)
+        {
+            <a title="Disable starting when the Host starts" href="@Url.Action("_Partial_AutoStart", new { Area = "Domain", host = Model.Host, domain = name, autostart = false })" class="btn btn-xs" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
+                <i class="fa fa-toggle-on"></i>
+            </a>
+        }
+        else
+        {
+            <a title="Enable start when the Host starts" href="@Url.Action("_Partial_AutoStart", new { Area="Domain", host = Model.Host, domain = name, autostart = true  })" class="btn btn-xs" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true" data-ajax-method="POST">
+                <i class="fa fa-toggle-off"></i>
+            </a>
+        }
+    </td>
     <td>
         <a href="@Url.Action("_Partial_Start", new { Area="Domain", host = Model.Host, domain = name })" class="btn btn-xs btn-success" @(info.state != Libvirt.virDomainState.VIR_DOMAIN_SHUTOFF ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">
             <i class="fa fa-play"></i>

@@ -30,6 +30,17 @@ namespace Libvirt_WebManager.Areas.Network.Controllers
             n.virNetworkDestroy();
             return PartialView("_Partial_TableRowDetails", new Libvirt_WebManager.Areas.Network.Models.Network_Down { Host = host, Parent = host, Network = n });
         }
+
+
+        [HttpPost]
+        public ActionResult _Partial_AutoStart(string host, string network, bool autostart)
+        {
+            var n = GetHost(host).virNetworkLookupByName(network);
+            AddToAutomaticDisposal(n);
+            if (autostart) n.virNetworkSetAutostart(1);
+            else n.virNetworkSetAutostart(0);
+            return PartialView("_Partial_TableRowDetails", new Libvirt_WebManager.Areas.Network.Models.Network_Down { Host = host, Parent = host, Network = n });
+        }
         [HttpPost]
         public ActionResult _Partial_Delete(string host, string network)
         {

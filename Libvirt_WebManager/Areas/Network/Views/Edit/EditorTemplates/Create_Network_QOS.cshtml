@@ -1,0 +1,52 @@
+﻿@model Libvirt_WebManager.Areas.Network.Models.Create_Network_QOS
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="row form-group">
+            @Html.LabelFor(a => a.average, new { @class = "col-sm-7 control-label" })
+            <div class="col-sm-5">
+                @Html.TextBoxFor(a => a.average, new
+           {
+               @class = "form-control",
+               @type = "number",
+               min = 32,
+               step = 32,
+               title = "in KB/s"
+           })
+            </div>
+            @Html.ValidationMessageFor(a => a.average)
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="row form-group">
+            @Html.LabelFor(a => a.burst, new { @class = "col-sm-7 control-label" })
+            <div class="col-sm-5">
+                @Html.TextBoxFor(a => a.burst, new
+           {
+               @class = "form-control",
+               @type = "number",
+               min = 32,
+               step = 32,
+               title = "in KB/s"
+           })
+            </div>
+            @Html.ValidationMessageFor(a => a.burst)
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="row form-group">
+            @Html.LabelFor(a => a.peak, new { @class = "col-sm-7 control-label" })
+            <div class="col-sm-5">
+                @Html.TextBoxFor(a => a.peak, new
+                   {
+                       @class = "form-control",
+                       @type = "number",
+                       min = 32,
+                       step = 32,
+                       title ="in KB/s"
+                   })
+            </div>
+            @Html.ValidationMessageFor(a => a.peak)
+        </div>
+    </div>
+</div>

@@ -20,7 +20,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         {
             if (ModelState.IsValid)
             {
-                _Domain_Service.CreateDomain(domain);
+                _Domain_Service.QuickCreate(domain);
             }
             if (ModelState.IsValid) return CloseDialog();
             var d = GetDomainDown(domain.Host);

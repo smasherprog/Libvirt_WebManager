@@ -7,7 +7,7 @@ namespace Libvirt_WebManager.Service
     {
         public Domain_Service(Libvirt.Models.Interface.IValdiator v) : base(v) { }
 
-        public void CreateDomain(Libvirt_WebManager.Areas.Domain.Models.New_Domain_VM v)
+        public void QuickCreate(Libvirt_WebManager.Areas.Domain.Models.New_Domain_VM v)
         {
             var h = Service.VM_Manager.Instance.virConnectOpen(v.Host);
             Libvirt.Models.Concrete.Virtual_Machine virtuammachine = new Libvirt.Models.Concrete.Virtual_Machine();
@@ -17,6 +17,7 @@ namespace Libvirt_WebManager.Service
             virtuammachine.Memory.memory_unit = virtuammachine.Memory.currentMemory_unit = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.MiB;
             virtuammachine.Memory.currentMemory = virtuammachine.Memory.memory = v.Ram;
 
+        
 
             //Add a hard drive
             var harddrive = new Libvirt.Models.Concrete.Disk();

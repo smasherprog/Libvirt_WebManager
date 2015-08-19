@@ -3,7 +3,7 @@
 <ul>
     @foreach (var d in Model.Networks)
     {
-        var dname = d.virNetworkGetBridgeName();
+        var dname = d.virNetworkGetName();
         var active = d.virNetworkIsActive() == 1;
 
         <li  data-html="true" data-toggle="tooltip" data-placement="right" title="Network: @dname<br>Status: @(active ? "Running" : "NOT Running")">
@@ -15,7 +15,7 @@
             {
                 <i class="fa fa-frown-o"></i>
             }
-            <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_IndexMainContent", "Details", new {Area="Network", host = Model.Host, network = dname})');return false;">@dname</a>
+            <a href="#" onclick="LoadMainContent('@Url.Action("_Partial_IndexMainContent", "Edit", new {Area="Network", host = Model.Host, network = dname})');return false;">@dname</a>
         </li>
     }
 </ul>

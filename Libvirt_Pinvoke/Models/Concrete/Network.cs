@@ -130,6 +130,13 @@ namespace Libvirt.Models.Concrete
         }
         public string To_XML()
         {
+            if(string.IsNullOrWhiteSpace(default_gateway_address) &&
+                string.IsNullOrWhiteSpace(netmask) &&
+                string.IsNullOrWhiteSpace(dhcp_range_start) &&
+                string.IsNullOrWhiteSpace(dhcp_range_end))
+            {
+                return "";
+            }
             var ret = "<ip address='" + default_gateway_address + "' netmask='" + netmask + "'>";
             ret += "<dhcp><range start='" + dhcp_range_start + "' end='" + dhcp_range_end + "'/></dhcp>";
             ret += "</ip>";

@@ -91,13 +91,15 @@
                     case 'loaded': level = "normal"; break;
                     default: level = "warn"; break;
                 }
-
-                if (state === "normal") {
-                    cad.disabled = false;
-                } else {
-                    cad.disabled = true;
-                    xvpInit(0);
+                if (cad != null) {
+                    if (state === "normal") {
+                        cad.disabled = false;
+                    } else {
+                        cad.disabled = true;
+                        xvpInit(0);
+                    }
                 }
+             
 
                 if (typeof (msg) !== 'undefined') {
                     sb.setAttribute("class", "noVNC_status_" + level);

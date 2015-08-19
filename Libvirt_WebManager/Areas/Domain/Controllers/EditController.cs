@@ -82,6 +82,25 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             return PartialView(vm);
         }
         [HttpGet]
+        public ActionResult _Partial_Network(string Host, string Parent)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            return PartialView(Code.ViewModelFactory.Build_Domain_Network_Down(Host, Parent, out machine));
+        }
+        [HttpPost]
+        public ActionResult _Partial_Network(Models.Domain_Network_Down_VM net)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            var vm = Code.ViewModelFactory.Build_Domain_Network_Down(net.Host, net.Parent, out machine);
+            var h = GetHost(net.Host);
+            machine.Iface = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Iface>.Map(net);
+            if (ModelState.IsValid) virDomainDefineXML(machine, h);
+            vm.Network = net;
+            return PartialView(vm);
+        }
+
+        
+        [HttpGet]
         public ActionResult _Partial_BootOptions(string Host, string Parent)
         {
             Libvirt.Models.Concrete.Virtual_Machine machine = null;
