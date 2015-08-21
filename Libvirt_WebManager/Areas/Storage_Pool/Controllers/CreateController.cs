@@ -9,7 +9,11 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
         {
             _Storage_Service = new Service.Storage_Service(new Libvirt_WebManager.Models.Validator(ModelState));
         }
-
+        [HttpGet]
+        public ActionResult VolumeUpload()
+        {
+            return View();
+        }
         [HttpGet]
         public ActionResult _Partial_CreatePool(string host)
         {

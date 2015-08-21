@@ -191,6 +191,7 @@
     <Compile Include="Areas\Host\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Host\HostAreaRegistration.cs" />
     <Compile Include="Areas\Host\Models\GetHostsChildren_ViewModel.cs" />
+    <Compile Include="Areas\Storage_Pool\Controllers\VolumeFilesController.cs" />
     <Compile Include="Areas\Network\Controllers\CreateController.cs" />
     <Compile Include="Areas\Network\Controllers\EditController.cs" />
     <Compile Include="Areas\Network\Controllers\ListingController.cs" />
@@ -263,6 +264,12 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\contextjs.bootstrap.css" />
     <Content Include="Content\contextjs.standalone.css" />
+    <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload-noscript.css" />
+    <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload-ui-noscript.css" />
+    <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload-ui.css" />
+    <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload.css" />
+    <Content Include="Content\jQuery.FileUpload\img\loading.gif" />
+    <Content Include="Content\jQuery.FileUpload\img\progressbar.gif" />
     <Content Include="Content\jquery.jgrowl.css" />
     <Content Include="Content\jquery.jgrowl.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -411,6 +418,18 @@
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\context.js" />
+    <Content Include="Scripts\jQuery.FileUpload\cors\jquery.postmessage-transport.js" />
+    <Content Include="Scripts\jQuery.FileUpload\cors\jquery.xdr-transport.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-angular.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-audio.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-image.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-jquery-ui.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-process.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-ui.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-validate.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-video.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.jgrowl.js" />
     <Content Include="Scripts\jquery.jgrowl.min.js" />
     <Content Include="Scripts\jquery.mask.js" />
@@ -493,6 +512,7 @@
     <Content Include="x86\zlib1.dll" />
     <Content Include="Areas\Network\Views\Edit\EditorTemplates\Create_Network_QOS.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_Network.cshtml" />
+    <Content Include="Areas\Storage_Pool\Views\Create\VolumeUpload.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -549,6 +569,8 @@
     <Content Include="Areas\Domain\Views\Listing\_Partial_TableRowDetails.cshtml" />
     <Content Include="Areas\Domain\Views\Details\_Partial_Console.cshtml" />
     <Content Include="Views\Common\CloseDialog.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Blank_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
