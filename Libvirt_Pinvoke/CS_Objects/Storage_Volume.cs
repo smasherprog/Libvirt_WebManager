@@ -9,7 +9,7 @@ namespace Libvirt.CS_Objects
     public class Storage_Volume : IDisposable
     {
         private Libvirt.virStorageVolPtr _Storage_VolumePtr;
-        public bool IsValid { get { return _Storage_VolumePtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_Storage_VolumePtr.IsInvalid; } }
         public Storage_Volume(Libvirt.virStorageVolPtr ptr)
         {
             _Storage_VolumePtr = ptr;

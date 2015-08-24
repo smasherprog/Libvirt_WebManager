@@ -204,6 +204,8 @@
     <Compile Include="Areas\Storage_Pool\Controllers\ListingController.cs" />
     <Compile Include="Areas\Storage_Pool\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Storage_Pool\Models\Storage_Pools.cs" />
+    <Compile Include="Areas\Storage_Pool\Models\Storage_Volume_Resize.cs" />
+    <Compile Include="Areas\Storage_Pool\Models\Storage_Volume_Upload.cs" />
     <Compile Include="Areas\Storage_Pool\Models\Storage_Volume_TreeViewDown.cs" />
     <Compile Include="Areas\Storage_Pool\Storage_PoolAreaRegistration.cs" />
     <Compile Include="Controllers\CommonController.cs" />
@@ -513,6 +515,7 @@
     <Content Include="Areas\Network\Views\Edit\EditorTemplates\Create_Network_QOS.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_Network.cshtml" />
     <Content Include="Areas\Storage_Pool\Views\Create\VolumeUpload.cshtml" />
+    <Content Include="Areas\Storage_Pool\Views\Listing\_Partial_ResizeVolume.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

@@ -6,25 +6,25 @@ namespace Libvirt_WebManager.Service
     {
         public Storage_Service(Libvirt.Models.Interface.IValdiator v) : base(v) { }
 
-        public void CreateVolume(Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume v, System.Web.HttpPostedFileBase File)
+        public void CreateVolume(Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume v)
         {
             var volume = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Storage_Volume>.Map(v);
-            if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
-            {
-                if (File == null)
-                {
-                    _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
-                    return;
-                } else if(File.ContentLength == 0)
-                {
-                    _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
-                    return;
-                }
-                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
-                volume.capacity = volume.allocation = File.ContentLength;
-            } else {
+            //if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
+            //{
+            //    if (File == null)
+            //    {
+            //        _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
+            //        return;
+            //    } else if(File.ContentLength == 0)
+            //    {
+            //        _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
+            //        return;
+            //    }
+            //    volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
+            //    volume.capacity = volume.allocation = File.ContentLength;
+            //} else {
                 volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GiB;
-            }
+          //  }
             var h = Service.VM_Manager.Instance.virConnectOpen(v.Host);
             if (!_Validator.IsValid()) return;
             using (var p = h.virStoragePoolLookupByName(v.Parent))
@@ -37,10 +37,10 @@ namespace Libvirt_WebManager.Service
                     {
                         if (storagevol.IsValid)
                         {
-                            if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
-                            {
-                                storagevol.Upload(h, File.InputStream);
-                            }
+                            //if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
+                            //{
+                            //    storagevol.Upload(h, File.InputStream);
+                            //}
                         }
                         else
                         {

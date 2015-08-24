@@ -9,7 +9,7 @@ namespace Libvirt.CS_Objects
     public class Node_Device : IDisposable
     {
         private virNodeDevicePtr _virNodeDevicePtr;
-        public bool IsValid { get { return _virNodeDevicePtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_virNodeDevicePtr.IsInvalid; } }
         public Node_Device(virNodeDevicePtr ptr)
         {
             _virNodeDevicePtr = ptr;

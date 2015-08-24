@@ -80,6 +80,57 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             p.virStoragePoolDestroy();
             return PartialView("_Partial_Pool_TableRowDetails", new Models.Storage_PoolBase { Host = Host, Parent = Host, Pool = p });
         }
- 
+
+        [HttpGet]
+        public ActionResult _Partial_ResizeVolume(string Host, string Parent, string volume)
+        {
+            var vm = new Models.Storage_Volume_Resize();
+            var h = GetHost(Host);
+            vm.Host = Host;
+            vm.Parent = Parent;
+            vm.name = volume;
+            using (var p = h.virStoragePoolLookupByName(Parent))
+            {
+                Libvirt._virStoragePoolInfo poolinfo;
+                p.virStoragePoolGetInfo(out poolinfo);
+                vm.PoolInfo = poolinfo;
+                using (var v = p.virStorageVolLookupByName(volume))
+                {
+                    Libvirt._virStorageVolInfo volinfo;
+                    v.virStorageVolGetInfo(out volinfo);
+                    vm.capacity = volinfo.capacity;
+                    vm.VolInfo = volinfo;
+                }
+            }
+            return PartialView(vm);
+        }
+        [HttpPost]
+        public ActionResult _Partial_ResizeVolume(Models.Storage_Volume_Resize volres)
+        {
+            var vm = new Models.Storage_Volume_Resize();
+            var h = GetHost(volres.Host);
+
+            using (var p = h.virStoragePoolLookupByName(volres.Parent))
+            {
+                Libvirt._virStoragePoolInfo poolinfo;
+                p.virStoragePoolGetInfo(out poolinfo);
+                vm.PoolInfo = poolinfo;
+                using (var v = p.virStorageVolLookupByName(volres.name))
+                {
+                    Libvirt._virStorageVolInfo volinfo;
+                    v.virStorageVolGetInfo(out volinfo);
+                    if(volinfo.capacity > volres.capacity)
+                    {
+                        v.virStorageVolResize(volres.capacity, Libvirt.virStorageVolResizeFlags.VIR_STORAGE_VOL_RESIZE_SHRINK);
+                    } else
+                    {
+                        v.virStorageVolResize(volres.capacity, Libvirt.virStorageVolResizeFlags.VIR_DEFAULT);
+                    }
+                    v.virStorageVolGetInfo(out volinfo);
+                    vm.VolInfo = volinfo;
+                }
+            }
+            return PartialView(vm);
+        }
     }
 }

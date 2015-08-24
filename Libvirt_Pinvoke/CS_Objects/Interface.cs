@@ -9,7 +9,7 @@ namespace Libvirt.CS_Objects
     public class virInterface : IDisposable
     {
         private virInterfacePtr _virInterfacePtr;
-        public bool IsValid { get { return _virInterfacePtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_virInterfacePtr.IsInvalid; } }
         public virInterface(virInterfacePtr ptr)
         {
             _virInterfacePtr = ptr;

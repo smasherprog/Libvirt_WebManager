@@ -1,41 +1,7 @@
 ﻿@model Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume_Down
 <div id="_Partial_CreateVolume_Form">
     <script>
-        function Storage_Volume_Volume_Typeupdate() {
-            if ($('#Volume_Volume_Type :selected').text() == "iso") {
-                console.log('show');
-                $('#FileArea').show();
-            } else {
-                $('#FileArea').hide();
-                console.log('hide');
-            }
-        }
-        function fileselected() {
-            var x = document.getElementById('Volume_File')
-            if ('files' in x) {
-                if (x.files.length == 0) {
-                    txt = "Select one or more files.";
-                } else {
-                    for (var i = 0; i < x.files.length; i++) {
-                        var file = x.files[i];
-                        if ('size' in file) {
-                            if (file.size > 0) {
-                                var present = Math.floor(file.size / 1000000000) + 1;
-                                $('#Volume_capacity').val(present);
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        $(document).ready(function () {
-
-            $('#Volume_Volume_Type').change(function () {
-                Storage_Volume_Volume_Typeupdate();
-            });
-            Storage_Volume_Volume_Typeupdate();
-        });
+ 
     </script>
     @using (Ajax.BeginForm("_Partial_CreateVolume", Html.Controller(), new { Area="Storage_Pool" }, new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_CreateVolume_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_CreateVolume_Form_spinner" }, new { enctype = "multipart/form-data" }))
     {
@@ -65,16 +31,7 @@
                         @Html.EnumDropDownListFor(a => a.Volume.Volume_Type, new { @class = "form-control" })
                         @Html.ValidationMessageFor(a => a.Volume.Volume_Type)
                     </div>
-                    <div id="FileArea" class="form-group-sm">
-                        @Html.LabelFor(a => a.Volume.File)
-                        <input type="file" id="Volume_File" name="File" class="form-control" onchange="fileselected();" />
-                        @Html.ValidationMessageFor(a => a.Volume.File)
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped active" style="width:0;">
-                                0%
-                            </div>
-                        </div>
-                    </div>
+         
                     <h3>Pool Details:</h3>
                     <dl class="dl-horizontal">
                         <dt>State</dt>

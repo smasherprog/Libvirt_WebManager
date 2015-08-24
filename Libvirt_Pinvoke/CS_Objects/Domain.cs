@@ -12,7 +12,7 @@ namespace Libvirt.CS_Objects
     public class Domain : IDisposable
     {
         private Libvirt.virDomainPtr _DomainPtr;
-        public bool IsValid { get { return _DomainPtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_DomainPtr.IsInvalid; } }
         public Domain(Libvirt.virDomainPtr ptr)
         {
             _DomainPtr = ptr;

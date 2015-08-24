@@ -9,7 +9,7 @@ namespace Libvirt.CS_Objects
     public class Stream : IDisposable
     {
         private Libvirt.virStreamPtr _StreamPtr;
-        public bool IsValid { get { return _StreamPtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_StreamPtr.IsInvalid; } }
         public Stream(Libvirt.virStreamPtr ptr)
         {
             _StreamPtr = ptr;

@@ -87,7 +87,7 @@ namespace Libvirt_WebManager.Service
             {//test if connection is alive
                 lock (h)
                 {//prevent other threads from accessing h concurrently
-                    if (h.virConnectIsAlive() == 0)
+                    if (!h.IsValid || h.virConnectIsAlive() == 0)
                     {//reconnect
                         h.Dispose();
                         Message_Manager.Send(new Libvirt_WebManager.Models.Message.LogMessage { Title = "Reconnecting . . " + hostorip, Message_Type = Libvirt_WebManager.Models.Message_Types.info, Body = "Connected to host: " + hostorip });

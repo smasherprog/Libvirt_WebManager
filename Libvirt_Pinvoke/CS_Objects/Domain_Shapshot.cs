@@ -10,7 +10,7 @@ namespace Libvirt.CS_Objects
     {
 
         private virDomainSnapshotPtr _virDomainSnapshotPtr;
-        public bool IsValid { get { return _virDomainSnapshotPtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_virDomainSnapshotPtr.IsInvalid; } }
         public Domain_Shapshot(virDomainSnapshotPtr ptr)
         {
             _virDomainSnapshotPtr = ptr;

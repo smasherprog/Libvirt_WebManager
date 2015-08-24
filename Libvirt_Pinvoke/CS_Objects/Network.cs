@@ -9,7 +9,7 @@ namespace Libvirt.CS_Objects
     public class Network : IDisposable
     {
         private virNetworkPtr _virNetworkPtr;
-        public bool IsValid { get { return _virNetworkPtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_virNetworkPtr.IsInvalid; } }
         public Network(virNetworkPtr ptr)
         {
             _virNetworkPtr = ptr;

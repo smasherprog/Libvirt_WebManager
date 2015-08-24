@@ -10,7 +10,7 @@ namespace Libvirt.Models.Concrete
     public class Storage_Volume : IXML, IValidation
     {
         //always file type for now
-        public enum Volume_Types { raw, cow, qcow, qcow2, qed, vmdk, vpc, iso};
+        public enum Volume_Types { raw, cow, qcow, qcow2, qed, vmdk, vpc};
         public Storage_Volume()
         {
      

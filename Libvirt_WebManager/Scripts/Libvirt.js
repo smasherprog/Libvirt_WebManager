@@ -49,7 +49,7 @@ Libvirt.UI.Internal.OpenDialog = function (url, ctype) {
     $('#' + did + ' .modal-content').load(url);
     $('#' + did).modal('show');
     $('#' + did).on('hidden.bs.modal', function () {
-        console.log('hiding stuff '+ did);
+        console.log('hiding stuff ' + did);
         $('#' + did).remove();
     });
     return newd;
@@ -123,5 +123,40 @@ Libvirt.ViewModels.ErrorMessage = function (code, title, body, add_1, add_2, add
         self.OnReceviedCallback();
     };
 }
-
-
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+              ? args[number]
+              : match
+            ;
+        });
+    };
+}
+if (!String.prototype.replaceAll) {
+    function escapeRegExp(string) {
+        return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    }
+    String.prototype.replaceAll = function (find, replace) {
+        return this.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+    };
+}
+Libvirt.Utilities.FormatBytes = function (bytes) {
+    var scale = 1024;
+    var possibles = ["TB", "GB", "MB", "KB", "Bytes"];
+    var max = scale;
+    for (var i = 0; i < possibles.length-2; i++) {
+        max = max * scale;
+    }
+    for (var i = 0; i < possibles.length; i++) {
+        if (bytes > max) {
+            var re = Math.floor(bytes / max);
+            console.log(re);
+            return re + ' ' + possibles[i];
+        }
+            
+        max /= scale;
+    }
+    return "0 Bytes";
+}

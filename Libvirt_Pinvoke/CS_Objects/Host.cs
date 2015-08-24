@@ -12,7 +12,7 @@ namespace Libvirt.CS_Objects
     public class Host : IDisposable
     {
         private Libvirt.virConnectPtr _ConnectPtr;
-        public bool IsValid { get { return _ConnectPtr.Pointer != IntPtr.Zero; } }
+        public bool IsValid { get { return !_ConnectPtr.IsInvalid; } }
         public Host(Libvirt.virConnectPtr ptr)
         {
             _ConnectPtr = ptr;

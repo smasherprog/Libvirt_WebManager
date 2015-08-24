@@ -10,11 +10,6 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             _Storage_Service = new Service.Storage_Service(new Libvirt_WebManager.Models.Validator(ModelState));
         }
         [HttpGet]
-        public ActionResult VolumeUpload()
-        {
-            return View();
-        }
-        [HttpGet]
         public ActionResult _Partial_CreatePool(string host)
         {
             return PartialView(new Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Pool { Host = host });
@@ -54,9 +49,9 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             return PartialView(GetStorage_Volume_Down(new Models.Storage_Volume { Host = host, Parent = pool }));
         }
         [HttpPost]
-        public ActionResult _Partial_CreateVolume(Models.Storage_Volume volume, System.Web.HttpPostedFileBase File)
+        public ActionResult _Partial_CreateVolume(Models.Storage_Volume volume)
         {
-            if (ModelState.IsValid) _Storage_Service.CreateVolume(volume, File);
+            if (ModelState.IsValid) _Storage_Service.CreateVolume(volume);
             if (ModelState.IsValid) return CloseDialog();
             return PartialView(GetStorage_Volume_Down(volume));
         }
@@ -75,6 +70,12 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
                 }
                 return svd;
             }
+        }
+
+       [HttpGet]
+       public ActionResult VolumeUpload(Areas.Storage_Pool.Models.Storage_Volume_Upload d)
+        {
+            return View(d);
         }
     }
 }

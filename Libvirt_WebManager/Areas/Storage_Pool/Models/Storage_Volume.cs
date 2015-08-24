@@ -26,7 +26,6 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Models
         [Required]
         public Int64 capacity { get; set; }
         [Display(Name = "Seed File")]
-        public System.Web.HttpPostedFileBase File { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (allocation > capacity)

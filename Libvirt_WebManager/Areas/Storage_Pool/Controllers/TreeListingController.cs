@@ -27,7 +27,7 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             var h = GetHost(host);
             vm.Host = host;
             vm.Parent = pool;
-            using (var p = AddToAutomaticDisposal(h.virStoragePoolLookupByName(pool)))
+            using (var p = h.virStoragePoolLookupByName(pool))
             {
                 Libvirt.CS_Objects.Storage_Volume[] volumes;
                 p.virStoragePoolListAllVolumes(out volumes);
@@ -36,6 +36,7 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             }
             return PartialView(vm);
         }
+
 
     }
 }

@@ -1,0 +1,76 @@
+﻿@model Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume_Resize
+
+<div id="_Partial_ResizeVolume_Form">
+    <script>
+        $(document).ready(function () {
+            $('#newcapacity').mask('#,##0,000', { reverse: true });
+        });
+        function formatstuff() {
+            var r = $('#newcapacity').val();
+            var newbytesa = parseInt(r.replaceAll(',', ''));
+            $('#newsizevolume234').text(Libvirt.Utilities.FormatBytes(newbytesa));
+            $('#capacity').val(newbytesa);
+        }
+    </script>@using (Ajax.BeginForm(Html.Action(), Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_ResizeVolume_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_ResizeVolume_Form_spinner" }, new { @class = "form-horizontal" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Storage Pool<small class="pull-right">@Model.Host</small></h4>
+        </div>
+        <div class="modal-body">
+
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    @Html.HiddenFor(a => a.Host)
+                    @Html.HiddenFor(a => a.Parent)
+                    @Html.HiddenFor(a => a.name)
+                    @Html.HiddenFor(a => a.capacity)
+                    @Html.ValidationSummary()
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Current Size
+                        </dt>
+                        <dd>
+                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)Model.capacity)
+                        </dd>
+                        <dt>
+                            New Size
+                        </dt>
+                        <dd id="newsizevolume234">
+                            @Libvirt_WebManager.Utilities.String.Formatting.Format((long)Model.capacity)
+                        </dd>
+                    </dl>
+
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>New Capacity</label>
+                        </div>
+                        <div class="col-sm-9 input-group">
+                            <input id="newcapacity" type="text" class="form-control" onkeyup="formatstuff();" value="@Model.capacity" />
+                            <span class="input-group-addon">bytes</span>
+                            @Html.ValidationMessageFor(a => a.capacity)
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary pull-right">
+                Resize
+                @Html.Spinner("_Partial_ResizeVolume_Form_spinner")
+            </button>
+        </div>
+    }
+</div>
+
+
