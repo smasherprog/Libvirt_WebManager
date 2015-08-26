@@ -15,6 +15,7 @@ namespace Libvirt_WebManager.Service
         private Libvirt.Utilities.Default_EventLoop _Libvirt_EventLoop;
         private Libvirt.virErrorFunc _ErrorFunc;
         private readonly IHubContext _hubContext;
+  
 
         public static VM_Manager Instance { get { return _instance; } }
         public IEnumerable<string> Hosts
@@ -37,7 +38,7 @@ namespace Libvirt_WebManager.Service
         }
         public void Dispose()
         {
-            if (_Libvirt_EventLoop != null) _Libvirt_EventLoop.Stop();
+            if (_Libvirt_EventLoop != null) _Libvirt_EventLoop.Dispose();
             _Libvirt_EventLoop = null;
             foreach (var item in Connections)
             {
@@ -59,6 +60,7 @@ namespace Libvirt_WebManager.Service
             Connections = new ConcurrentDictionary<string, Libvirt.CS_Objects.Host>();
             _Libvirt_EventLoop = new Libvirt.Utilities.Default_EventLoop();
             _ErrorFunc = virErrorFunc;
+        
             System.Web.Hosting.HostingEnvironment.QueueBackgroundWorkItem(ctx => _Libvirt_EventLoop.Start(ctx));
 
         }

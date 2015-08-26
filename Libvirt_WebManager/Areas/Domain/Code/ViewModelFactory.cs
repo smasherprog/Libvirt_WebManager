@@ -93,5 +93,21 @@ namespace Libvirt_WebManager.Areas.Domain.Code
                 return vm;
             }
         }
+        public static Models.Domain_Drive_Down Domain_Drive_Down(string host, string domain, char letter, out Libvirt.Models.Concrete.Virtual_Machine machine)
+        {
+            using (var d = Service.VM_Manager.Instance.virConnectOpen(host).virDomainLookupByName(domain))
+            {
+                machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+
+                var vm = new Models.Domain_Drive_Down();
+                vm.Domain_Drive = new Models.Domain_Drive_Down_VM();
+                vm.Domain_Drive = Utilities.AutoMapper.Mapper<Models.Domain_Drive_Down_VM>.Map(machine.Drives.Disks.FirstOrDefault(a=>a.Letter == letter));
+                vm.Disk = machine.Drives.Disks.FirstOrDefault(a => a.Letter == letter);
+                vm.Domain_Drive.Host = host;
+                vm.Domain_Drive.Parent = domain;
+
+                return vm;
+            }
+        }
     }
 }

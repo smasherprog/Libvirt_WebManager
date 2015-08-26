@@ -15,7 +15,14 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         [HttpGet]
         public ActionResult _Partial_IndexMainContent(string host, string domain)
         {
-            return PartialView(new ViewModels.BaseViewModel { Host = host, Parent = domain });
+            var vm = new Models.Domain_Hardware_Down();
+            using(var d = GetHost(host).virDomainLookupByName(domain))
+            {
+                vm.Host = host;
+                vm.Parent = domain;
+                vm.Machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+            }
+            return PartialView(vm);
         }
         [HttpGet]
         public ActionResult _Partial_Details(string Host, string Parent)
@@ -131,6 +138,29 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             BuildBootOrder(vm.BiosInfo, machine);
             return PartialView(vm);
         }
+
+
+        [HttpGet]
+        public ActionResult _Partial_Drives(string Host, string Parent, char letter)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            return PartialView(Code.ViewModelFactory.Domain_Drive_Down(Host, Parent, letter, out machine));
+        }
+
+        [HttpPost]
+        public ActionResult _Partial_Drives(Models.Domain_Drive_Down_VM drive)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+
+            var vm = Code.ViewModelFactory.Domain_Drive_Down(drive.Host, drive.Parent, drive.Letter, out machine);
+         
+            if (ModelState.IsValid)
+            {
+     
+            }
+            return PartialView(vm);
+        }
+
         private void BuildBootOrder(Models.Domain_Bios_Down_VM BiosInfo, Libvirt.Models.Concrete.Virtual_Machine machine)
         {
             BiosInfo.BootOrder.Clear();
@@ -150,6 +180,11 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
                     BootType = Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.hd
                 });
             }
+            BiosInfo.BootOrder.Add(new Models.BootOrder_VM
+            {
+                Enabled = machine.BootLoader.BootOrder.Any(b => b == Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.network),
+                BootType = Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.network
+            });
         }
 
         private void virDomainDefineXML(Libvirt.Models.Concrete.Virtual_Machine machine, Libvirt.CS_Objects.Host h)

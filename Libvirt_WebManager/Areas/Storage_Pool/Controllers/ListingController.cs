@@ -51,7 +51,7 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
 
         public ActionResult _Partial_Refresh_Pool(string Host, string Pool)
         {
-            
+
             var p = GetHost(Host).virStoragePoolLookupByName(Pool);
             AddToAutomaticDisposal(p);
             p.virStoragePoolRefresh();
@@ -80,7 +80,42 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             p.virStoragePoolDestroy();
             return PartialView("_Partial_Pool_TableRowDetails", new Models.Storage_PoolBase { Host = Host, Parent = Host, Pool = p });
         }
+        public void VolumeDownload(string Host, string Pool, string volume)
+        {
+            var h = GetHost(Host);
+            using (var p = h.virStoragePoolLookupByName(Pool))
+            using (var v = p.virStorageVolLookupByName(volume))
+            using (var st = h.virStreamNew(Libvirt.virStreamFlags.VIR_STREAM_NONBLOCK))
+            {
+                Libvirt._virStorageVolInfo info;
+                v.virStorageVolGetInfo(out info);
+                var stupload = v.virStorageVolDownload(st, 0, info.allocation);
+                System.Diagnostics.Debug.WriteLine("virStorageDownload");
+                ulong chunksize = 65000;
+                var dat = new byte[chunksize];
+                Response.CacheControl = "No-cache";
+                Response.ContentType = "application/octet-stream";
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + volume);
+                var dataToRead = info.allocation;
 
+                while (Response.IsClientConnected && dataToRead > 0)
+                {
+                    var got = st.virStreamRecv(dat, chunksize);
+                    if (got > 0)
+                    {
+                        Response.OutputStream.Write(dat, 0, got);
+                        Response.Flush();
+                    }
+                    else if (got == 0)
+                    {
+                        dataToRead = 0;
+                    }
+                    dataToRead -= (ulong)got;
+
+                }
+                st.virStreamFinish();
+            }
+        }
         [HttpGet]
         public ActionResult _Partial_ResizeVolume(string Host, string Parent, string volume)
         {
@@ -107,30 +142,29 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
         [HttpPost]
         public ActionResult _Partial_ResizeVolume(Models.Storage_Volume_Resize volres)
         {
-            var vm = new Models.Storage_Volume_Resize();
-            var h = GetHost(volres.Host);
-
-            using (var p = h.virStoragePoolLookupByName(volres.Parent))
+   
+            using (var p = GetHost(volres.Host).virStoragePoolLookupByName(volres.Parent))
             {
                 Libvirt._virStoragePoolInfo poolinfo;
                 p.virStoragePoolGetInfo(out poolinfo);
-                vm.PoolInfo = poolinfo;
+                volres.PoolInfo = poolinfo;
                 using (var v = p.virStorageVolLookupByName(volres.name))
                 {
                     Libvirt._virStorageVolInfo volinfo;
                     v.virStorageVolGetInfo(out volinfo);
-                    if(volinfo.capacity > volres.capacity)
+                    if (volinfo.capacity > volres.capacity)
                     {
                         v.virStorageVolResize(volres.capacity, Libvirt.virStorageVolResizeFlags.VIR_STORAGE_VOL_RESIZE_SHRINK);
-                    } else
+                    }
+                    else
                     {
                         v.virStorageVolResize(volres.capacity, Libvirt.virStorageVolResizeFlags.VIR_DEFAULT);
                     }
                     v.virStorageVolGetInfo(out volinfo);
-                    vm.VolInfo = volinfo;
+                    volres.VolInfo = volinfo;
                 }
             }
-            return PartialView(vm);
+            return PartialView(volres);
         }
     }
 }

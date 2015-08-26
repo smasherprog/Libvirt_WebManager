@@ -61,7 +61,7 @@
     </td>
     <td>
         <a class="btn btn-xs btn-success" title="Resize Volume: Grow or shrink the volume" href="#" onclick="Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_ResizeVolume", "Listing", new {Area="Storage_Pool", Host = Model.Host, Parent = Model.Parent, Volume = name }))');return false;"><i class="fa fa-expand"></i></a>
-        <a class="btn btn-xs btn-info" title="Download the volume" href="#"><i class="fa fa-download"></i></a>
+        <a class="btn btn-xs btn-info" title="Download the volume" href="@Url.Action("VolumeDownload", "Listing", new {Area="Storage_Pool", Host = Model.Host, Pool = Model.Parent, Volume = name})"><i class="fa fa-download"></i></a>
         <span> | </span>
         <a class="btn btn-xs btn-warning" title="Upload Data Into the Volume." href="#" onclick="window.open('@Url.Action("VolumeUpload", "Create", new {Area="Storage_Pool", Host = Model.Host, Parent = Model.Parent, Volume = name})', '_blank', 'menubar=no,toolbar=no,width=700,height=300'); return false;" ><i class="fa fa-upload"></i></a>
         <span> | </span>

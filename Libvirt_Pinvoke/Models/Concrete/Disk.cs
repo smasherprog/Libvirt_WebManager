@@ -11,7 +11,7 @@ namespace Libvirt.Models.Concrete
     public class Disk : IXML, IValidation
     {
         public enum Disk_Types { file, block, dir, network, volume };
-        public enum Disk_Device_Types { floppy, disk, cdrom, lun };//default is disk
+        public enum Disk_Device_Types { floppy, disk, cdrom, lun };
         public enum Snapshot_Types { _internal, external, _default };//Store the snapshots WITH the underlying storage, or seperate?
         public enum Driver_Types { raw, qcow2 };
         public enum Driver_Cache_Types { _default, none, writethrough, writeback, directsync, _unsafe };
@@ -146,21 +146,7 @@ namespace Libvirt.Models.Concrete
             {
                 ReadOnly = true;// force this here
             }
-            if (Device_Type == Disk_Types.file && Device_Device_Type == Disk_Device_Types.cdrom)
-            {
-                var src = Source as Device_Source_File;
-                if (!string.IsNullOrWhiteSpace(src.file_path))
-                {
-                    if (!src.file_path.EndsWith(".iso"))
-                    {
-                        v.AddError("Source.file_path", "You must select an ISO!");
-                    }
-                }
-                else
-                {
-                    v.AddError("Source.file_path", "You must select an ISO!");
-                }
-            }
+            if (Source != null) Source.Validate(v);
 
         }
     }

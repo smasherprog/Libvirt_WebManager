@@ -47,21 +47,14 @@
                                "jsunzip.js", "rfb.js", "keysym.js"]);
 
             var rfb;
-
-            function passwordRequired(rfb) {
-                var msg;
-                msg = '<form onsubmit="return setPassword();"';
-                msg += '  style="margin-bottom: 0px">';
-                msg += 'Password Required: ';
-                msg += '<input type=password size=10 id="password_input" class="noVNC_status">';
-                msg += '<\/form>';
-                $D('noVNC_status_bar').setAttribute("class", "noVNC_status_warn");
-                $D('noVNC_status').innerHTML = msg;
-            }
             function setPassword() {
-                rfb.sendPassword($D('password_input').value);
+                rfb.sendPassword($('#password_input').val());
                 return false;
             }
+            function passwordRequired(r) {
+                $('#noVNC_status').html("Password Required: <input type='password' size='10' id='password_input' class='noVNC_status' /><button onclick='return setPassword();'>Authenticate<button>");
+            }
+        
             function sendCtrlAltDel() {
                 rfb.sendCtrlAltDel();
                 return false;
@@ -91,7 +84,9 @@
                     case 'loaded': level = "normal"; break;
                     default: level = "warn"; break;
                 }
+              
                 if (cad != null) {
+                    console.log('state ' + state);
                     if (state === "normal") {
                         cad.disabled = false;
                     } else {
@@ -108,13 +103,8 @@
             }
 
             function xvpInit(ver) {
-                var xvpbuttons;
-                xvpbuttons = $D('noVNC_xvp_buttons');
-                if (ver >= 1) {
-                    xvpbuttons.style.display = 'inline';
-                } else {
-                    xvpbuttons.style.display = 'none';
-                }
+                var xvpbuttons= $D('noVNC_xvp_buttons');
+                xvpbuttons.style.display = 'inline';
             }
 
             window.onscriptsload = function () {
@@ -154,6 +144,7 @@
                     <text>rfb.connect('@Model.Host', '@Model.Port', '@Model.Password', '@Model.Path');</text>
                 }
             };
+      
         </script>
     </div>
 </div>

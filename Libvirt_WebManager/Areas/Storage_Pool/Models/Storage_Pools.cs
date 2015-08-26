@@ -3,5 +3,7 @@
     public class Storage_Pools: ViewModels.BaseViewModel
     {
         public Libvirt.CS_Objects.Storage_Pool[] Pools { get; set; }
+
+
     }
 }

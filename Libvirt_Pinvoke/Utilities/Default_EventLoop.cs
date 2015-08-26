@@ -7,19 +7,20 @@ using System.Threading.Tasks;
 
 namespace Libvirt.Utilities
 {
-    public class Default_EventLoop
+    public class Default_EventLoop : IDisposable
     {
 
         private bool KeepRunningLoop = true;
-
         private Libvirt.virFreeCallback _FuncDeclare_To_Keep_GC_From_Collecting_free;
         private Libvirt.virEventTimeoutCallback _FuncDeclare_To_Keep_GC_From_Collecting;
+  
         private int TimerHandle = -1;
         public Default_EventLoop()
         {
             _FuncDeclare_To_Keep_GC_From_Collecting = virEventTimeoutCallback;
             _FuncDeclare_To_Keep_GC_From_Collecting_free = DummyFree;
             Libvirt.API.virEventRegisterDefaultImpl();
+      
             TimerHandle = Libvirt.API.virEventAddTimeout(1000, _FuncDeclare_To_Keep_GC_From_Collecting, IntPtr.Zero, _FuncDeclare_To_Keep_GC_From_Collecting_free);
             if (TimerHandle < 0)
             {
@@ -28,10 +29,6 @@ namespace Libvirt.Utilities
         }
 
 
-        public void Stop()
-        {
-            KeepRunningLoop = false;
-        }
         void DummyFree(IntPtr opaque)
         {
             //Does nothing on purpose!
@@ -53,7 +50,30 @@ namespace Libvirt.Utilities
                     Debug.WriteLine(e.Message);
                 }
             }
-            Libvirt.API.virEventRemoveTimeout(TimerHandle);
         }
+
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            KeepRunningLoop = false;
+            if (!disposedValue)
+            {
+                if (TimerHandle > -1) Libvirt.API.virEventRemoveTimeout(TimerHandle);
+                TimerHandle = -1;
+                disposedValue = true;
+            }
+        }
+
+        ~Default_EventLoop()
+        {
+            Dispose(false);
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
     }
 }

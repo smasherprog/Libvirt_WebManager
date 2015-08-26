@@ -34,10 +34,10 @@ namespace Libvirt.CS_Objects
         {
             return API.virStreamFinish(_StreamPtr);
         }
-        public int virStreamRecv(byte[] data)
+        public int virStreamRecv(byte[] data, ulong nbytes=0/* if nbytes ==0, the size of the array is used */)
         {
-            UIntPtr bytes = new UIntPtr(Convert.ToUInt32(data.Length));
-            return API.virStreamRecv(_StreamPtr, data, bytes);
+            if (nbytes <= 0) nbytes = (ulong)data.LongLength;
+            return API.virStreamRecv(_StreamPtr, data, new UIntPtr(nbytes));
         }
         public int virStreamRecvAll(virStreamSinkFunc handler)
         {
