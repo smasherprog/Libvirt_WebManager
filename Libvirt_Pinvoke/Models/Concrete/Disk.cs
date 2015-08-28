@@ -20,7 +20,7 @@ namespace Libvirt.Models.Concrete
         public Disk()
         {
             Device_Type = Disk_Types.dir;
-            Device_Device_Type = Disk_Device_Types.disk;
+            Disk_Device_Type = Disk_Device_Types.disk;
             Snapshot_Type = Snapshot_Types._default;
             Driver_Type = Driver_Types.raw;
             Driver_Cache_Type = Driver_Cache_Types._default;
@@ -30,7 +30,7 @@ namespace Libvirt.Models.Concrete
         }
 
         public Disk_Types Device_Type { get; set; }
-        public Disk_Device_Types Device_Device_Type { get; set; }
+        public Disk_Device_Types Disk_Device_Type { get; set; }
         public Snapshot_Types Snapshot_Type { get; set; }
         public Driver_Types Driver_Type { get; set; }
         public Driver_Cache_Types Driver_Cache_Type { get; set; }
@@ -40,7 +40,7 @@ namespace Libvirt.Models.Concrete
         public char Letter { get; set; }
         public string To_XML()
         {
-            var ret = "<disk type='" + Device_Type.ToString() + "' device='" + Device_Device_Type.ToString() + "' ";
+            var ret = "<disk type='" + Device_Type.ToString() + "' device='" + Disk_Device_Type.ToString() + "' ";
             if (Snapshot_Type != Snapshot_Types._default) ret += "snapshot='" + Snapshot_Type.ToString().Replace("_", "") + "'";
             ret += ">";
             ret += "<driver type='" + Driver_Type.ToString() + "' cache='" + Driver_Cache_Type.ToString().Replace("_", "") + "' />";
@@ -59,7 +59,7 @@ namespace Libvirt.Models.Concrete
         private void Reset()
         {
             Device_Type = Disk_Types.dir;
-            Device_Device_Type = Disk_Device_Types.disk;
+            Disk_Device_Type = Disk_Device_Types.disk;
             Snapshot_Type = Snapshot_Types._default;
             Driver_Type = Driver_Types.raw;
             Driver_Cache_Type = Driver_Cache_Types._default;
@@ -85,7 +85,7 @@ namespace Libvirt.Models.Concrete
                 {
                     var b = Disk_Device_Types.disk;
                     Enum.TryParse(attr.Value, true, out b);
-                    Device_Device_Type = b;
+                    Disk_Device_Type = b;
                 }
                 attr = os.Attribute("snapshot");
                 if (attr != null)
@@ -142,7 +142,7 @@ namespace Libvirt.Models.Concrete
         }
         public void Validate(IValdiator v)
         {
-            if (Device_Device_Type == Disk_Device_Types.cdrom)
+            if (Disk_Device_Type == Disk_Device_Types.cdrom)
             {
                 ReadOnly = true;// force this here
             }

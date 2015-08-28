@@ -42,21 +42,21 @@
     var obj = Model.Machine.Drives.Disks[i];
 
     <div class="row">
-        <a href="#" onclick="showsomearea676($(this).next(),'@Url.Action("_Partial_Drives", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent, letter = obj.Letter })'); return false;" class="btn btn-primary col-sm-2">
-            @if (obj.Device_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom)
+        <a href="#" onclick="$('.editdrivesclassthingy234').empty().css('display', 'none'); showsomearea676($(this).next(),'@Url.Action("_Partial_Drives", "Edit", new { Area="Domain", Host = Model.Host, Parent= Model.Parent, letter = obj.Letter })'); return false;" class="btn btn-primary col-sm-2">
+            @if (obj.Disk_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom)
             {
                 <span class=" glyphicon glyphicon-cd"></span><span> CD Rom @(i+1)</span>
             }
-            else if (obj.Device_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.disk)
+            else if (obj.Disk_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.disk)
             {
                 <span class="glyphicon glyphicon-hdd"></span><span> Hard Drive @(i + 1)</span>
             }
-            else if (obj.Device_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.lun)
+            else if (obj.Disk_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.lun)
             {
                 <i class="fa fa-cube"></i><span> Lun @(i + 1)</span>
             }
         </a>
-        <div class="col-sm-10" style="display:none;">
+        <div class="col-sm-10 editdrivesclassthingy234" style="display:none;">
         </div>
     </div>
 

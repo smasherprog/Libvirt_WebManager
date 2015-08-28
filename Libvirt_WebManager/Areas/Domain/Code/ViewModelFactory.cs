@@ -65,7 +65,7 @@ namespace Libvirt_WebManager.Areas.Domain.Code
         {
             machine = GetMachine(host, domain, null);
             var h = Service.VM_Manager.Instance.virConnectOpen(host);
-           
+
             var vm = new Models.Domain_Network_Down();
             vm.Network = Utilities.AutoMapper.Mapper<Models.Domain_Network_Down_VM>.Map(machine.Iface);
             Libvirt.CS_Objects.Network[] ns;
@@ -74,7 +74,7 @@ namespace Libvirt_WebManager.Areas.Domain.Code
             foreach (var item in ns) item.Dispose();
             return vm;
         }
-        
+
         public static Models.Domain_Bios_Down Build_Domain_Bios_Down(string host, string domain, out Libvirt.Models.Concrete.Virtual_Machine machine)
         {
             using (var d = Service.VM_Manager.Instance.virConnectOpen(host).virDomainLookupByName(domain))
@@ -101,8 +101,15 @@ namespace Libvirt_WebManager.Areas.Domain.Code
 
                 var vm = new Models.Domain_Drive_Down();
                 vm.Domain_Drive = new Models.Domain_Drive_Down_VM();
-                vm.Domain_Drive = Utilities.AutoMapper.Mapper<Models.Domain_Drive_Down_VM>.Map(machine.Drives.Disks.FirstOrDefault(a=>a.Letter == letter));
+                vm.Domain_Drive = Utilities.AutoMapper.Mapper<Models.Domain_Drive_Down_VM>.Map(machine.Drives.Disks.FirstOrDefault(a => a.Letter == letter));
                 vm.Disk = machine.Drives.Disks.FirstOrDefault(a => a.Letter == letter);
+                var volthingy = vm.Disk.Source as Libvirt.Models.Concrete.Device_Source_Volume;
+                if (volthingy != null)
+                {
+                    vm.Domain_Drive.Pool = volthingy.pool;
+                    vm.Domain_Drive.Volume = volthingy.volume;
+                }
+                vm.Domain_Drive.Source_Startup_Policy = vm.Disk.Source.Source_Startup_Policy;
                 vm.Domain_Drive.Host = host;
                 vm.Domain_Drive.Parent = domain;
 

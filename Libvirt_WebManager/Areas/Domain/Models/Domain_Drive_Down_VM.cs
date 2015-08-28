@@ -11,7 +11,7 @@ namespace Libvirt_WebManager.Areas.Domain.Models
         public Libvirt.Models.Concrete.Disk.Disk_Types Device_Type { get; set; }
         [Required]
         [Display(Name = "Device Type")]
-        public Libvirt.Models.Concrete.Disk.Disk_Device_Types Device_Device_Type { get; set; }
+        public Libvirt.Models.Concrete.Disk.Disk_Device_Types Disk_Device_Type { get; set; }
         [Required]
         [Display(Name = "Snapshot Type")]
         public Libvirt.Models.Concrete.Disk.Snapshot_Types Snapshot_Type { get; set; }
@@ -24,6 +24,15 @@ namespace Libvirt_WebManager.Areas.Domain.Models
         [Required]
         [Display(Name = "Driver Bus Type")]
         public Libvirt.Models.Concrete.Disk.Disk_Bus_Types Device_Bus_Type { get; set; }
+        [Required]
+        [Display(Name = "Pool")]
+        public string Pool { get; set; }
+        [Required]
+        [Display(Name = "Volume")]
+        public string Volume { get; set; }
+        [Required]
+        [Display(Name = "Start Up Policy")]
+        public Libvirt.Models.Concrete.Disk.Source_Startup_Policies Source_Startup_Policy { get; set; }
         [Required]
         [Display(Name = "Readonly")]
         public bool ReadOnly { get; set; }

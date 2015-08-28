@@ -519,6 +519,7 @@
     <Content Include="Areas\Storage_Pool\Views\Create\VolumeUpload.cshtml" />
     <Content Include="Areas\Storage_Pool\Views\Listing\_Partial_ResizeVolume.cshtml" />
     <Content Include="Areas\Domain\Views\Edit\_Partial_Drives.cshtml" />
+    <Content Include="Areas\Domain\Views\Edit\_Partial_SourceSelect.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

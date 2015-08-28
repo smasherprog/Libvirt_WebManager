@@ -148,23 +148,41 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         }
 
         [HttpPost]
-        public ActionResult _Partial_Drives(Models.Domain_Drive_Down_VM drive)
+        public ActionResult _Partial_Drives(Models.Domain_Drive_Down_VM Domain_Drive)
         {
             Libvirt.Models.Concrete.Virtual_Machine machine = null;
 
-            var vm = Code.ViewModelFactory.Domain_Drive_Down(drive.Host, drive.Parent, drive.Letter, out machine);
+            var vm = Code.ViewModelFactory.Domain_Drive_Down(Domain_Drive.Host, Domain_Drive.Parent, Domain_Drive.Letter, out machine);
          
             if (ModelState.IsValid)
             {
-     
+                var harddrive = new Libvirt.Models.Concrete.Disk();
+                harddrive.Device_Bus_Type = Domain_Drive.Device_Bus_Type;
+                harddrive.Disk_Device_Type= Domain_Drive.Disk_Device_Type;
+                harddrive.Device_Type = Domain_Drive.Device_Type;
+                harddrive.Driver_Cache_Type = Domain_Drive.Driver_Cache_Type;
+                harddrive.Driver_Type = Domain_Drive.Driver_Type;
+                harddrive.ReadOnly = Domain_Drive.ReadOnly;
+                harddrive.Snapshot_Type = Domain_Drive.Snapshot_Type;
+                harddrive.Letter = Domain_Drive.Letter;
+                var source = new Libvirt.Models.Concrete.Device_Source_Volume();
+                source.pool = Domain_Drive.Pool;
+                source.volume = Domain_Drive.Volume;
+
+                source.Source_Startup_Policy = Domain_Drive.Source_Startup_Policy;
+                harddrive.Source = source;
+                machine.Drives.Disks.RemoveAll(a => a.Letter == Domain_Drive.Letter);
+                machine.Drives.Disks.Add(harddrive);
+                virDomainDefineXML(machine, GetHost(Domain_Drive.Host));
             }
+            vm.Domain_Drive = Domain_Drive;
             return PartialView(vm);
         }
 
         private void BuildBootOrder(Models.Domain_Bios_Down_VM BiosInfo, Libvirt.Models.Concrete.Virtual_Machine machine)
         {
             BiosInfo.BootOrder.Clear();
-            if (machine.Drives.Disks.Any(a => a.Device_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom))
+            if (machine.Drives.Disks.Any(a => a.Disk_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom))
             {
                 BiosInfo.BootOrder.Add(new Models.BootOrder_VM
                 {
@@ -172,7 +190,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
                     BootType = Libvirt.Models.Concrete.BIOS_Bootloader.Boot_Types.cdrom
                 });
             }
-            if (machine.Drives.Disks.Any(a => a.Device_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.disk))
+            if (machine.Drives.Disks.Any(a => a.Disk_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.disk))
             {
                 BiosInfo.BootOrder.Add(new Models.BootOrder_VM
                 {

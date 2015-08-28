@@ -2,13 +2,20 @@
 
 <div id="driveoptionerthi345">
     <script>
-        $(document).ready(function () {
-
-        });
-
+    
+        function SelectVolumePool@(Model.Disk.Letter)() {
+            Libvirt.UI.OpenDialog('@Html.Raw(Url.Action("_Partial_OS_PoolVolume_Selector", "Create", new {
+                                  Area="Domain",
+                                    Host = Model.Domain_Drive.Host,
+                                    Select_ISO = Model.Disk.Disk_Device_Type == Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom,
+                                    Parent = Model.Domain_Drive.Host,
+                                    PoolSelector = "Domain_Drive_Pool",
+                                    VolumeSelector = "Domain_Drive_Volume"
+                              }))');
+        }
     </script>
     <div class="panel panel-default">
-        <div class="panel-heading">Boot Options</div>
+        <div class="panel-heading">Drive Options</div>
         <div class="panel-body">
 
             <div class="row">
@@ -20,20 +27,33 @@
                         @Html.HiddenFor(a => a.Domain_Drive.Parent)
                         @Html.HiddenFor(a => a.Domain_Drive.ReadOnly)
                         @Html.HiddenFor(a => a.Domain_Drive.Letter)
-                        <dl class="dl-horizontal">
-                            <dt>
-                                Readonly
-                            </dt>
-                            <dd>
-                                @Model.Domain_Drive.ReadOnly
-                            </dd>
-                            <dt>
-                                Letter
-                            </dt>
-                            <dd>
-                                @Model.Domain_Drive.Letter
-                            </dd>
-                        </dl>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        Readonly
+                                    </dt>
+                                    <dd>
+                                        @Model.Domain_Drive.ReadOnly
+                                    </dd>
+                                    <dt>
+                                        Letter
+                                    </dt>
+                                    <dd>
+                                        @Model.Domain_Drive.Letter
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(a => a.Domain_Drive.Source_Startup_Policy, new { @class = "col-sm-2 control-label" })
+                                    <div class="col-sm-10">
+                                        @Html.EnumDropDownListFor(a => a.Domain_Drive.Source_Startup_Policy, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(a => a.Domain_Drive.Source_Startup_Policy)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -46,10 +66,10 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    @Html.LabelFor(a => a.Domain_Drive.Device_Device_Type, new { @class = "col-sm-2 control-label" })
+                                    @Html.LabelFor(a => a.Domain_Drive.Disk_Device_Type, new { @class = "col-sm-2 control-label" })
                                     <div class="col-sm-10">
-                                        @Html.EnumDropDownListFor(a => a.Domain_Drive.Device_Device_Type, new { @class = "form-control" })
-                                        @Html.ValidationMessageFor(a => a.Domain_Drive.Device_Device_Type)
+                                        @Html.EnumDropDownListFor(a => a.Domain_Drive.Disk_Device_Type, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(a => a.Domain_Drive.Disk_Device_Type)
                                     </div>
                                 </div>
                             </div>
@@ -93,6 +113,27 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    @Html.LabelFor(a => a.Domain_Drive.Pool, new { @class = "col-sm-2 control-label" })
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(a => a.Domain_Drive.Pool, new { @class = "form-control", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(a => a.Domain_Drive.Pool)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    @Html.LabelFor(a => a.Domain_Drive.Volume, new { @class = "col-sm-2 control-label" })
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(a => a.Domain_Drive.Volume, new { @class = "form-control", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(a => a.Domain_Drive.Volume)
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="col-sm-2 btn btn-primary" onclick="SelectVolumePool@(Model.Disk.Letter)(); return false;">Select</button>
                         </div>
 
                         <button class="col-sm-offset-2 col-sm-10 btn btn-primary btn-block">
