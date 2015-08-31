@@ -9,7 +9,7 @@ namespace Libvirt.Models.Concrete
 {
     public class Memory_Allocation : IXML, IValidation
     {
-        public enum UnitTypes { B, KB, K, KiB, MB, M, MiB, GB, G, GiB, TB, T, TiB };
+        public enum UnitTypes { B, bytes, KB, K, KiB, MB, M, MiB, GB, G, GiB, TB, T, TiB };
         public Memory_Allocation()
         {
             Reset();
@@ -51,6 +51,11 @@ namespace Libvirt.Models.Concrete
         {
             Reset();
             var element = xml.Element("memory");
+            if (element == null)
+            {
+                if (xml.Name == "memory") element = xml;
+                else element = null;
+            }
             if (element != null)
             {
                 Int64 i = 0;

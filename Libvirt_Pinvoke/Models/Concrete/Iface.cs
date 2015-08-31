@@ -23,6 +23,11 @@ namespace Libvirt.Models.Concrete
         {
             if (xml == null) return;
             var element = xml.Element("source");
+            if (element == null)
+            {
+                if (xml.Name == "source") element = xml;
+                else element = null;
+            }
             if (element != null)
             {
                 var attr = element.Attribute("network");

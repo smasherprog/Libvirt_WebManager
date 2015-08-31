@@ -56,7 +56,11 @@ namespace Libvirt.Models.Concrete
         {
             Reset();
             var os = xml.Element("os");
-            if (os == null) return;
+            if (os == null)
+            {
+                if (xml.Name == "os") os = xml;
+                else os = null;
+            }
             var element = os.Element("type");
 
             if (element != null)

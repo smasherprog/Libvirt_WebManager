@@ -1,9 +1,19 @@
 ﻿@model Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume_Down
 <div id="_Partial_CreateVolume_Form">
     <script>
- 
+        function Storage_Volume_Volume_Typeupdate() {
+            $('#volnameext_thingy').text('.' + $('#Volume_Volume_Type :selected').text());
+        }
+        $(document).ready(function () {
+            $("#Volume_Volume_Type option[value='@((int)Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)']").remove();//iso creation not allowed. Will be auto detected on creation
+
+            $('#Volume_Volume_Type').change(function () {
+                Storage_Volume_Volume_Typeupdate();
+            });
+            Storage_Volume_Volume_Typeupdate();
+        });
     </script>
-    @using (Ajax.BeginForm("_Partial_CreateVolume", Html.Controller(), new { Area="Storage_Pool" }, new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_CreateVolume_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_CreateVolume_Form_spinner" }, new { enctype = "multipart/form-data" }))
+    @using (Ajax.BeginForm("_Partial_CreateVolume", Html.Controller(), new { Area = "Storage_Pool" }, new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_CreateVolume_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_CreateVolume_Form_spinner" }, new { enctype = "multipart/form-data" }))
     {
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -21,17 +31,23 @@
                     <div class="form-group-sm">
                         @Html.ValidationSummary()
                     </div>
-                    <div class="form-group-sm">
-                        @Html.LabelFor(a => a.Volume.name)
-                        @Html.TextBoxFor(a => a.Volume.name, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(a => a.Volume.name)
+                    <div class="row">
+
+                        <div class="col-sm-12">
+                            @Html.LabelFor(a => a.Volume.name)
+                            <div class="input-group">
+                                @Html.TextBoxFor(a => a.Volume.name, new { @class = "form-control" })
+                                <span class="input-group-addon" id="volnameext_thingy"></span>
+                                @Html.ValidationMessageFor(a => a.Volume.name)
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group-sm">
                         @Html.LabelFor(a => a.Volume.Volume_Type)
                         @Html.EnumDropDownListFor(a => a.Volume.Volume_Type, new { @class = "form-control" })
                         @Html.ValidationMessageFor(a => a.Volume.Volume_Type)
                     </div>
-         
+           
                     <h3>Pool Details:</h3>
                     <dl class="dl-horizontal">
                         <dt>State</dt>
@@ -50,16 +66,16 @@
                             <div class="input-group">
 
                                 @Html.TextBoxFor(a => a.Volume.allocation, new
-                           {
-                               @class = "form-control",
-                               @type = "number",
-                               min = 0,
-                               step = 1,
-                               max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
-                               data_toggle = "tooltip",
-                               data_placement = "bottom",
-                               title = "Specify 0 if you want to pre allocate the entire capacity."
-                           })
+                                   {
+                                       @class = "form-control",
+                                       @type = "number",
+                                       min = 0,
+                                       step = 1,
+                                       max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
+                                       data_toggle = "tooltip",
+                                       data_placement = "bottom",
+                                       title = "Specify 0 if you want to pre allocate the entire capacity."
+                                   })
                                 <span class="input-group-addon">GB</span>
                                 @Html.ValidationMessageFor(a => a.Volume.allocation)
                             </div>
@@ -69,13 +85,13 @@
                             <div class="input-group">
 
                                 @Html.TextBoxFor(a => a.Volume.capacity, new
-                           {
-                               @class = "form-control",
-                               @type = "number",
-                               min = 1,
-                               step = 1,
-                               max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
-                           })
+                                   {
+                                       @class = "form-control",
+                                       @type = "number",
+                                       min = 1,
+                                       step = 1,
+                                       max = ((Model.PoolInfo.available / (1024 * 1024 * 1000)) - 1),
+                                   })
                                 <span class="input-group-addon">GB</span>
                                 @Html.ValidationMessageFor(a => a.Volume.capacity)
                             </div>
@@ -85,11 +101,11 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary pull-right">
-                Create
-                @Html.Spinner("_Partial_CreateVolume_Form_spinner")
-            </button>
-        </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary pull-right">
+                        Create
+                        @Html.Spinner("_Partial_CreateVolume_Form_spinner")
+                    </button>
+                </div>
     }
 </div>

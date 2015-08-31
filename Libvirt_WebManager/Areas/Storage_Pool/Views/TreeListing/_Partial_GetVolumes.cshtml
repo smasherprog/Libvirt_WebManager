@@ -4,14 +4,12 @@
 
     @foreach (var volume in Model.Volumes)
     {
-        var dname = volume.virStorageVolGetName();
-        Libvirt._virStorageVolInfo info;
-        volume.virStorageVolGetInfo(out info);
+        var info = volume.virStorageVolGetInfo();
 
-        var li_id = "x" + Model.Host.Replace(".", "_") + "StoragePools_Volume_" + dname;
-        <li id="@(li_id)" data-html="true" data-toggle="tooltip" data-placement="right" title="Volume:@dname<br>Type:@info.type.ToString().Split('_').LastOrDefault()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">
+        var li_id = "x" + Model.Host.Replace(".", "_") + "StoragePools_Volume_" + info.name;
+        <li id="@(li_id)" data-html="true" data-toggle="tooltip" data-placement="right" title="Volume:@info.name<br>Type:@info.Volume_Type.ToString().Split('_').LastOrDefault()<br>allocation:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)<br>capacity:@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)<br>">
             <a href="#">
-                @if (dname.ToLower().EndsWith(".iso"))
+                @if (info.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
                 {
                     <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
                 }
@@ -19,7 +17,7 @@
                 {
                     <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
                 }
-                @dname
+                @info.name
             </a>
         </li>
     }

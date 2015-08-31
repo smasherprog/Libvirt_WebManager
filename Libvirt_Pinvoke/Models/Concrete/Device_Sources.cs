@@ -27,6 +27,11 @@ namespace Libvirt.Models.Concrete
         public override void From_XML(System.Xml.Linq.XElement xml)
         {
             var os = xml.Element("source");
+            if (os == null)
+            {
+                if (xml.Name == "source") os = xml;
+                else os = null;
+            }
             if (os != null)
             {
                 var attr = os.Attribute("dir");

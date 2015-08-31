@@ -12,6 +12,6 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Models
         [MaxLength(30)]
         public string name { get; set; }
         [Display(Name = "Pool Type")]
-        public Libvirt.Models.Concrete.Storage_Pool.Pool_Types pool_type { get; set; }
+        public Libvirt.Models.Interface.IStorage_Pool_Item.Pool_Types pool_type { get; set; }
     }
 }

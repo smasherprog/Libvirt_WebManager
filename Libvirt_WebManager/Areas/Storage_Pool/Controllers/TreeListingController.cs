@@ -14,8 +14,7 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
         {
             var vm = new Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Pool_TreeViewDown();
             var h = GetHost(host);
-            Libvirt.CS_Objects.Storage_Pool[] p;
-            h.virConnectListAllStoragePools(out p, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
+            var p= h.virConnectListAllStoragePools(Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
             AddToAutomaticDisposal(p);
             vm.Pools = p;
             vm.Host = host;

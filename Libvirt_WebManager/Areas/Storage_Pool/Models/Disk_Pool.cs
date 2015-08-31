@@ -2,9 +2,9 @@
 
 namespace Libvirt_WebManager.Areas.Storage_Pool.Models
 {
-    public class Dir_Pool
+    public class Disk_Pool
     {
-        public Dir_Pool()
+        public Disk_Pool()
         {
             AutoStart = true;
         }
@@ -18,5 +18,8 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Models
         [Display(Name = "Build pool")]
         public bool Build { get; set; }
         public Storage_Pool Storage_Pool { get; set; }
+        public System.Collections.Generic.IEnumerable<Libvirt.Models.Concrete.Node.Storage> Devices { get; set; }
     }
 }
+
+

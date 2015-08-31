@@ -26,9 +26,9 @@ namespace Libvirt.CS_Objects
         {
             return API.virStorageVolDownload(_Storage_VolumePtr, Stream.GetPtr(stream), offset, length);
         }
-        public int virStorageVolGetInfo(out _virStorageVolInfo info)
+        public Libvirt.Models.Concrete.Storage_Volume virStorageVolGetInfo()
         {
-            return API.virStorageVolGetInfo(_Storage_VolumePtr, out info);
+            return virStorageVolGetXMLDesc();
         }
         public string virStorageVolGetKey()
         {
@@ -42,9 +42,11 @@ namespace Libvirt.CS_Objects
         {
             return API.virStorageVolGetPath(_Storage_VolumePtr);
         }
-        public string virStorageVolGetXMLDesc()
+        public Libvirt.Models.Concrete.Storage_Volume virStorageVolGetXMLDesc()
         {
-            return API.virStorageVolGetXMLDesc(_Storage_VolumePtr);
+            var ret = new Libvirt.Models.Concrete.Storage_Volume();
+            ret.From_XML(System.Xml.Linq.XDocument.Parse(API.virStorageVolGetXMLDesc(_Storage_VolumePtr)).Root);
+            return ret;
         }
 
         public int virStorageVolResize(ulong capacity, virStorageVolResizeFlags flags)

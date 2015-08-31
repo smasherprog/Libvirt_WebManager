@@ -23,6 +23,10 @@ namespace Libvirt_WebManager.Controllers
             if(t==null) ModelState.AddModelError("Host Does not Exist", "The host does not exist!");
             return t;
         }
+        protected string GenerateURIFromHostname(string hostname)
+        {
+            return "qemu+tcp://" + hostname + "/system";
+        }
         protected List<IDisposable> ObjectsToDispose { get; set; }
         protected IEnumerable<T> AddToAutomaticDisposal<T>(IEnumerable<T> objs) where T : IDisposable { ObjectsToDispose.AddRange((IEnumerable<IDisposable>)objs); return objs; }
         protected T[] AddToAutomaticDisposal<T>(T[] objs) where T : IDisposable { foreach (var item in objs) ObjectsToDispose.Add(item); return objs; }

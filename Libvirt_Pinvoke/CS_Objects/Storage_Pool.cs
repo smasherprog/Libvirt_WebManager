@@ -54,9 +54,11 @@ namespace Libvirt.CS_Objects
             return API.virStoragePoolGetUUIDString(_Storage_PoolPtr, out buf);
         }
 
-        public string virStoragePoolGetXMLDesc(virStorageXMLFlags flags)
+        public Libvirt.Models.Concrete.Storage_Pool virStoragePoolGetXMLDesc(virStorageXMLFlags flags)
         {
-            return API.virStoragePoolGetXMLDesc(_Storage_PoolPtr, flags);
+            var vm = new Libvirt.Models.Concrete.Storage_Pool();
+            vm.From_XML(System.Xml.Linq.XDocument.Parse(API.virStoragePoolGetXMLDesc(_Storage_PoolPtr, flags)).Root);
+            return vm;
         }
         public int virStoragePoolIsActive()
         {

@@ -24,9 +24,22 @@
                         @Html.ValidationMessageFor(a => a.path)
                     </div>
 
-                    @Html.LabelFor(a => a.AutoStart)
-                    @Html.CheckBoxFor(a => a.AutoStart)
-                    @Html.ValidationMessageFor(a => a.AutoStart)
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group" title="This will cause the Pool to always start when the Host Starts up, otherwise it will have to be turned on manually">
+                                @Html.LabelFor(a => a.AutoStart)
+                                @Html.CheckBoxFor(a => a.AutoStart)
+                                @Html.ValidationMessageFor(a => a.AutoStart)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group" title="This will attempt to create, format or setup the underlying pool. If it is already set up, an error might be generated stating so.">
+                                @Html.LabelFor(a => a.Build)
+                                @Html.CheckBoxFor(a => a.Build)
+                                @Html.ValidationMessageFor(a => a.Build)
+                            </div>
+                        </div>
+                    </div>
 
                     <button class="btn btn-primary pull-right">
                         Create

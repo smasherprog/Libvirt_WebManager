@@ -29,6 +29,11 @@ namespace Libvirt_Pinvoke.Models.Concrete
         public void From_XML(System.Xml.Linq.XElement xml)
         {
             var element = xml.Element("listen");
+            if (element == null)
+            {
+                if (xml.Name == "listen") element = xml;
+                else element = null;
+            }
             if (element != null)
             {
                 var addr = element.Attribute("address");

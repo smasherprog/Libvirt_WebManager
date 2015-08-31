@@ -14,7 +14,7 @@ namespace Libvirt_WebManager.Areas.Domain.Code
                 var h = Service.VM_Manager.Instance.virConnectOpen(host);
                 using (var d = h.virDomainLookupByName(domain))
                 {
-                    machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+                    machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DOMAIN_XML_INACTIVE);
                 }
             }
             return machine;
@@ -68,18 +68,21 @@ namespace Libvirt_WebManager.Areas.Domain.Code
 
             var vm = new Models.Domain_Network_Down();
             vm.Network = Utilities.AutoMapper.Mapper<Models.Domain_Network_Down_VM>.Map(machine.Iface);
-            Libvirt.CS_Objects.Network[] ns;
-            h.virConnectListAllNetworks(out ns, Libvirt.virConnectListAllNetworksFlags.VIR_DEFAULT);
-            vm.Networks = ns.Select(a => a.virNetworkGetXMLDesc(Libvirt.virNetworkXMLFlags.VIR_DEFAULT)).ToList();
-            foreach (var item in ns) item.Dispose();
+            using (var ns = h.virConnectListAllNetworks(Libvirt.virConnectListAllNetworksFlags.VIR_DEFAULT))
+            {
+                vm.Networks = ns.Select(a => a.virNetworkGetXMLDesc(Libvirt.virNetworkXMLFlags.VIR_DEFAULT)).ToList();
+            }
             return vm;
         }
 
         public static Models.Domain_Bios_Down Build_Domain_Bios_Down(string host, string domain, out Libvirt.Models.Concrete.Virtual_Machine machine)
         {
-            using (var d = Service.VM_Manager.Instance.virConnectOpen(host).virDomainLookupByName(domain))
+            machine = GetMachine(host, domain, null);
+            var h = Service.VM_Manager.Instance.virConnectOpen(host);
+
+            using (var d = h.virDomainLookupByName(domain))
             {
-                machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+
                 var vm = new Models.Domain_Bios_Down();
                 vm.BiosInfo = new Models.Domain_Bios_Down_VM();
                 vm.BiosInfo.BootOrder = machine.BootLoader.BootOrder.Select(a => new Models.BootOrder_VM { BootType = a, Enabled = true }).ToList();
@@ -95,10 +98,11 @@ namespace Libvirt_WebManager.Areas.Domain.Code
         }
         public static Models.Domain_Drive_Down Domain_Drive_Down(string host, string domain, char letter, out Libvirt.Models.Concrete.Virtual_Machine machine)
         {
-            using (var d = Service.VM_Manager.Instance.virConnectOpen(host).virDomainLookupByName(domain))
-            {
-                machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DEFAULT);
+            machine = GetMachine(host, domain, null);
+            var h = Service.VM_Manager.Instance.virConnectOpen(host);
 
+            using (var d = h.virDomainLookupByName(domain))
+            {
                 var vm = new Models.Domain_Drive_Down();
                 vm.Domain_Drive = new Models.Domain_Drive_Down_VM();
                 vm.Domain_Drive = Utilities.AutoMapper.Mapper<Models.Domain_Drive_Down_VM>.Map(machine.Drives.Disks.FirstOrDefault(a => a.Letter == letter));

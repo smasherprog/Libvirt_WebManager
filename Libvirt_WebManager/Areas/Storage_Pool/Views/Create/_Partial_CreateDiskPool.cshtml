@@ -1,0 +1,99 @@
+﻿@model Libvirt_WebManager.Areas.Storage_Pool.Models.Disk_Pool
+@{
+    var selecteditems = new List<SelectListItem>();
+    foreach (var item in Model.Devices)
+    {
+        selecteditems.Add(new SelectListItem { Text = item.block, Value = item.block });
+    }
+}
+<div id="_Partial_CreateDiskPool_Form">
+    <script>
+        function pathchange378678() {
+            $('.blockinfosectionthing456').hide();
+            var selected = $('#path :selected').text().replace(/\W/g, '');
+            $('#' + selected).show();
+        }
+        $(document).ready(function () {
+            $('.blockinfosectionthing456').hide();
+            $('#path').change(function () {
+                pathchange378678();
+            });
+            pathchange378678();
+        });
+
+    </script>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Storage Disk - Add Device <small>@Model.Storage_Pool.Host</small></h4>
+    </div>
+    <div class="modal-body">
+        @using (Ajax.BeginForm("_Partial_CreateDiskPool", Html.Controller(), new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "_Partial_CreateDiskPool_Form", InsertionMode = InsertionMode.ReplaceWith, LoadingElementId = "_Partial_CreateDiskPool_Form_spinner" }))
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    @Html.HiddenFor(a => a.Storage_Pool.Host)
+                    @Html.HiddenFor(a => a.Storage_Pool.name)
+                    @Html.HiddenFor(a => a.Storage_Pool.pool_type)
+                    <div class="form-group">
+                        @Html.ValidationSummary()
+                    </div>
+                    @foreach (var item in Model.Devices)
+                    {
+                        <dl class="dl-horizontal blockinfosectionthing456" id="@(new string(item.block.Where(a=> char.IsLetterOrDigit(a)).ToArray()))">
+                            <dt>block</dt>
+                            <dd>@item.block</dd>
+                            <dt>bus</dt>
+                            <dd>@item.bus</dd>
+                            <dt>drive_type</dt>
+                            <dd>@item.drive_type</dd>
+                            <dt>model</dt>
+                            <dd>@item.model</dd>
+                            <dt>vendor</dt>
+                            <dd>@item.vendor</dd>
+                            <dt>serial</dt>
+                            <dd>@item.serial</dd>
+                            <dt>size</dt>
+                            <dd>@item.size</dd>
+                            <dt>logical_block_size</dt>
+                            <dd>@item.logical_block_size</dd>
+                            <dt>num_blocks</dt>
+                            <dd>@item.num_blocks</dd>
+                        </dl>
+                    }
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.path)
+                        @Html.DropDownListFor(a => a.path, selecteditems, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(a => a.path)
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group" title="This will cause the Pool to always start when the Host Starts up, otherwise it will have to be turned on manually">
+                                @Html.LabelFor(a => a.AutoStart)
+                                @Html.CheckBoxFor(a => a.AutoStart)
+                                @Html.ValidationMessageFor(a => a.AutoStart)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group" title="This will attempt to create, format or setup the underlying pool. If it is already set up, an error might be generated stating so.">
+                                @Html.LabelFor(a => a.Build)
+                                @Html.CheckBoxFor(a => a.Build)
+                                @Html.ValidationMessageFor(a => a.Build)
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary pull-right">
+                        Create
+                        @Html.Spinner("_Partial_CreateDiskPool_Form_spinner")
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="modal-footer">
+
+    </div>
+</div>

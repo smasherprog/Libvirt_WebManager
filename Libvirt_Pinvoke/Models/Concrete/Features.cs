@@ -43,6 +43,11 @@ namespace Libvirt.Models.Concrete
         public void From_XML(System.Xml.Linq.XElement xml)
         {
             var element = xml.Element("features");
+            if (element == null)
+            {
+                if (xml.Name == "features") element = xml;
+                else element = null;
+            }
             pae = element.Element("pae")!= null;
             acpi = element.Element("acpi") != null;
             apic = element.Element("apic") != null;

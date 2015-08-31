@@ -20,6 +20,6 @@ namespace Libvirt_WebManager.Areas.Domain.Models
     }
     public class PoolVolume_Selector_Down: BasePoolVolume_Selector
     {
-        public Libvirt.CS_Objects.Storage_Pool[] Pools { get; set; }
+        public Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Libvirt.CS_Objects.Storage_Pool> Pools { get; set; }
     }
 }

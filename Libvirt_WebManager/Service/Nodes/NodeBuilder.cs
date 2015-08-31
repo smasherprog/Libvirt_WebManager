@@ -127,8 +127,7 @@ namespace Libvirt_WebManager.Service.Nodes
         private static List<Libvirt_WebManager.ViewModels.TreeViewModel> Populate_Domains(nodehelper nodeh)
         {
             var ret = new List<Libvirt_WebManager.ViewModels.TreeViewModel>();
-            Libvirt.CS_Objects.Domain[] d;
-            if (nodeh.host.virConnectListAllDomains(out d, Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT) > -1)
+            using (var d = nodeh.host.virConnectListAllDomains(Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT)) 
             {
                 try
                 {

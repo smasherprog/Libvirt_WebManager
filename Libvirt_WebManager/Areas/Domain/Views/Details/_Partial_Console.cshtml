@@ -1,8 +1,7 @@
 ﻿@model Libvirt_WebManager.ViewModels.NoVNC.ConnectionInfo
 
-<link rel="stylesheet" href="~/include/base.css" />
-<script src="~/include/util.js"></script>
-
+<link href="~/Scripts/novnc/base.css" rel="stylesheet" />
+<script src="~/Scripts/novnc/util.js"></script>
 <div class="row">
     <div class="col-sm-12">
         <div id="noVNC_screen">
@@ -19,12 +18,7 @@
                                 <input type=button value="Send CtrlAltDel"
                                        id="sendCtrlAltDelButton">
                                 <span id="noVNC_xvp_buttons">
-                                    <input type=button value="Shutdown"
-                                           id="xvpShutdownButton">
-                                    <input type=button value="Reboot"
-                                           id="xvpRebootButton">
-                                    <input type=button value="Reset"
-                                           id="xvpResetButton">
+                                    @Html.Partial("_Partial_DomainControlOptions", Model)
                                 </span>
                             </div>
                         </td>
@@ -37,16 +31,16 @@
 
         </div>
         <script>
-            /*jslint white: false */
-            /*global window, $, Util, RFB, */
+      
             "use strict";
-
+            var INCLUDE_URI = "/Scripts/novnc/";
             // Load supporting scripts
             Util.load_scripts(["webutil.js", "base64.js", "websock.js", "des.js",
                                "keysymdef.js", "keyboard.js", "input.js", "display.js",
                                "jsunzip.js", "rfb.js", "keysym.js"]);
 
             var rfb;
+      
             function setPassword() {
                 rfb.sendPassword($('#password_input').val());
                 return false;
@@ -54,23 +48,12 @@
             function passwordRequired(r) {
                 $('#noVNC_status').html("Password Required: <input type='password' size='10' id='password_input' class='noVNC_status' /><button onclick='return setPassword();'>Authenticate<button>");
             }
-        
+
             function sendCtrlAltDel() {
                 rfb.sendCtrlAltDel();
                 return false;
             }
-            function xvpShutdown() {
-                rfb.xvpShutdown();
-                return false;
-            }
-            function xvpReboot() {
-                rfb.xvpReboot();
-                return false;
-            }
-            function xvpReset() {
-                rfb.xvpReset();
-                return false;
-            }
+
             function updateState(rfb, state, oldstate, msg) {
                 var s, sb, cad, level;
                 s = $D('noVNC_status');
@@ -84,7 +67,7 @@
                     case 'loaded': level = "normal"; break;
                     default: level = "warn"; break;
                 }
-              
+
                 if (cad != null) {
                     console.log('state ' + state);
                     if (state === "normal") {
@@ -94,7 +77,7 @@
                         xvpInit(0);
                     }
                 }
-             
+
 
                 if (typeof (msg) !== 'undefined') {
                     s.innerHTML = msg;
@@ -102,7 +85,7 @@
             }
 
             function xvpInit(ver) {
-                var xvpbuttons= $D('noVNC_xvp_buttons');
+                var xvpbuttons = $D('noVNC_xvp_buttons');
                 xvpbuttons.style.display = 'inline';
             }
 
@@ -111,9 +94,6 @@
 
                 $D('sendCtrlAltDelButton').style.display = "inline";
                 $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
-                $D('xvpShutdownButton').onclick = xvpShutdown;
-                $D('xvpRebootButton').onclick = xvpReboot;
-                $D('xvpResetButton').onclick = xvpReset;
 
                 WebUtil.init_logging(WebUtil.getQueryVar('logging', 'warn'));
                 document.title = unescape(WebUtil.getQueryVar('title', 'noVNC'));
@@ -143,7 +123,7 @@
                     <text>rfb.connect('@Model.Host', '@Model.Port', '@Model.Password', '@Model.Path');</text>
                 }
             };
-      
+
         </script>
     </div>
 </div>

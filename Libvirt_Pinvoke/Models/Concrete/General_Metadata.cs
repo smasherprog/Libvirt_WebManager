@@ -46,6 +46,11 @@ namespace Libvirt.Models.Concrete
         public void From_XML(System.Xml.Linq.XElement xml)
         {
             var element = xml.Element("name");
+            if (element == null)
+            {
+                if (xml.Name == "name") element = xml;
+                else element = null;
+            }
             if (element != null)
             {
                 name = element.Value;

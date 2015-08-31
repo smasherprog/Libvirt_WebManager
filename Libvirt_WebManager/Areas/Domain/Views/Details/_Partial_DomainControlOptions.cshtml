@@ -1,0 +1,21 @@
+﻿@model Libvirt_WebManager.ViewModels.NoVNC.ConnectionInfo
+@{
+
+    var someuiniqueid = "Domain_Details_" + Model.Machine.Metadata.name.Replace(".", "");
+    var disabledstring = "disabled=disabled";
+}
+<span id="@someuiniqueid">
+    <a href="@Url.Action("Console", new { Area="Domain", host = Model.Host, domain = Model.Machine.Metadata.name })" target="_blank" class="btn btn-xs btn-success" title="Open in new window (Popout)">
+        <i class="fa fa-expand"></i>
+    </a>
+    <a href="@Url.Action("_Partial_Start", new { Area="Domain", host = Model.Host, domain = Model.Machine.Metadata.name })" class="btn btn-xs btn-success" @(Model.State != Libvirt.virDomainState.VIR_DOMAIN_SHUTOFF ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">
+        <i class="fa fa-play"></i>
+    </a>
+    <a title="This will send a request to the underlying OS to shut down. It is a gracefull shutdown" href="@Url.Action("_Partial_Stop", new { Area="Domain",host = Model.Host, domain =  Model.Machine.Metadata.name , gracefull=true})" class="btn btn-xs btn-warning" @(Model.State == Libvirt.virDomainState.VIR_DOMAIN_SHUTOFF ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">
+        <i class="fa fa-power-off"></i>
+    </a>
+    <a title="This will essentially pull the plug on the virtual machine, use with caution --Data loss can occur--" href="@Url.Action("_Partial_Stop", new { Area="Domain",host = Model.Host, domain =  Model.Machine.Metadata.name, gracefull=false })" class="btn btn-xs btn-danger" @(Model.State == Libvirt.virDomainState.VIR_DOMAIN_SHUTOFF ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">
+        <i class="fa fa-plug"></i>
+    </a>
+</span>
+

@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics;
+using System.Web.Mvc;
+using System.Linq;
 
 namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
 {
@@ -27,7 +29,26 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
                     t.Validate(new Libvirt_WebManager.Models.Validator(ModelState), v, h);
                     if (ModelState.IsValid)
                     {
-                        return PartialView("_Partial_CreateDirPool", new Libvirt_WebManager.Areas.Storage_Pool.Models.Dir_Pool { Storage_Pool = pool });
+
+                        if (pool.pool_type == Libvirt.Models.Interface.IStorage_Pool_Item.Pool_Types.dir)
+                        {
+                            return PartialView("_Partial_CreateDirPool", new Libvirt_WebManager.Areas.Storage_Pool.Models.Dir_Pool { Storage_Pool = pool });
+                        }
+                        else if (pool.pool_type == Libvirt.Models.Interface.IStorage_Pool_Item.Pool_Types.disk)
+                        {
+                            using (var nodes = h.virConnectListAllNodeDevices(Libvirt.virConnectListAllNodeDeviceFlags.VIR_CONNECT_LIST_NODE_DEVICES_CAP_STORAGE))
+                            using (var pools = h.virConnectListAllStoragePools(Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DISK))
+                            {
+                                var poolsxml = pools.Select(a => a.virStoragePoolGetXMLDesc(Libvirt.virStorageXMLFlags.VIR_DEFAULT)).Select(b => b.Storage_Pool_Item as Libvirt.Models.Concrete.Storage_Pool_Disk);
+                                var nodesxml = nodes.Select(a => a.virNodeDeviceGetXMLDesc() as Libvirt.Models.Concrete.Node.Storage)
+                                    .Where(a => !a.block.ToLower().Contains("/sda") 
+                                    && !a.drive_type.ToLower().Contains("cdrom")
+                                    && !poolsxml.Any(b=>b.device_path.ToLower().Contains(a.block.ToLower())));
+
+
+                                return PartialView("_Partial_CreateDiskPool", new Libvirt_WebManager.Areas.Storage_Pool.Models.Disk_Pool { Storage_Pool = pool, Devices = nodesxml.ToList() });
+                            }
+                        }
                     }
                 }
             }
@@ -38,7 +59,17 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
         {
             if (ModelState.IsValid)
             {
-                _Storage_Service.CreatePool_Dir(pool);
+                _Storage_Service.CreatePool(pool);
+                return CloseDialog();
+            }
+            return PartialView(pool);
+        }
+        [HttpPost]
+        public ActionResult _Partial_CreateDiskPool(Libvirt_WebManager.Areas.Storage_Pool.Models.Disk_Pool pool)
+        {
+            if (ModelState.IsValid)
+            {
+                _Storage_Service.CreatePool(pool);
                 return CloseDialog();
             }
             return PartialView(pool);
@@ -72,8 +103,8 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             }
         }
 
-       [HttpGet]
-       public ActionResult VolumeUpload(Areas.Storage_Pool.Models.Storage_Volume_Upload d)
+        [HttpGet]
+        public ActionResult VolumeUpload(Areas.Storage_Pool.Models.Storage_Volume_Upload d)
         {
             return View(d);
         }

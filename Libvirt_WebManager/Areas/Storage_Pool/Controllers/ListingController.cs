@@ -28,9 +28,13 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
         {
             var vm = new Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Pools();
             var h = GetHost(host);
-            Libvirt.CS_Objects.Storage_Pool[] p;
-            h.virConnectListAllStoragePools(out p, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
+            var p = h.virConnectListAllStoragePools(Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
             AddToAutomaticDisposal(p);
+            foreach(var item in p)
+            {
+                var t = item.virStoragePoolGetXMLDesc(Libvirt.virStorageXMLFlags.VIR_DEFAULT);
+
+            }
             vm.Pools = p;
             vm.Host = host;
             return PartialView(vm);
@@ -87,16 +91,15 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
             using (var v = p.virStorageVolLookupByName(volume))
             using (var st = h.virStreamNew(Libvirt.virStreamFlags.VIR_STREAM_NONBLOCK))
             {
-                Libvirt._virStorageVolInfo info;
-                v.virStorageVolGetInfo(out info);
-                var stupload = v.virStorageVolDownload(st, 0, info.allocation);
+                var info =v.virStorageVolGetInfo();
+                var stupload = v.virStorageVolDownload(st, 0, (ulong)info.allocation);
                 System.Diagnostics.Debug.WriteLine("virStorageDownload");
                 ulong chunksize = 65000;
                 var dat = new byte[chunksize];
                 Response.CacheControl = "No-cache";
                 Response.ContentType = "application/octet-stream";
                 Response.AddHeader("Content-Disposition", "attachment; filename=" + volume);
-                var dataToRead = info.allocation;
+                var dataToRead = (ulong)info.allocation;
 
                 while (Response.IsClientConnected && dataToRead > 0)
                 {
@@ -131,8 +134,7 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
                 vm.PoolInfo = poolinfo;
                 using (var v = p.virStorageVolLookupByName(volume))
                 {
-                    Libvirt._virStorageVolInfo volinfo;
-                    v.virStorageVolGetInfo(out volinfo);
+                    var volinfo = v.virStorageVolGetInfo();
                     vm.capacity = volinfo.capacity;
                     vm.VolInfo = volinfo;
                 }
@@ -150,8 +152,7 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
                 volres.PoolInfo = poolinfo;
                 using (var v = p.virStorageVolLookupByName(volres.name))
                 {
-                    Libvirt._virStorageVolInfo volinfo;
-                    v.virStorageVolGetInfo(out volinfo);
+                    var volinfo = v.virStorageVolGetInfo();
                     if (volinfo.capacity > volres.capacity)
                     {
                         v.virStorageVolResize(volres.capacity, Libvirt.virStorageVolResizeFlags.VIR_STORAGE_VOL_RESIZE_SHRINK);
@@ -160,8 +161,7 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Controllers
                     {
                         v.virStorageVolResize(volres.capacity, Libvirt.virStorageVolResizeFlags.VIR_DEFAULT);
                     }
-                    v.virStorageVolGetInfo(out volinfo);
-                    volres.VolInfo = volinfo;
+                    volres.VolInfo = v.virStorageVolGetInfo();
                 }
             }
             return PartialView(volres);

@@ -19,6 +19,6 @@ namespace Libvirt_WebManager.Areas.Storage_Pool.Models
         public UInt64 capacity { get; set; }
 
         public Libvirt._virStoragePoolInfo PoolInfo { get; set; }
-        public Libvirt._virStorageVolInfo VolInfo { get; set; }
+        public Libvirt.Models.Concrete.Storage_Volume VolInfo { get; set; }
     }
 }

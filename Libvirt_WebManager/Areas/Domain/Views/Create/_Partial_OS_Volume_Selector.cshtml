@@ -23,20 +23,18 @@
     <tbody>
         @foreach (var vol in Model.Volumes)
         {
-            var name = vol.virStorageVolGetName();
-
-            if ((Model.Select_ISO && !name.ToLower().EndsWith(".iso")) || (name.ToLower().EndsWith(".iso") && !Model.Select_ISO))
+            var xmldesc = vol.virStorageVolGetXMLDesc();
+            if (Model.Select_ISO && xmldesc.Volume_Type != Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
             {
                 continue;
             }
-            Libvirt._virStorageVolInfo info;
-            vol.virStorageVolGetInfo(out info);
+         
             <tr>
-                <td>@name</td>
-                <td>@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.allocation)</td>
-                <td>@Libvirt_WebManager.Utilities.String.Formatting.Format((long)info.capacity)</td>
-                <td>@info.type.ToString().Split('_').LastOrDefault()</td>
-                <td><a href="#" class="btn btn-default btn-xs bg-success" data-dismiss="modal" onclick="UpdateSelectors('@Model.Parent', '@name');"><i class="fa fa-plus-square-o"></i></a></td>
+                <td>@xmldesc.name</td>
+                <td>@Libvirt_WebManager.Utilities.String.Formatting.Format((long)xmldesc.allocation)</td>
+                <td>@Libvirt_WebManager.Utilities.String.Formatting.Format((long)xmldesc.capacity)</td>
+                <td>@xmldesc.Volume_Type</td>
+                <td><a href="#" class="btn btn-default btn-xs bg-success" data-dismiss="modal" onclick="UpdateSelectors('@Model.Parent', '@xmldesc.name');"><i class="fa fa-plus-square-o"></i></a></td>
             </tr>
         }
 

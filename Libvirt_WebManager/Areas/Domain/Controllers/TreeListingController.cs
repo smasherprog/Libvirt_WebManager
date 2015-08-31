@@ -13,8 +13,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         public ActionResult _Partial_Index(string host)
         {
             var vm = new Models.Domain_List_Down();
-            Libvirt.CS_Objects.Domain[] ds;
-            GetHost(host).virConnectListAllDomains(out ds, Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT);
+            var  ds= GetHost(host).virConnectListAllDomains(Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT);
             AddToAutomaticDisposal(ds);
             vm.Host = host;
             vm.Parent = host;

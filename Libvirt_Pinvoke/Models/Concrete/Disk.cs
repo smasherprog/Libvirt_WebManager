@@ -23,7 +23,7 @@ namespace Libvirt.Models.Concrete
             Disk_Device_Type = Disk_Device_Types.disk;
             Snapshot_Type = Snapshot_Types._default;
             Driver_Type = Driver_Types.raw;
-            Driver_Cache_Type = Driver_Cache_Types._default;
+            Driver_Cache_Type = Driver_Cache_Types.none;
             Device_Bus_Type = Disk_Bus_Types.virtio;
             ReadOnly = false;
             Letter = 'a';
@@ -98,14 +98,14 @@ namespace Libvirt.Models.Concrete
             var element = os.Element("driver");
             if (element != null)
             {
-                var attr = os.Attribute("type");
+                var attr = element.Attribute("type");
                 if (attr != null)
                 {
                     var b = Driver_Types.raw;
                     Enum.TryParse(attr.Value, true, out b);
                     Driver_Type = b;
                 }
-                attr = os.Attribute("cache");
+                attr = element.Attribute("cache");
                 if (attr != null)
                 {
                     var b = Driver_Cache_Types._default;

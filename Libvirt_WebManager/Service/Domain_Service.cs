@@ -10,6 +10,9 @@ namespace Libvirt_WebManager.Service
         public void QuickCreate(Libvirt_WebManager.Areas.Domain.Models.New_Domain_VM v)
         {
             var h = Service.VM_Manager.Instance.virConnectOpen(v.Host);
+     
+            var capabilities = System.Xml.Linq.XDocument.Parse(h.virConnectGetCapabilities()).Root;
+
             Libvirt.Models.Concrete.Virtual_Machine virtuammachine = new Libvirt.Models.Concrete.Virtual_Machine();
             virtuammachine.CPU.vCpu_Count = v.Cpus;
             virtuammachine.type = Libvirt.Models.Concrete.Virtual_Machine.Domain_Types.qemu;
@@ -24,7 +27,7 @@ namespace Libvirt_WebManager.Service
             harddrive.Device_Bus_Type = Libvirt.Models.Concrete.Disk.Disk_Bus_Types.virtio;
             harddrive.Disk_Device_Type = Libvirt.Models.Concrete.Disk.Disk_Device_Types.disk;
             harddrive.Device_Type = Libvirt.Models.Concrete.Disk.Disk_Types.volume;
-            harddrive.Driver_Cache_Type = Libvirt.Models.Concrete.Disk.Driver_Cache_Types._default;
+            harddrive.Driver_Cache_Type = Libvirt.Models.Concrete.Disk.Driver_Cache_Types.none;
             harddrive.Driver_Type = Libvirt.Models.Concrete.Disk.Driver_Types.raw;
             harddrive.ReadOnly = false;
             harddrive.Snapshot_Type = Libvirt.Models.Concrete.Disk.Snapshot_Types._default;
@@ -40,7 +43,7 @@ namespace Libvirt_WebManager.Service
             oscdrom.Device_Bus_Type = Libvirt.Models.Concrete.Disk.Disk_Bus_Types.ide;
             oscdrom.Disk_Device_Type = Libvirt.Models.Concrete.Disk.Disk_Device_Types.cdrom;
             oscdrom.Device_Type = Libvirt.Models.Concrete.Disk.Disk_Types.volume;
-            oscdrom.Driver_Cache_Type = Libvirt.Models.Concrete.Disk.Driver_Cache_Types._default;
+            oscdrom.Driver_Cache_Type = Libvirt.Models.Concrete.Disk.Driver_Cache_Types.none;
             oscdrom.Driver_Type = Libvirt.Models.Concrete.Disk.Driver_Types.raw;
             oscdrom.ReadOnly = true;
             oscdrom.Snapshot_Type = Libvirt.Models.Concrete.Disk.Snapshot_Types._default;

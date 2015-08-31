@@ -46,7 +46,7 @@
         <a href="@Url.Action("_Partial_Start", new { Area="Domain", host = Model.Host, domain = name })" class="btn btn-xs btn-success" @(info.state != Libvirt.virDomainState.VIR_DOMAIN_SHUTOFF ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">
             <i class="fa fa-play"></i>
         </a>
-        <a href="@Url.Action("_Partial_Delete", new { Area="Domain",host = Model.Host, domain = name })" class="btn btn-xs btn-danger" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">
+        <a onclick="return confirm('Are you sure that you want to delete this domain?');" href="@Url.Action("_Partial_Delete", new { Area="Domain",host = Model.Host, domain = name })" class="btn btn-xs btn-danger" data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">
             <i class="fa fa-trash"></i>
         </a>
         <a title="This will send a request to the underlying OS to shut down. It is a gracefull shutdown" href="@Url.Action("_Partial_Stop", new { Area="Domain",host = Model.Host, domain = name , gracefull=true})" class="btn btn-xs btn-warning" @(info.state == Libvirt.virDomainState.VIR_DOMAIN_SHUTOFF ? disabledstring : "") data-ajax-update="#@someuiniqueid" data-ajax-mode="replace-with" data-ajax="true">

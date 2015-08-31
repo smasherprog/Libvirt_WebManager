@@ -12,24 +12,13 @@ namespace Libvirt.Service.Concrete
     {
         public void Validate(IValdiator v, Models.Concrete.General_Metadata obj, CS_Objects.Host obj2)
         {
-
-            Libvirt.CS_Objects.Domain[] domains;
-            if (obj2.virConnectListAllDomains(out domains, Libvirt.virConnectListAllDomainsFlags.VIR_CONNECT_LIST_DOMAINS_PERSISTENT | Libvirt.virConnectListAllDomainsFlags.VIR_CONNECT_LIST_DOMAINS_TRANSIENT) > 0)
+            using (var d = obj2.virConnectListAllDomains(Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT))
             {
-                foreach (var item in domains)
+                if (d.Any(a => a.virDomainGetName() == obj.name))
                 {
-                    if (item.virDomainGetName() == obj.name)
-                    {
-                        v.AddError("General_Metadata.name", "A VM with that name already exists, try another!");
-                        break;
-                    }
-                }
-                foreach (var item in domains)
-                {
-                    item.Dispose();
+                    v.AddError("General_Metadata.name", "A VM with that name already exists, try another!");
                 }
             }
         }
-
     }
 }

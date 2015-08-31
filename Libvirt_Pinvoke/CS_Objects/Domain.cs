@@ -366,11 +366,11 @@ namespace Libvirt.CS_Objects
         {
             return API.virDomainMemoryStats(_DomainPtr, out stats, nr_stats);
         }
-        public Domain virDomainMigrate(Host destination_host, virDomainMigrateFlags flags, string dst_vm_name, string uri, uint bandwidth)
+        public Domain virDomainMigrate(Host destination_host, virDomainMigrateFlags flags, string dst_vm_name=null, string uri= null, uint bandwidth=0)
         {
             return new Domain(API.virDomainMigrate(_DomainPtr, Host.GetPtr(destination_host), flags, dst_vm_name, uri, bandwidth));
         }
-        public Domain virDomainMigrate2(Host destination_host, string dxml, virDomainMigrateFlags flags, string dst_vm_name, string uri, uint bandwidth)
+        public Domain virDomainMigrate2(Host destination_host, string dxml, virDomainMigrateFlags flags, string dst_vm_name = null, string uri = null, uint bandwidth = 0)
         {
             return new Domain(API.virDomainMigrate2(_DomainPtr, Host.GetPtr(destination_host), dxml, flags, dst_vm_name, uri, bandwidth));
         }
@@ -399,11 +399,11 @@ namespace Libvirt.CS_Objects
             return API.virDomainMigrateSetMaxSpeed(_DomainPtr, bandwidth);
         }
 
-        public int virDomainMigrateToURI(string duri, virDomainMigrateFlags flags, string dname, uint bandwidth)
+        public int virDomainMigrateToURI(string duri, virDomainMigrateFlags flags, string dname = null, uint bandwidth = 0)
         {
             return API.virDomainMigrateToURI(_DomainPtr, duri, flags, dname, bandwidth);
         }
-        public int virDomainMigrateToURI2(string dconnuri, string miguri, string dxml, virDomainMigrateFlags flags, string dname, uint bandwidth)
+        public int virDomainMigrateToURI2(string dconnuri, string miguri, string dxml, virDomainMigrateFlags flags,  string dname = null, uint bandwidth = 0)
         {
             return API.virDomainMigrateToURI2(_DomainPtr, dconnuri, miguri, dxml, flags, dname, bandwidth);
         }

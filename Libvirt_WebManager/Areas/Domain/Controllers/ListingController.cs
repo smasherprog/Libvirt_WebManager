@@ -11,12 +11,11 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         {
             _Domain_Service = new Service.Domain_Service(new Libvirt_WebManager.Models.Validator(ModelState));
         }
- 
+
         public ActionResult _Partial_MainContent(string host)
         {
             var h = GetHost(host);
-            Libvirt.CS_Objects.Domain[] ds;
-            h.virConnectListAllDomains(out ds, Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT);
+            var ds=h.virConnectListAllDomains(Libvirt.virConnectListAllDomainsFlags.VIR_DEFAULT);
             AddToAutomaticDisposal(ds);
             return PartialView(new Libvirt_WebManager.Areas.Domain.Models.Domain_List_Down { Host = host, Parent = host, Domains = ds });
         }
@@ -73,6 +72,8 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         public ActionResult _Partial_Migrate(string host, string domain)
         {
             var vm = new Models.Domain_Migrate_Down();
+            vm.Host = host;
+            vm.Parent = domain;
             foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Hosts)
             {
                 if (item.ToLower() == host.ToLower()) continue;
@@ -83,16 +84,27 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
 
 
         [HttpPost]
-        public ActionResult _Partial_Migrate(string host, string domain, string selected_host)
+        public ActionResult _Partial_Migrate(string Host, string Parent, string selected_host)
         {
-            using (var d = GetHost(host).virDomainLookupByName(domain))
+            var src_host = GetHost(Host);
+            using (var d = src_host.virDomainLookupByName(Parent))
             {
-               //migrate coed hereree
+
+                var options = Libvirt.virDomainMigrateFlags.VIR_MIGRATE_NON_SHARED_DISK | Libvirt.virDomainMigrateFlags.VIR_MIGRATE_TUNNELLED | Libvirt.virDomainMigrateFlags.VIR_MIGRATE_PEER2PEER;
+                Libvirt.virDomainState state;
+                int reason = 0;
+                d.virDomainGetState(out state, out reason);
+                if (state == Libvirt.virDomainState.VIR_DOMAIN_RUNNING) options |= Libvirt.virDomainMigrateFlags.VIR_MIGRATE_LIVE;
+                else options |= Libvirt.virDomainMigrateFlags.VIR_MIGRATE_OFFLINE;
+                var success = d.virDomainMigrateToURI(GenerateURIFromHostname(selected_host), options);
+
+                Debug.WriteLine("got here");
+
             }
             var vm = new Models.Domain_Migrate_Down();
             foreach (var item in Libvirt_WebManager.Service.VM_Manager.Instance.Hosts)
             {
-                if (item.ToLower() == host.ToLower()) continue;
+                if (item.ToLower() == Host.ToLower()) continue;
                 vm.Hosts.Add(new SelectListItem { Text = item, Value = item });
             }
             return PartialView(vm);

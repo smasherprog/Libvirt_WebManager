@@ -54,6 +54,11 @@ namespace Libvirt.Models.Concrete
         {
             Reset();
             var element = xml.Element("vcpu");
+            if (element == null)
+            {
+                if (xml.Name == "vcpu") element = xml;
+                else element = null;
+            }
             if (element != null)
             {
                 var i = 0;

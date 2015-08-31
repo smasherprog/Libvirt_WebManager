@@ -2,6 +2,6 @@
 {
     public class Storage_Pool_TreeViewDown : ViewModels.BaseViewModel
     {
-        public Libvirt.CS_Objects.Storage_Pool[] Pools { get; set; }
+        public Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Libvirt.CS_Objects.Storage_Pool> Pools { get; set; }
     }
 }

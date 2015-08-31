@@ -29,9 +29,8 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         }
         public ActionResult _Partial_OS_PoolVolume_Selector(Libvirt_WebManager.Areas.Domain.Models.BasePoolVolume_Selector pselector)
         {
-            Libvirt.CS_Objects.Storage_Pool[] pools;
             var h = GetHost(pselector.Host);
-            h.virConnectListAllStoragePools(out pools, Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
+            var pools = h.virConnectListAllStoragePools( Libvirt.virConnectListAllStoragePoolsFlags.VIR_CONNECT_LIST_STORAGE_POOLS_DEFAULT);
             AddToAutomaticDisposal(pools);
             var vm = Utilities.AutoMapper.Mapper<Libvirt_WebManager.Areas.Domain.Models.PoolVolume_Selector_Down>.Map(pselector);
             vm.Pools = pools;

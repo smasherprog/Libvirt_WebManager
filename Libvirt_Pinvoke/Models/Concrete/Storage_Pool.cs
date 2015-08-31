@@ -9,7 +9,7 @@ namespace Libvirt.Models.Concrete
 {
     public class Storage_Pool : IXML, IValidation
     {
-        public enum Pool_Types { dir, fs, netfs, disk, iscsi, logical, scsi, mpath, rbd , sheepdog, gluster, zfs};
+        
         public Storage_Pool()
         {
             Storage_Pool_Item = new Storage_Pool_Dir();
@@ -31,7 +31,31 @@ namespace Libvirt.Models.Concrete
         }
         public void From_XML(System.Xml.Linq.XElement xml)
         {
-
+            var element = xml.Element("pool");
+            if (element == null)
+            {
+                if (xml.Name == "pool") element = xml;
+                else element = null;
+            }
+            if (element == null) return;
+            IStorage_Pool_Item.Pool_Types type = IStorage_Pool_Item.Pool_Types.dir;
+            if (element != null)
+            {
+                var attr = element.Attribute("type");
+                if (attr != null)
+                {
+                    type = (IStorage_Pool_Item.Pool_Types)Enum.Parse(typeof(IStorage_Pool_Item.Pool_Types), attr.Value);
+                }
+            }
+            if (type == IStorage_Pool_Item.Pool_Types.dir) Storage_Pool_Item = new Storage_Pool_Dir();
+            else if (type == IStorage_Pool_Item.Pool_Types.iscsi) Storage_Pool_Item = new Storage_Pool_Iscsi();
+            else if (type == IStorage_Pool_Item.Pool_Types.netfs) Storage_Pool_Item = new Storage_Pool_Netfs();
+            else if (type == IStorage_Pool_Item.Pool_Types.disk) Storage_Pool_Item = new Storage_Pool_Disk();
+            else
+            {
+                throw new NotImplementedException("Other Storage Types are not implemented yet");
+            }
+            Storage_Pool_Item.From_XML(element);
         }
         public void Validate(IValdiator v)
         {

@@ -70,6 +70,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CS_Objects\Container\LibvirtContainer.cs" />
     <Compile Include="CS_Objects\Domain.cs" />
     <Compile Include="CS_Objects\Extensions\Storage_Volume_Extensions.cs" />
     <Compile Include="CS_Objects\Host.cs" />
@@ -91,6 +92,9 @@
     <Compile Include="Models\Concrete\General_Metadata.cs" />
     <Compile Include="Models\Concrete\Disk_Collection.cs" />
     <Compile Include="Models\Concrete\Graphics_Listen.cs" />
+    <Compile Include="Models\Concrete\Node\system.cs" />
+    <Compile Include="Models\Concrete\Node\Storage.cs" />
+    <Compile Include="Models\Concrete\Node\Device.cs" />
     <Compile Include="Models\Concrete\Storage_Volume.cs" />
     <Compile Include="Models\Concrete\Storage_Pool.cs" />
     <Compile Include="Models\Concrete\Storage_Pool_Items.cs" />

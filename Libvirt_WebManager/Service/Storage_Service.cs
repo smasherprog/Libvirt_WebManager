@@ -1,4 +1,5 @@
 ﻿using Libvirt_Pinvoke.CS_Objects.Extensions;
+using System.Linq;
 
 namespace Libvirt_WebManager.Service
 {
@@ -9,22 +10,12 @@ namespace Libvirt_WebManager.Service
         public void CreateVolume(Libvirt_WebManager.Areas.Storage_Pool.Models.Storage_Volume v)
         {
             var volume = Utilities.AutoMapper.Mapper<Libvirt.Models.Concrete.Storage_Volume>.Map(v);
-            //if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
-            //{
-            //    if (File == null)
-            //    {
-            //        _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
-            //        return;
-            //    } else if(File.ContentLength == 0)
-            //    {
-            //        _Validator.AddError("File", "File cannot be empty if adding an ISO volume");
-            //        return;
-            //    }
-            //    volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.B;
-            //    volume.capacity = volume.allocation = File.ContentLength;
-            //} else {
-                volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GiB;
-          //  }
+            var splits = volume.name.Split('.');
+            if (splits.Length > 1) volume.name = splits[0];
+            if (v.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.raw) volume.name += ".img";
+            else volume.name += "." + v.Volume_Type.ToString();
+            volume.Memory_Units = Libvirt.Models.Concrete.Memory_Allocation.UnitTypes.GiB;
+          
             var h = Service.VM_Manager.Instance.virConnectOpen(v.Host);
             if (!_Validator.IsValid()) return;
             using (var p = h.virStoragePoolLookupByName(v.Parent))
@@ -35,23 +26,15 @@ namespace Libvirt_WebManager.Service
                 {
                     using (var storagevol = p.virStorageVolCreateXML(volume, Libvirt.virStorageVolCreateFlags.VIR_DEFAULT))
                     {
-                        if (storagevol.IsValid)
-                        {
-                            //if (volume.Volume_Type == Libvirt.Models.Concrete.Storage_Volume.Volume_Types.iso)
-                            //{
-                            //    storagevol.Upload(h, File.InputStream);
-                            //}
-                        }
-                        else
-                        {
-                            _Validator.AddError("Storage Pool", "Storage Pool not valid");
+                        if (!storagevol.IsValid) { 
+                            _Validator.AddError("Storage_Volue", "Storage Volume create Failed!");
                         }
                     }
                 }
             }
         }
 
-        public void CreatePool_Dir(Libvirt_WebManager.Areas.Storage_Pool.Models.Dir_Pool pool)
+        public void CreatePool(Libvirt_WebManager.Areas.Storage_Pool.Models.Dir_Pool pool)
         {
             var h = Service.VM_Manager.Instance.virConnectOpen(pool.Storage_Pool.Host);
          
@@ -64,13 +47,34 @@ namespace Libvirt_WebManager.Service
             d.target_path = pool.path;
             using (var storagepool = h.virStoragePoolDefineXML(p))
             {
-                var suc = storagepool.virStoragePoolBuild(Libvirt.virStoragePoolBuildFlags.VIR_STORAGE_POOL_BUILD_NEW);
-                if (storagepool.virStoragePoolCreate() == 0)
-                {//succesfully created the pool
-                    if (pool.AutoStart) storagepool.virStoragePoolSetAutostart(1);
-                }
+                if (pool.Build) storagepool.virStoragePoolBuild(Libvirt.virStoragePoolBuildFlags.VIR_STORAGE_POOL_BUILD_NEW);
+                storagepool.virStoragePoolCreate();
+                if (pool.AutoStart) storagepool.virStoragePoolSetAutostart(1);
             }
 
         }
+        public void CreatePool(Libvirt_WebManager.Areas.Storage_Pool.Models.Disk_Pool pool)
+        {
+            var h = Service.VM_Manager.Instance.virConnectOpen(pool.Storage_Pool.Host);
+
+            if (!_Validator.IsValid()) return;
+
+            var p = new Libvirt.Models.Concrete.Storage_Pool();
+            p.name = pool.Storage_Pool.name;
+            var d = new Libvirt.Models.Concrete.Storage_Pool_Disk();
+            p.Storage_Pool_Item = d;
+            d.target_path = "/"+pool.path.Split('/').FirstOrDefault(a => !string.IsNullOrWhiteSpace(a) && a.Length > 1);
+            d.device_path = pool.path;
+
+            using (var storagepool = h.virStoragePoolDefineXML(p))
+            {
+                if(pool.Build) storagepool.virStoragePoolBuild(Libvirt.virStoragePoolBuildFlags.VIR_STORAGE_POOL_BUILD_NEW);
+                storagepool.virStoragePoolCreate();
+                if (pool.AutoStart) storagepool.virStoragePoolSetAutostart(1);
+                
+            }
+        }
+
+       
     }
 }

@@ -172,16 +172,21 @@ namespace Libvirt.CS_Objects
             return new virInterface(API.virInterfaceLookupByName(_ConnectPtr, name));
         }
 
-        public int virConnectListAllInterfaces(out virInterface[] ifaces, virConnectListAllInterfacesFlags flags)
+        public Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<virInterface> virConnectListAllInterfaces(virConnectListAllInterfacesFlags flags)
         {
+            virInterface[] ifaces;
             virInterfacePtr[] ptrs;
             var ret = API.virConnectListAllInterfaces(_ConnectPtr, out ptrs, flags);
-            ifaces = new virInterface[ptrs.Length];
-            for (var i = 0; i < ptrs.Length; i++)
+            if (ret > -1)
             {
-                ifaces[i] = new virInterface(ptrs[i]);
+                ifaces = new virInterface[ptrs.Length];
+                for (var i = 0; i < ptrs.Length; i++)
+                {
+                    ifaces[i] = new virInterface(ptrs[i]);
+                }
             }
-            return ret;
+            else ifaces = new virInterface[0];
+            return new Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<virInterface>(ifaces);
         }
         public int virConnectListDefinedInterfaces(out string[] names, int maxnames)
         {
@@ -238,16 +243,22 @@ namespace Libvirt.CS_Objects
         {
             return API.virConnectFindStoragePoolSources(_ConnectPtr, type, srcSpec);
         }
-        public int virConnectListAllStoragePools(out Storage_Pool[] pools, virConnectListAllStoragePoolsFlags flags)
+        public Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Storage_Pool> virConnectListAllStoragePools(virConnectListAllStoragePoolsFlags flags)
         {
+            Storage_Pool[] pools;
             virStoragePoolPtr[] ptrs;
             var ret = API.virConnectListAllStoragePools(_ConnectPtr, out ptrs, flags);
-            pools = new Storage_Pool[ptrs.Length];
-            for (var i = 0; i < ptrs.Length; i++)
+            if (ret > -1)
             {
-                pools[i] = new Storage_Pool(ptrs[i]);
+                pools = new Storage_Pool[ptrs.Length];
+                for (var i = 0; i < ptrs.Length; i++)
+                {
+                    pools[i] = new Storage_Pool(ptrs[i]);
+                }
             }
-            return ret;
+            else pools = new Storage_Pool[0];
+
+            return new Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Storage_Pool>(pools);
         }
         public int virConnectListDefinedStoragePools(out string[] names, int maxnames)
         {
@@ -316,8 +327,9 @@ namespace Libvirt.CS_Objects
         {
             return API.virConnectGetDomainCapabilities(_ConnectPtr, emulatorbin, arch, machine, virttype);
         }
-        public int virConnectListAllDomains(out Domain[] domains, virConnectListAllDomainsFlags flags)
+        public Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Domain> virConnectListAllDomains(virConnectListAllDomainsFlags flags)
         {
+            Domain[] domains;
             Libvirt.virDomainPtr[] ds;
             var ret = API.virConnectListAllDomains(_ConnectPtr, out ds, flags);
             if (ret > -1)
@@ -329,7 +341,7 @@ namespace Libvirt.CS_Objects
                 }
             }
             else domains = new Domain[0];
-            return ret;
+            return new Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Domain>(domains);
         }
         public int virConnectListDefinedDomains(out string[] names, int maxnames)
         {
@@ -403,8 +415,9 @@ namespace Libvirt.CS_Objects
         {
             return new Node_Device(API.virNodeDeviceLookupByName(_ConnectPtr, name));
         }
-        public int virConnectListAllNodeDevices(out Node_Device[] devices, virConnectListAllNodeDeviceFlags flags)
+        public Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Node_Device> virConnectListAllNodeDevices(virConnectListAllNodeDeviceFlags flags)
         {
+            Node_Device[] devices;
             Libvirt.virNodeDevicePtr[] ds;
             var ret = API.virConnectListAllNodeDevices(_ConnectPtr, out ds, flags);
             if (ret > -1)
@@ -416,7 +429,7 @@ namespace Libvirt.CS_Objects
                 }
             }
             else devices = new Node_Device[0];
-            return ret;
+            return new Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Node_Device>(devices);
         }
 
         public int virNodeNumOfDevices(string cap)
@@ -424,8 +437,9 @@ namespace Libvirt.CS_Objects
             return API.virNodeNumOfDevices(_ConnectPtr, cap);
         }
 
-        public int virConnectListAllNetworks(out Network[] nets, virConnectListAllNetworksFlags flags)
+        public Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Network> virConnectListAllNetworks(virConnectListAllNetworksFlags flags)
         {
+            Network[] nets;
             Libvirt.virNetworkPtr[] ds;
             var ret = API.virConnectListAllNetworks(_ConnectPtr, out ds, flags);
             if (ret > -1)
@@ -437,7 +451,7 @@ namespace Libvirt.CS_Objects
                 }
             }
             else nets = new Network[0];
-            return ret;
+            return new Libvirt_Pinvoke.CS_Objects.Container.LibvirtContainer<Network>(nets);
         }
         public int virConnectListDefinedNetworks(out string[] nets, int maxnames)
         {
