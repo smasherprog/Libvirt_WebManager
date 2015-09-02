@@ -175,9 +175,12 @@
     <Compile Include="Areas\Domain\Controllers\CreateController.cs" />
     <Compile Include="Areas\Domain\Controllers\TreeListingController.cs" />
     <Compile Include="Areas\Domain\DomainAreaRegistration.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Graphics_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Graphics_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Drive_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Drives_Down.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Bios_Down.cs" />
+    <Compile Include="Areas\Domain\Models\Domain_Migrate_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Network_Down_VM.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Network_Down.cs" />
     <Compile Include="Areas\Domain\Models\Domain_Memory_Down.cs" />
@@ -525,6 +528,7 @@
     <Content Include="Areas\Domain\Views\Details\_Partial_DomainControlOptions_Started.cshtml" />
     <Content Include="Areas\Domain\Views\Details\Console.cshtml" />
     <Content Include="Areas\Storage_Pool\Views\Create\_Partial_CreateDiskPool.cshtml" />
+    <Content Include="Areas\Domain\Views\Edit\_Partial_Graphics.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

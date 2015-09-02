@@ -12,21 +12,30 @@
         <div class="modal-body">
 
             @Html.ValidationSummary()
-            @Html.HiddenFor(a => a.Host)
-            @Html.HiddenFor(a => a.Parent)
+            @Html.HiddenFor(a => a.Domain_Migrate.Host)
+            @Html.HiddenFor(a => a.Domain_Migrate.Parent)
 
             <div class="form-group">
-                @Html.Label("selected_host")
-                @Html.DropDownList("selected_host", Model.Hosts, new { @class="form-control" })
-                @Html.ValidationMessage("selected_host")
+                @Html.LabelFor(a => a.Domain_Migrate.Dst_Domain)
+                @Html.DropDownListFor(a => a.Domain_Migrate.Dst_Domain, Model.Hosts, new { @class = "form-control" })
+                @Html.ValidationMessageFor(a => a.Domain_Migrate.Dst_Domain)
             </div>
-
+            <div class="form-group">
+                @Html.LabelFor(a => a.Domain_Migrate.Delete_On_Src)
+                @Html.CheckBoxFor(a => a.Domain_Migrate.Delete_On_Src)
+                @Html.ValidationMessageFor(a => a.Domain_Migrate.Delete_On_Src)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(a => a.Domain_Migrate.Persist_On_Dst)
+                @Html.CheckBoxFor(a => a.Domain_Migrate.Persist_On_Dst)
+                @Html.ValidationMessageFor(a => a.Domain_Migrate.Persist_On_Dst)
+            </div>
         </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary btn-block">
-                    Move
-                    @Html.Spinner("_Generalmetadata1235_Form_spinner")
-                </button>
-            </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary btn-block">
+                Move
+                @Html.Spinner("_Generalmetadata1235_Form_spinner")
+            </button>
+        </div>
     }
 </div>

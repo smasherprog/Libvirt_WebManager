@@ -41,6 +41,37 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
             vm.MetaData = MetaData;
             return PartialView(vm);
         }
+        [HttpGet]
+        public ActionResult _Partial_Graphics(string Host, string Parent)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            return PartialView(Code.ViewModelFactory.Build_Domain_Graphics_Down(Host, Parent, out machine));
+        }
+        [HttpPost]
+        public ActionResult _Partial_Graphics(Models.Domain_Graphics_Down_VM Domain_Graphics)
+        {
+            Libvirt.Models.Concrete.Virtual_Machine machine = null;
+            var vm = Code.ViewModelFactory.Build_Domain_Graphics_Down(Domain_Graphics.Host, Domain_Graphics.Parent, out machine);
+
+            if (Domain_Graphics.WebSocket)
+            {
+                machine.graphics.autoport = true;
+                machine.graphics.websocket = -1;
+            } else
+            {
+                machine.graphics.autoport = false;
+                machine.graphics.websocket = null;
+            }
+            machine.graphics.passwd = Domain_Graphics.passwd;
+            machine.graphics.passwdValidTo = Domain_Graphics.passwdValidTo;
+            machine.graphics.Graphic_Type = Domain_Graphics.Graphic_Type;
+            machine.graphics.listen = Domain_Graphics.Listen_Address_Type == Models.Listen_Address_Types.LocalHost ? "localhost" : "0.0.0.0";
+
+            if (ModelState.IsValid) virDomainDefineXML(machine, GetHost(Domain_Graphics.Host));
+
+            vm.Domain_Graphics = Domain_Graphics;
+            return PartialView(vm);
+        }
 
         [HttpGet]
         public ActionResult _Partial_CPU(string Host, string Parent)
@@ -159,7 +190,7 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
                 var harddrive = new Libvirt.Models.Concrete.Disk();
                 harddrive.Device_Bus_Type = Domain_Drive.Device_Bus_Type;
                 harddrive.Disk_Device_Type= Domain_Drive.Disk_Device_Type;
-                harddrive.Device_Type = Domain_Drive.Device_Type;
+                harddrive.Device_Type = Libvirt.Models.Concrete.Disk.Disk_Types.volume;//use volumes because this makes management much easier
                 harddrive.Driver_Cache_Type = Domain_Drive.Driver_Cache_Type;
                 harddrive.Driver_Type = Domain_Drive.Driver_Type;
                 harddrive.ReadOnly = Domain_Drive.ReadOnly;

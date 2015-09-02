@@ -43,6 +43,25 @@ namespace Libvirt_WebManager.Areas.Domain.Code
             vm.CpuInfo.Parent = domain;
             return vm;
         }
+        public static Models.Domain_Graphics_Down Build_Domain_Graphics_Down(string host, string domain, out Libvirt.Models.Concrete.Virtual_Machine machine)
+        {
+            machine = GetMachine(host, domain, null);
+            var vm = new Models.Domain_Graphics_Down();
+            vm.Domain_Graphics = new Models.Domain_Graphics_Down_VM();
+            vm.Domain_Graphics.Graphic_Type = machine.graphics.Graphic_Type;
+            vm.Domain_Graphics.Listen_Address_Type = Models.Listen_Address_Types.LocalHost;
+            if (!string.IsNullOrWhiteSpace(machine.graphics.listen))
+            {
+                vm.Domain_Graphics.Listen_Address_Type = (machine.graphics.listen == "0.0.0.0" ? Models.Listen_Address_Types.All_Interfaces : Models.Listen_Address_Types.LocalHost);
+            }
+            vm.Domain_Graphics.passwd = machine.graphics.passwd;
+            vm.Domain_Graphics.passwdValidTo = machine.graphics.passwdValidTo;
+            vm.Domain_Graphics.WebSocket = machine.graphics.websocket.HasValue;
+
+            vm.Domain_Graphics.Host = host;
+            vm.Domain_Graphics.Parent = domain;
+            return vm;
+        }
         public static Models.Domain_Memory_Down Build_Domain_Memory_Down(string host, string domain, out Libvirt.Models.Concrete.Virtual_Machine machine)
         {
             machine = GetMachine(host, domain, null);
