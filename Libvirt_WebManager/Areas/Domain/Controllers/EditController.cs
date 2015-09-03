@@ -52,18 +52,19 @@ namespace Libvirt_WebManager.Areas.Domain.Controllers
         {
             Libvirt.Models.Concrete.Virtual_Machine machine = null;
             var vm = Code.ViewModelFactory.Build_Domain_Graphics_Down(Domain_Graphics.Host, Domain_Graphics.Parent, out machine);
-
+            machine.graphics.autoport = true;
             if (Domain_Graphics.WebSocket)
             {
-                machine.graphics.autoport = true;
+             
                 machine.graphics.websocket = -1;
             } else
             {
-                machine.graphics.autoport = false;
                 machine.graphics.websocket = null;
             }
             machine.graphics.passwd = Domain_Graphics.passwd;
-            machine.graphics.passwdValidTo = Domain_Graphics.passwdValidTo;
+
+           machine.graphics.passwdValidTo = Domain_Graphics.passwdValidTo.Value;
+        
             machine.graphics.Graphic_Type = Domain_Graphics.Graphic_Type;
             machine.graphics.listen = Domain_Graphics.Listen_Address_Type == Models.Listen_Address_Types.LocalHost ? "localhost" : "0.0.0.0";
 

@@ -18,7 +18,7 @@ namespace Libvirt_WebManager.Areas.Host.Controllers
             {
                 if (Libvirt_WebManager.Service.VM_Manager.Instance.virConnectOpen(obj.host_or_ip) != null)
                 {
-           
+
                     return CloseDialog();
                 }
             }

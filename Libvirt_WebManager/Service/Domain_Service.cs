@@ -60,8 +60,52 @@ namespace Libvirt_WebManager.Service
             virtuammachine.graphics.autoport = true;
             virtuammachine.graphics.websocket = -1;
             virtuammachine.graphics.listen = "0.0.0.0";
+            virtuammachine.clock = v.Operating_System == Areas.Domain.Models.OS_Options.Windows ? Libvirt.Models.Concrete.Virtual_Machine.Clock_Types.localtime : Libvirt.Models.Concrete.Virtual_Machine.Clock_Types.utc;
 
-            var testxml = virtuammachine.To_XML();
+            var hostcapabilities = System.Xml.Linq.XDocument.Parse(h.virConnectGetCapabilities()).Root;
+
+            foreach(var item in hostcapabilities.Elements("guest"))
+            {
+                var arch = item.Element("arch");
+                if (arch != null)
+                {
+                    var attr = arch.Attribute("name");
+                    if (attr != null)
+                    {
+                        if(attr.Value == "x86_64")
+                        {
+                            var wordsize = arch.Element("wordsize");
+                            if (wordsize != null)
+                            {
+                                if (wordsize.Value == "64")
+                                {//GOT IT!!! 64 bit, x86 type.. get host capaciliies and pick best
+                                    var ele = arch.Element("emulator");
+                                    if (ele != null)
+                                    {
+                                        virtuammachine.emulator = ele.Value;
+                                    }
+                                    ele = arch.Element("machine");
+                                    if (ele != null)
+                                    {
+                                        var fattr = ele.Attribute("canonical");
+                                        if (fattr != null)
+                                        {
+                                            virtuammachine.BootLoader.machine = fattr.Value;
+                                        }
+                                        else
+                                        {
+                                            virtuammachine.BootLoader.machine = ele.Value;
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
             using (var domain = h.virDomainDefineXML(virtuammachine))
             {
             

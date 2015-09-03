@@ -26,6 +26,8 @@ namespace Libvirt_WebManager
                                     "~/Scripts/context.js",
                                     "~/Scripts/Chart.min.js",
                                     "~/Scripts/jquery.mask.js",
+                                      "~/Scripts/moment.min.js",
+                                      "~/Scripts/bootstrap-datetimepicker.min.js",
                     "~/Scripts/Common.js"
                         ));
 
@@ -47,10 +49,11 @@ namespace Libvirt_WebManager
                       "~/Content/jQueryFileTree.css",
                       "~/Content/jquery.jgrowl.min.css",
                       "~/Content/contextjs.bootstrap.css",
-                      "~/css/font-awesome.min.css"
+                      "~/css/font-awesome.min.css",
+                       "~/Content/bootstrap-datetimepicker.min.css"
 
 
-              
+
 
                       ));
         }

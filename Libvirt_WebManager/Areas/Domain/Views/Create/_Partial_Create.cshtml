@@ -56,12 +56,23 @@
                         @Html.TextBoxFor(a => a.Domain.Name, new { @class = "form-control" })
                         @Html.ValidationMessageFor(a => a.Domain.Name)
                     </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(a => a.Domain.OS_Options)
-                        @Html.DropDownListFor(a => a.Domain.OS_Options, Model.InstallOptions, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(a => a.Domain.OS_Options)
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(a => a.Domain.OS_Options)
+                                @Html.DropDownListFor(a => a.Domain.OS_Options, Model.InstallOptions, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(a => a.Domain.OS_Options)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(a => a.Domain.Operating_System)
+                                @Html.EnumDropDownListFor(a => a.Domain.Operating_System, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(a => a.Domain.Operating_System)
+                            </div>
+                        </div>
                     </div>
+                  
                     <div class="row" id="OS_Pool_n_Vol_Area">
                         <div class="col-sm-5">
                             <div class="form-group">

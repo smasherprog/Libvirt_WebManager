@@ -14,7 +14,7 @@ namespace Libvirt_WebManager.Areas.Domain.Code
                 var h = Service.VM_Manager.Instance.virConnectOpen(host);
                 using (var d = h.virDomainLookupByName(domain))
                 {
-                    machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DOMAIN_XML_INACTIVE);
+                    machine = d.virDomainGetXMLDesc(Libvirt.virDomainXMLFlags.VIR_DOMAIN_XML_INACTIVE | Libvirt.virDomainXMLFlags.VIR_DOMAIN_XML_SECURE);
                 }
             }
             return machine;

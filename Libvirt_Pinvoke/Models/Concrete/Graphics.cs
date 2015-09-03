@@ -65,6 +65,8 @@ namespace Libvirt.Models.Concrete
             _port = -1;
             websocket = -1;
             autoport = true;
+            passwdValidTo = null;
+            passwd = null;
         }
         public string To_XML()
         {
@@ -80,7 +82,7 @@ namespace Libvirt.Models.Concrete
             }
             ret += (!string.IsNullOrWhiteSpace(listen) ? " listen='" + listen + "'" : "");
             ret += (!string.IsNullOrWhiteSpace(passwd) ? " passwd='" + passwd + "'" : "") + (websocket.HasValue ? " websocket='" + websocket.Value.ToString() + "'" : "");
-            // ret += (passwdValidTo.HasValue ? " passwdValidTo='" + passwdValidTo.Value.ToFileTimeUtc() + "'" : "");
+            ret += (passwdValidTo.HasValue ? " passwdValidTo='" + System.DateTime.SpecifyKind(passwdValidTo.Value, System.DateTimeKind.Utc).ToString("yyyy-MM-ddTH:mm:ss") + "'" : "");
             if (Graphics_Listen != null)
             {
                 ret += ">" + Graphics_Listen.To_XML();
@@ -141,6 +143,9 @@ namespace Libvirt.Models.Concrete
                     if (type.Value == "yes") autoport = true;
                     else autoport = false;
                 }
+                type = element.Attribute("passwdValidTo");
+                if (type != null) passwdValidTo = DateTime.ParseExact(type.Value, "yyyy-MM-ddTH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+               
                 type = element.Attribute("passwd");
                 if (type != null) passwd = type.Value;
                 type = element.Attribute("listen");
